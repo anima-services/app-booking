@@ -6,9 +6,9 @@
 ## Сборка проекта
 Есть два варианта сборки apk приложения:
 1. Сборка через облако с помощью expo:
-`npx eas build -platform android -profile preview`
+`npx eas build -platform android -profile preview`  
 2. На локальной машине (быстрее):
-`npx eas build -platform android -local -profile preview`
+`npx eas build -platform android -local -profile preview`  
 При успешной сборке apk, в корне проекта окажется файл.
 ## Работа с приложением
 При первом запуске приложения на устройстве может наблюдаться белый экран. Поскольку приложение еще не сконфигурировано.
