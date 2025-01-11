@@ -53,16 +53,10 @@ export default function App() {
     Montserrat_600SemiBold, Montserrat_700Bold, Montserrat_800ExtraBold, Montserrat_900Black,
   });
 
-  const [logs, setLogs] = useState([]);
   const [date, setDate] = useState(new Date());
   const [update, setUpdate] = useState({});
 
   const [notification, setNotification] = useState({ text: "", color: "#ffffff" });
-
-  useEffect(() => {
-    if (logs.length > 20)
-      setLogs(array => { array.shift(); return array; });
-  }, [logs]);
 
   useEffect(() => {
     setDate(new Date());
@@ -79,25 +73,23 @@ export default function App() {
 
   return (
     <Provider store={store}>{
-      !fontsLoaded ? null :
+      !fontsLoaded ? <p>загрузка шрифтов...</p> :
         <View style={Styles.bg}>
           <MainContainer
             date={date}
-            logs={logs} setLogs={setLogs}
             setUpdate={setUpdate}
           />
           {/* <TestContainer /> */}
 
           {/* API's */}
-          <Qbic logs={logs} setLogs={setLogs} />
-          <Newbest logs={logs} setLogs={setLogs} />
-          <WebApi logs={logs} setLogs={setLogs} />
+          <Qbic  />
+          <Newbest  />
+          <WebApi  />
           {/* API's */}
 
           <Notification setNotification={setNotification} notification={notification} />
           <DataManager />
           <Connection
-            logs={logs} setLogs={setLogs}
             setNotification={setNotification}
             date={date} update={update}
           />

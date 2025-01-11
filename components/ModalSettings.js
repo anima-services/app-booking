@@ -11,6 +11,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const ModalSettings = (props) => {
     const config = useSelector((state) => state.appData.config);
+    const logs = useSelector((state) => state.tempData.logs);
     const dispatch = useDispatch();
 
     const [formData, setFormData] = useState({
@@ -203,7 +204,7 @@ const ModalSettings = (props) => {
                 </View>
                 <Text style={styles.header}>Логи приложения</Text>
                 <View style={{ marginBottom: 50 }}>
-                    {props.logs.map((item, i) =>
+                    {logs.map((item, i) =>
                         <Text key={i}>{item}</Text>
                     )}
                 </View>

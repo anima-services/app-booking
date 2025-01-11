@@ -98,7 +98,6 @@ export default function MainContainer(props) {
                 <ObjectContainer
                     objectId={selectedObject}
                     date={props.date}
-                    logs={props.logs} setLogs={props.setLogs}
                     setUpdate={props.setUpdate}
                     goToMain={goToMain} showBack={config.spaces && config.spaces.length > 1}
                 />
@@ -133,7 +132,6 @@ export default function MainContainer(props) {
             }
             <ModalSettings
                 modalVisible={modalVisible} setModalVisible={setModalVisible}
-                logs={props.logs}
             />
         </Pressable>
     );

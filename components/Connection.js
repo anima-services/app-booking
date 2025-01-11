@@ -3,6 +3,9 @@ import { Styles } from '../utils/styles';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { updateData, updateConfig } from '../data/appDataSlice';
+import {
+  setLogs
+} from '../data/tempDataSlice';
 
 const Connection = (props) => {
     const config = useSelector((state) => state.appData.config);
@@ -18,7 +21,7 @@ const Connection = (props) => {
         let _logText = (new Date).toLocaleString("ru") + " >>> ";
         _logText += `Connection: ${in_text}`;
         console.log(_logText);
-        props.setLogs([...props.logs, _logText]);
+        dispatch(setLogs(_logText));
     }
 
     function ResetCycle() {
