@@ -46,6 +46,7 @@ const Connection = (props) => {
   useEffect(() => {
     if (props.update == null || props.update.text == null) return;
     LogData(props.update.text);
+    if (props.update.error) LogData(props.update.error)
     props.setNotification(props.update);
     ResetCycle();
   },
@@ -309,10 +310,13 @@ export async function reservationCreate(in_hostname, in_token, in_id, in_start, 
         "participants": in_participants,
       })
     });
+    let responseData = await response.json();
 
     if (response.status > 299) {
       in_update({
-        text: 'Не удалось создать бронирование', color: Styles.main.busy.borderColor
+        text: 'Не удалось создать бронирование', 
+        error: `ошибка в подтверждении- ${responseData}`,
+        color: Styles.main.busy.borderColor
       });
     } else {
       in_update({
@@ -343,10 +347,12 @@ export async function reservationApprove(in_hostname, in_token, in_id, in_reserv
         "email": in_email,
       })
     });
+    let responseData = await response.json();
 
     if (response.status > 299) {
       in_update({
-        text: 'Не удалось подтвердить бронирование', color: Styles.main.busy.borderColor
+        text: 'Не удалось подтвердить бронирование', color: Styles.main.busy.borderColor,
+        error: `ошибка в подтверждении- ${responseData}`
       });
     } else {
       in_update({
