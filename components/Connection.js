@@ -315,7 +315,7 @@ export async function reservationCreate(in_hostname, in_token, in_id, in_start, 
     if (response.status > 299) {
       in_update({
         text: 'Не удалось создать бронирование', 
-        error: `ошибка в подтверждении- ${responseData}`,
+        error: `ошибка в бронировании- ${JSON.stringify(responseData)}`,
         color: Styles.main.busy.borderColor
       });
     } else {
@@ -343,7 +343,7 @@ export async function reservationApprove(in_hostname, in_token, in_id, in_reserv
         'Authorization': `Token ${in_token}`
       },
       body: JSON.stringify({
-        "reserve_token": in_reserveToken,
+        "reserve_token": `${in_reserveToken}`,
         "email": in_email,
       })
     });
@@ -352,7 +352,7 @@ export async function reservationApprove(in_hostname, in_token, in_id, in_reserv
     if (response.status > 299) {
       in_update({
         text: 'Не удалось подтвердить бронирование', color: Styles.main.busy.borderColor,
-        error: `ошибка в подтверждении- ${responseData}`
+        error: `ошибка в подтверждении- ${JSON.stringify(responseData)}`
       });
     } else {
       in_update({
