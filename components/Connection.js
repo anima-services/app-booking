@@ -26,6 +26,7 @@ const Connection = (props) => {
     setToken] = useState();
   const [isAuth,
     setAuth] = useState(false);
+    const [authTime, setAuthTime] = useState(0);
 
   const [inProcess,
     setProcess] = useState(false);
@@ -55,13 +56,18 @@ const Connection = (props) => {
   /* Цикличное обновление */
   useEffect(() => {
     if (inProcess) return;
+    
+    let nowTime = Math.floor((new Date()).getTime() / 1000);
 
-    if (!isAuth || token == null) {
+    let _authPeriod = 60 * 15;
+
+    if (!isAuth || token == null ||
+    (nowTime - authTime) > _authPeriod) {
       getToken();
+      setAuthTime(nowTime);
       return;
     }
 
-    let nowTime = Math.floor((new Date()).getTime() / 1000);
     if ((nowTime - cycleTime) < 30) return;
     setCycleTime(nowTime);
 

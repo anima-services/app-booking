@@ -19,6 +19,8 @@ const Qbic = (props) => {
     setToken] = useState();
   const [isAuth,
     setAuth] = useState(false);
+    const [authTime, setAuthTime] = useState(0);
+
 
   /* Получение токена аутентификации */
   useEffect(() => {
@@ -28,6 +30,14 @@ const Qbic = (props) => {
         config.panelPassword == null ||
         config.panel != "qbic"
       ) return;
+
+      let nowTime = Math.floor((new Date()).getTime() / 1000);
+
+    let _authPeriod = 60 * 15;
+    
+    if ((nowTime - authTime) > _authPeriod) {
+      setAuthTime(nowTime);
+    } else return;
 
       setAuth(false);
       console.log("Аутентификация...");
@@ -70,7 +80,7 @@ const Qbic = (props) => {
       console.log(_logText);
       dispatch(setLogs(_logText));
     }
-  }, [config.panelHost, config.panelLogin, config.panelPassword]);
+  }, [config.panelHost, config.panelLogin, config.panelPassword, isAuth, props.date]);
 
   useEffect(() => {
     try {
@@ -78,7 +88,6 @@ const Qbic = (props) => {
         config.panel != "qbic" ||
         token == null
       ) return;
-      let _busy = props.busy;
 
       fetch(`http://${config.panelHost}:8080/v1/led/front_led`, {
         method: 'POST',
@@ -87,7 +96,7 @@ const Qbic = (props) => {
           'Content-Type': 'application/json',
           'Authorization': token
         },
-        body: JSON.stringify(_busy.state ? {
+        body: JSON.stringify(tempData.busy ? {
           "red": 100, "green": 0, "blue": 0
         }: {
           "red": 0, "green": 100, "blue": 0

@@ -82,7 +82,7 @@ export default function App() {
           {/* <TestContainer /> */}
 
           {/* API's */}
-          <Qbic  />
+          <Qbic date={date}/>
           <Newbest  />
           <WebApi  />
           {/* API's */}
