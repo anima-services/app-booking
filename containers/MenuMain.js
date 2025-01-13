@@ -34,7 +34,7 @@ const MenuMain = (props) => {
             />
             {props.currentEvent && props.currentEvent.id ?
                 <>
-                    <Text style={Styles.text_h2}>{props.currentEvent.topic}</Text>
+                    <Text style={Styles.text_h2}>{`${props.currentEvent.topic}${props.currentEvent.status != "approved" ? ": не подтверждено" : ""}`}</Text>
                     { props.reservationSelected ? <Text style={Styles.text_regular}>{countdownUpdate()}</Text> : <></>}
                     <Text style={Styles.text_regular}>Участники:</Text>
                     <View style={Styles.horizontalRow}>
