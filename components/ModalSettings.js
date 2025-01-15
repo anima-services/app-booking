@@ -5,6 +5,7 @@ import structuredClone from "@ungap/structured-clone";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setConfig } from '../data/appDataSlice';
+import { updateData } from '../data/tempDataSlice';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -197,10 +198,10 @@ const ModalSettings = (props) => {
                     <Button title="Вернуть параметры" onPress={() => setFormData(structuredClone(config))} />
                 </View>
                 <View style={{ marginVertical: 5 }}>
-                    <Button title="Подсветка: занято" onPress={() => props.setBusy({ state: true, time: "" })} />
+                    <Button title="Подсветка: занято" onPress={() => dispatch(updateData({ busy: true }))} />
                 </View>
                 <View style={{ marginVertical: 5 }}>
-                    <Button title="Подсветка: свободно" onPress={() => props.setBusy({ state: false, time: "" })} />
+                    <Button title="Подсветка: свободно" onPress={() => dispatch(updateData({ busy: false }))} />
                 </View>
                 <View style={{ marginVertical: 5 }}>
                     <Button title="Сохранить" onPress={handleSave} />

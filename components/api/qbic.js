@@ -96,7 +96,7 @@ const Qbic = (props) => {
           'Content-Type': 'application/json',
           'Authorization': token
         },
-        body: JSON.stringify(tempData.busy ? {
+        body: JSON.stringify(tempData.data.busy ? {
           "red": 100, "green": 0, "blue": 0
         }: {
           "red": 0, "green": 100, "blue": 0
@@ -116,7 +116,7 @@ const Qbic = (props) => {
       dispatch(setLogs(_logText));
     }
   },
-    [tempData.busy,
+    [tempData.data.busy,
       isAuth]);
 
   return (<></>);
