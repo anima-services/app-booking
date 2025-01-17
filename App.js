@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StatusBar } from 'react-native';
+import { View, StatusBar, Text } from 'react-native';
 
 import { Provider } from 'react-redux';
 import { store } from './data/store';
@@ -73,7 +73,7 @@ export default function App() {
 
   return (
     <Provider store={store}>{
-      !fontsLoaded ? <></> :
+      !fontsLoaded ? <Text>Загрузка шрифтов</Text> :
         <View style={Styles.bg}>
           <MainContainer
             date={date}

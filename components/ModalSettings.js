@@ -96,7 +96,7 @@ const ModalSettings = (props) => {
                     onChangeText={value => setFormData({ ...formData, hostname: value })}
                     style={styles.input}
                 />
-                <p>адрес бэкэнда системы бронирования</p>
+                <Text>адрес бэкэнда системы бронирования</Text>
                 <Text style={styles.header}>{`A4S / login: ${config.login}`}</Text>
                 <TextInput
                     placeholder="login"
@@ -104,7 +104,7 @@ const ModalSettings = (props) => {
                     onChangeText={value => setFormData({ ...formData, login: value })}
                     style={styles.input}
                 />
-                <p>логин от учетной записи со статусом "внешний админ</p>
+                <Text>логин от учетной записи со статусом "внешний админ</Text>
                 <Text style={styles.header}>{`A4S / password: ${config.password}`}</Text>
                 <TextInput
                     placeholder="password"
@@ -112,7 +112,7 @@ const ModalSettings = (props) => {
                     onChangeText={value => setFormData({ ...formData, password: value })}
                     style={styles.input}
                 />
-                <p>пароль от учетной записи со статусом "внешний админ"</p>
+                <Text>пароль от учетной записи со статусом "внешний админ"</Text>
                 <Text style={styles.header}>{`A4S / id карты: ${config.mapId}`}</Text>
                 <TextInput
                     placeholder="mapId"
@@ -121,7 +121,7 @@ const ModalSettings = (props) => {
                     style={styles.input}
                     inputMode="numeric"
                 />
-                <p>идентификатор карты. Если не указывать, то стартовой страницей будет не карта, а страница помещения</p>
+                <Text>идентификатор карты. Если не указывать, то стартовой страницей будет не карта, а страница помещения</Text>
                 <Text style={styles.header}>{`A4S / Число объектов: ${config.spaceCount}`}</Text>
                 <TextInput
                     placeholder="spaceCount"
@@ -134,7 +134,7 @@ const ModalSettings = (props) => {
                     }}
                     style={styles.input}
                 />
-                <p>число объектов - если указать 1, то не будет выбора помещений. При указанном идентификаторе карты, заполнять не нужно</p>
+                <Text>число объектов - если указать 1, то не будет выбора помещений. При указанном идентификаторе карты, заполнять не нужно</Text>
                 {formData.spaces.map((item, i) => {
                     return <View key={`space-${i}`}>
                         <Text style={styles.header}>{`ID ${i}:`}</Text>
@@ -157,7 +157,7 @@ const ModalSettings = (props) => {
                     onChangeText={value => setFormData({ ...formData, panel: value })}
                     style={styles.input}
                 />
-                <p>выбор вендора панели для настройки драйвера подсветки. В зависимости от выбранного драйвера могут меняться поля его конфигурации.</p>
+                <Text>выбор вендора панели для настройки драйвера подсветки. В зависимости от выбранного драйвера могут меняться поля его конфигурации.</Text>
                 {panelSettings.panelHost ? <>
                     <Text style={styles.header}>{`Хост: ${config.panelHost}`}</Text>
                     <TextInput
