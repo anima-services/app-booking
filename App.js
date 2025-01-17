@@ -73,7 +73,7 @@ export default function App() {
 
   return (
     <Provider store={store}>{
-      !fontsLoaded ? <p>загрузка шрифтов...</p> :
+      !fontsLoaded ? <></> :
         <View style={Styles.bg}>
           <MainContainer
             date={date}
