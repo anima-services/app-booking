@@ -48,6 +48,7 @@ export default function ObjectContainer(props) {
 
   useEffect(() => {
     setBusy(data[`space_${props.objectId}`] && data[`space_${props.objectId}`].is_reserved_now);
+    props.checkBusy();
   }, [data[`space_${props.objectId}`]]);
 
   return (

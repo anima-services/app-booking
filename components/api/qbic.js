@@ -73,8 +73,10 @@ const Qbic = (props) => {
         _logText += error;
         console.log(_logText);
         dispatch(setLogs(_logText));
+        setAuthTime(0);
       });
     } catch (e) {
+      setAuthTime(0);
       let _logText = (new Date).toLocaleString("ru") + " >>> ";
       _logText += 'QBic: ошибка в "Получение токена аутентификации"';
       console.log(_logText);
@@ -108,7 +110,17 @@ const Qbic = (props) => {
         _logText += 'QBic: ошибка в смене цвета';
         console.log(_logText);
         dispatch(setLogs(_logText));
-      });
+      })
+      .then(response => console.log(response.status) || response)
+  .then(response => response.text())
+  .then(body => {
+    let _logText = (new Date).toLocaleString("ru") + " >>> ";
+      _logText += 'QBic:' + JSON.stringify(body);
+      console.log(_logText);
+      dispatch(setLogs(_logText));
+    console.log(body)
+    
+  });
     } catch (e) {
       let _logText = (new Date).toLocaleString("ru") + " >>> ";
       _logText += 'QBic: ошибка в работе модуля';

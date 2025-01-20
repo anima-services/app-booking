@@ -12,6 +12,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const ModalSettings = (props) => {
     const config = useSelector((state) => state.appData.config);
+    const tempData = useSelector((state) => state.tempData);
     const logs = useSelector((state) => state.tempData.logs);
     const dispatch = useDispatch();
 
@@ -198,10 +199,7 @@ const ModalSettings = (props) => {
                     <Button title="Вернуть параметры" onPress={() => setFormData(structuredClone(config))} />
                 </View>
                 <View style={{ marginVertical: 5 }}>
-                    <Button title="Подсветка: занято" onPress={() => dispatch(updateData({ busy: true }))} />
-                </View>
-                <View style={{ marginVertical: 5 }}>
-                    <Button title="Подсветка: свободно" onPress={() => dispatch(updateData({ busy: false }))} />
+                    <Button title={`Подсветка: ${ tempData.data.busy ? "занято" : "свободно"}`} onPress={() => dispatch(updateData({ busy: !tempData.data.busy }))} />
                 </View>
                 <View style={{ marginVertical: 5 }}>
                     <Button title="Сохранить" onPress={handleSave} />
