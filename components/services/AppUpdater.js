@@ -1,14 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Button, Alert, Platform } from 'react-native';
+import React, {
+  useEffect,
+  useState
+} from 'react';
+import {
+  View,
+  Text,
+  Button,
+  Alert,
+  Platform
+} from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Updates from 'expo-updates';
 import * as IntentLauncher from 'expo-intent-launcher';
 
+import packageJson from '../../package.json';
+
+const currentVersion = packageJson.version;
+
 const AppUpdate = () => {
-  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
-  const [downloadUrl, setDownloadUrl] = useState('');
-  const [isDownloading, setIsDownloading] = useState(false);
-  const currentVersion = '1.0.0';  // Текущая версия вашего приложения
+  const [isUpdateAvailable,
+    setIsUpdateAvailable] = useState(false);
+  const [downloadUrl,
+    setDownloadUrl] = useState('');
+  const [isDownloading,
+    setIsDownloading] = useState(false);
 
   // Получение последнего релиза с вашего сервера
   const getLatestRelease = async () => {
@@ -25,9 +40,16 @@ const AppUpdate = () => {
   // Проверка доступности обновления
   const checkForUpdate = async () => {
     const release = await getLatestRelease();
-    if (release && release.version !== currentVersion) {
-      setIsUpdateAvailable(true);
-      setDownloadUrl(release.downloadUrl); // URL для скачивания APK
+    if (release && release.tag_name !== currentVersion) {
+      for (let i = 0; i < release.assets.length; i++) {
+        let _asset = release.assets[i];
+        let _url = _asset.browser_download_url;
+        if (_url.split(".apk")) {
+          setIsUpdateAvailable(true);
+          setDownloadUrl(release._url);
+          break;
+        }
+      }
     }
   };
 
@@ -36,14 +58,17 @@ const AppUpdate = () => {
     const path = FileSystem.documentDirectory + 'app.apk';
     try {
       setIsDownloading(true);
-      const { uri } = await FileSystem.downloadAsync(url, path);
+      const {
+        uri
+      } = await FileSystem.downloadAsync(url, path);
       setIsDownloading(false);
-      Alert.alert('Обновление скачано', 'Вы хотите установить обновление?', [
+      Alert.alert('Обновление скачано', 'Вы хотите установить обновление?', [{
+        text: 'Да',
+        onPress: () => installUpdate(uri),
+      },
         {
-          text: 'Да',
-          onPress: () => installUpdate(uri),
+          text: 'Нет', style: 'cancel'
         },
-        { text: 'Нет', style: 'cancel' },
       ]);
     } catch (error) {
       console.error('Ошибка при скачивании обновления:', error);
@@ -71,7 +96,7 @@ const AppUpdate = () => {
   }, []);
 
   return (
-    <View style={{ padding: 20 }}>
+    <View style={ { padding: 20 }}>
       <Text>Текущая версия: {currentVersion}</Text>
       {isUpdateAvailable ? (
         <View>
@@ -80,10 +105,10 @@ const AppUpdate = () => {
             title="Скачать обновление"
             onPress={() => downloadUpdate(downloadUrl)}
             disabled={isDownloading}
-          />
+            />
           {isDownloading && <Text>Загрузка...</Text>}
         </View>
-      ) : (
+      ): (
         <Text>У вас установлена последняя версия.</Text>
       )}
     </View>
