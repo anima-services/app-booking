@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Text, Button, Modal, TextInput, StyleSheet, Dimensions, Pressable } from 'react-native';
 
+import AppUpdater from "./services/AppUpdater";
+
 import structuredClone from "@ungap/structured-clone";
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -90,6 +92,7 @@ const ModalSettings = (props) => {
     return (
         <Modal visible={props.modalVisible} animationType="slide" presentationStyle='pageSheet'>
             <ScrollView style={styles.container}>
+          <AppUpdater/>
                 <Text style={styles.header}>{`A4S / хост: ${config.hostname}`}</Text>
                 <TextInput
                     placeholder="hostname"
