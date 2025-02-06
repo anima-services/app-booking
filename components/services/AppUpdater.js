@@ -28,7 +28,7 @@ const AppUpdate = () => {
   // Получение последнего релиза с вашего сервера
   const getLatestRelease = async () => {
     try {
-      const response = await fetch('https://api.github.com/repos/wantid/app-booking/releases/latest');
+      const response = await fetch('https://api.github.com/repos/anima-services/app-booking/releases/latest');
       const data = await response.json();
       return data;
     } catch (error) {
