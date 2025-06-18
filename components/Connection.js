@@ -100,7 +100,7 @@ const Connection = (props) => {
     setProcess(true);
 
     try {
-      let response = await fetch(`https://${config.hostname}/api/user/login/`, {
+      let response = await fetch(`${config.hostname}/api/user/login/`, {
         method: 'POST',
         headers: {
           'Accept': '*/*',
@@ -122,7 +122,7 @@ const Connection = (props) => {
         LogData('Успешно авторизовались!');
       } else LogData('Не удалось авторизоваться');
     } catch (e) {
-      LogData('ошибка в "Получение токена аутентификации" - ' + e);
+      LogData('ошибка в "Получение токена аутентификации" - ' + e + " " + config.hostname);
     }
     setProcess(false);
   }
@@ -133,7 +133,7 @@ const Connection = (props) => {
     ) return;
 
     try {
-      let response = await fetch(`https://${config.hostname}/api/space/${in_id}/`, {
+      let response = await fetch(`${config.hostname}/api/space/${in_id}/`, {
         method: 'GET',
         headers: {
           'Accept': '*/*',
@@ -177,7 +177,7 @@ const Connection = (props) => {
       .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
       .join('&');
 
-      let response = await fetch(`https://${config.hostname}/api/reservation/?${queryString}`, {
+      let response = await fetch(`${config.hostname}/api/reservation/?${queryString}`, {
         method: 'GET',
         headers: {
           'Accept': '*/*',
@@ -219,7 +219,7 @@ const Connection = (props) => {
       .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
       .join('&');
 
-      let response = await fetch(`https://${config.hostname}/api/map/${in_id}/?${queryString}`, {
+      let response = await fetch(`${config.hostname}/api/map/${in_id}/?${queryString}`, {
         method: 'GET',
         headers: {
           'Accept': '*/*',
@@ -268,7 +268,7 @@ const Connection = (props) => {
       .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
       .join('&');
 
-      let response = await fetch(`https://${config.hostname}/api/user/?${queryString}`, {
+      let response = await fetch(`${config.hostname}/api/user/?${queryString}`, {
         method: 'GET',
         headers: {
           'Accept': '*/*',
@@ -300,7 +300,7 @@ export async function reservationCreate(in_hostname, in_token, in_id, in_start, 
   ) return;
 
   try {
-    let response = await fetch(`https://${in_hostname}/api/reservation/extend_admin/`, {
+    let response = await fetch(`${in_hostname}/api/reservation/extend_admin/`, {
       method: 'POST',
       headers: {
         'Accept': '*/*',
@@ -341,7 +341,7 @@ export async function reservationApprove(in_hostname, in_token, in_id, in_reserv
   ) return;
 
   try {
-    let response = await fetch(`https://${in_hostname}/api/reservation/${in_id}/approve/`, {
+    let response = await fetch(`${in_hostname}/api/reservation/${in_id}/approve/`, {
       method: 'POST',
       headers: {
         'Accept': '*/*',
