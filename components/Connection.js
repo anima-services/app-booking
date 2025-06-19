@@ -103,7 +103,7 @@ const Connection = (props) => {
       let response = await fetch(`${config.hostname}/api/user/login/`, {
         method: 'POST',
         headers: {
-          'Accept': '*/*',
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({

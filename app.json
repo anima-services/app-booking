@@ -2,7 +2,7 @@
   "expo": {
     "name": "app-booking",
     "slug": "app-booking",
-    "version": "1.0.0",
+    "version": "1.0.4",
     "orientation": "landscape",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -34,7 +34,8 @@
       }
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "./plugins/trustLocalCerts"
     ]
   }
 }
