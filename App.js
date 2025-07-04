@@ -8,7 +8,7 @@ import { fontsLoaded } from "./components/StaticImports";
 import Background from "./components/Background";
 
 import HomeScreen from "./components/screens/HomeScreen";
-import DetailsScreen from "./components/screens/DetailsScreen";
+import ConfigScreen from "./components/screens/ConfigScreen";
 
 const Stack = createStackNavigator();
 
@@ -17,7 +17,7 @@ export default function App() {
 
     const screens = [
         { name: "Home", title: "Главная", component: HomeScreen },
-        { name: "Details", title: "Детали", component: DetailsScreen },
+        { name: "Config", title: "Конфигурация", component: ConfigScreen },
     ];
 
     return (

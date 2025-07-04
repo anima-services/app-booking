@@ -2,7 +2,8 @@ import {
   View,
   StyleSheet,
   useWindowDimensions,
-  Text
+  Text,
+  Button
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 10,
-  }
+  },
 });
 
 export default Background;
