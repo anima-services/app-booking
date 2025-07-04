@@ -16,8 +16,8 @@ import AppUpdater from "./services/AppUpdater";
 import structuredClone from "@ungap/structured-clone";
 
 import { useSelector, useDispatch } from "react-redux";
-import { setConfig } from "../data/appDataSlice";
-import { updateData } from "../data/tempDataSlice";
+import { setConfig } from "../data (old)/appDataSlice";
+import { updateData } from "../data (old)/tempDataSlice";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;

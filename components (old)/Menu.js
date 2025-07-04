@@ -6,9 +6,9 @@ import { Styles } from '../utils/styles';
 
 import CurrentDate from "./CurrentDate";
 
-import MenuMain from "../containers/MenuMain";
-import MenuBook from "../containers/MenuBook";
-import MenuCheckin from "../containers/MenuCheckin";
+import MenuMain from "../containers (old)/MenuMain";
+import MenuBook from "../containers (old)/MenuBook";
+import MenuCheckin from "../containers (old)/MenuCheckin";
 
 const Menu = (props) => {
 

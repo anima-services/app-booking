@@ -13,10 +13,10 @@ import {
 import {
   updateData,
   updateConfig
-} from '../data/appDataSlice';
+} from '../data (old)/appDataSlice';
 import {
   setLogs
-} from '../data/tempDataSlice';
+} from '../data (old)/tempDataSlice';
 
 const Connection = (props) => {
   const config = useSelector((state) => state.appData.config);

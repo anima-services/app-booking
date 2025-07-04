@@ -9,7 +9,7 @@ import {
 } from 'react-redux';
 import {
   setLogs
-} from '../../data/tempDataSlice';
+} from '../../data (old)/tempDataSlice';
 
 const WebApi = (props) => {
   const dispatch = useDispatch();

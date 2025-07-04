@@ -10,10 +10,10 @@ import {
   Styles
 } from '../utils/styles';
 
-import Menu from '../components/Menu';
-import Table from '../components/Table';
-import UsersTable from '../components/UsersTable';
-import BackButton from "../components/BackButton";
+import Menu from '../components (old)/Menu';
+import Table from '../components (old)/Table';
+import UsersTable from '../components (old)/UsersTable';
+import BackButton from "../components (old)/BackButton";
 
 import {
   useSelector

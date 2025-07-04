@@ -16,10 +16,10 @@ import {
   Styles
 } from '../utils/styles';
 
-import ModalSettings from "../components/ModalSettings";
+import ModalSettings from "../components (old)/ModalSettings";
 import ObjectContainer from './ObjectContainer';
 import GridContainer from './GridContainer';
-import Title from "../components/Title";
+import Title from "../components (old)/Title";
 
 import MapContainer from "./MapContainer";
 
@@ -29,7 +29,7 @@ import {
 } from 'react-redux';
 import {
   updateData
-} from '../data/tempDataSlice';
+} from '../data (old)/tempDataSlice';
 
 export default function MainContainer(props) {
   const config = useSelector((state) => state.appData.config);

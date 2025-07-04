@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-import QuickBook from "../components/QuickBook";
-import BackButton from "../components/BackButton";
-import DateSelect from "../components/DateSelect";
-import PersonSelect from "../components/PersonSelect";
-import BookBtn from "../components/BookBtn";
-import ChangeTopic from "../components/ChangeTopic";
+import QuickBook from "../components (old)/QuickBook";
+import BackButton from "../components (old)/BackButton";
+import DateSelect from "../components (old)/DateSelect";
+import PersonSelect from "../components (old)/PersonSelect";
+import BookBtn from "../components (old)/BookBtn";
+import ChangeTopic from "../components (old)/ChangeTopic";
 
-import { reservationCreate, reservationApprove } from '../components/Connection';
+import { reservationCreate, reservationApprove } from '../components (old)/Connection';
 
 import { useSelector } from 'react-redux';
 

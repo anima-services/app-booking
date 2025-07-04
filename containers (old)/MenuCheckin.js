@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-import BackButton from "../components/BackButton";
-import PersonSelect from "../components/PersonSelect";
-import Checkin from "../components/Checkin";
+import BackButton from "../components (old)/BackButton";
+import PersonSelect from "../components (old)/PersonSelect";
+import Checkin from "../components (old)/Checkin";
 
-import { reservationCreate, reservationApprove } from '../components/Connection';
+import { reservationCreate, reservationApprove } from '../components (old)/Connection';
 
 import { useSelector } from 'react-redux';
 

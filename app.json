@@ -34,8 +34,7 @@
       }
     },
     "plugins": [
-      "expo-font",
-      "./plugins/trustLocalCerts"
+      "expo-font"
     ]
   }
 }

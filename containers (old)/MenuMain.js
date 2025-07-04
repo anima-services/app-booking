@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from "react";
 import { Image, View, Text } from 'react-native';
 
-import Title from "../components/Title";
-import CheckinBtn from "../components/CheckinBtn";
-import QuickBook from "../components/QuickBook";
+import Title from "../components (old)/Title";
+import CheckinBtn from "../components (old)/CheckinBtn";
+import QuickBook from "../components (old)/QuickBook";
 
 import { Styles } from '../utils/styles';
 
