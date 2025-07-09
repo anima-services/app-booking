@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, useWindowDimensions } from 'react-native';
 
 
-const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, }) => {
+const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, setText, value }) => {
     const { width: screenWidth, height: screenHeight } = useWindowDimensions();
     const textSize = screenHeight * .02;
 
@@ -23,7 +23,6 @@ const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, }) 
     }];
 
     const [focused, setFocused] = useState(false);
-    const [text, setText] = useState('');
 
     return (
         <View style={{
@@ -43,7 +42,7 @@ const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, }) 
                 placeholder={placeholder}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
-                value={text}
+                value={value}
                 onChangeText={setText}
                 underlineColorAndroid="transparent"
                 inputMode={inputMode}

@@ -32,6 +32,7 @@
     "@react-navigation/stack": "^7.4.2",
     "@reduxjs/toolkit": "^2.2.8",
     "@ungap/structured-clone": "^1.2.0",
+    "axios": "^1.10.0",
     "eas-cli": "^8.0.0",
     "expo": "^50.0.17",
     "expo-file-system": "~16.0.9",

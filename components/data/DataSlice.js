@@ -2,36 +2,22 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export const DataSlice = createSlice({
     name: 'data',
-    initialState: {
-        data: {},
-        config: {},
-    },
+    initialState: {},
     reducers: {
         updateData: (state, action) => {
             try {
-                state.data = { ...state.data, ...action.payload };
-            } catch (e) {}
-        },
-        setData: (state, action) => {
-            state.data = action.payload;
-        },
-        setConfig: (state, action) => {
-            state.config = action.payload;
-        },
-        updateConfig: (state, action) => {
-            try {
-                state.config = { ...state.config, ...action.payload };
-            } catch (e) {}
+                state = { ...state, ...action.payload };
+            } catch (e) { console.log("Неудачная попытка обновления данных приложения! (updateData)"); }
         },
         setState: (state, action) => {
             try {
                 for (let key in action.payload) {
                     state[key] = action.payload[key];
                 }
-            } catch (e) { }
+            } catch (e) { console.log("Неудачная попытка обновления данных приложения! (setState)"); }
         },
     },
 });
 
-export const { setConfig, setData, updateData, setState, updateConfig } = DataSlice.actions;
+export const { setState, updateData } = DataSlice.actions;
 export default DataSlice.reducer;

@@ -9,6 +9,11 @@ import Background from "./components/Background";
 
 import HomeScreen from "./components/screens/HomeScreen";
 import ConfigScreen from "./components/screens/ConfigScreen";
+import MainApp from "./components/services/MainApp.services";
+
+import { Provider } from 'react-redux';
+import { Store } from './components/data/Store';
+import DataManager from "./components/data/DataManager";
 
 const Stack = createStackNavigator();
 
@@ -21,32 +26,33 @@ export default function App() {
     ];
 
     return (
-        <>
-            {
-                !checkFonts ?
-                    <Text>Шрифты загружаются</Text> :
-                    <SafeAreaProvider>
-                        <NavigationContainer>
-                            {/* Фоновый компонент */}
-                            <Background isBusy={false}/>
+        <Provider store={Store}>{
+            !checkFonts ?
+                <Text>Шрифты загружаются</Text> :
+                <SafeAreaProvider>
+                    <NavigationContainer>
+                        {/* Фоновый компонент */}
+                        <Background isBusy={false} />
 
-                            {/* Навигационный стек поверх фона */}
-                            <Stack.Navigator
-                                screenOptions={{
-                                    headerTransparent: true,
-                                    headerTitleStyle: { color: 'white' },
-                                    headerTintColor: 'white',
-                                }}
-                            >
-                                {screens.map((item, i) => <Stack.Screen key={i}
-                                    name={item.name}
-                                    component={item.component}
-                                    options={{ title: item.title, headerShown: false, cardStyle: { backgroundColor: 'transparent' } }}
-                                />)}
-                            </Stack.Navigator>
-                        </NavigationContainer>
-                    </SafeAreaProvider>
-            }
-        </>
+                        {/* Навигационный стек поверх фона */}
+                        <Stack.Navigator
+                            screenOptions={{
+                                headerTransparent: true,
+                                headerTitleStyle: { color: 'white' },
+                                headerTintColor: 'white',
+                            }}
+                        >
+                            {screens.map((item, i) => <Stack.Screen key={i}
+                                name={item.name}
+                                component={item.component}
+                                options={{ title: item.title, headerShown: false, cardStyle: { backgroundColor: 'transparent' } }}
+                            />)}
+                        </Stack.Navigator>
+                    </NavigationContainer>
+                    <MainApp />
+                </SafeAreaProvider>
+        }
+            <DataManager />
+        </Provider>
     )
 }

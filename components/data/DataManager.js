@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useDispatch } from 'react-redux';
-import { store } from './Store';
-import { setState } from './appDataSlice';
+import { Store } from './Store';
+import { setState } from './DataSlice';
 
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 
@@ -33,8 +33,8 @@ const DataManager = (props) => {
             dispatch(setState(value));
         });
 
-        const unsubscribe = store.subscribe(() => {
-            let storeState = store.getState().data;
+        const unsubscribe = Store.subscribe(() => {
+            let storeState = Store.getState().data;
             storeData("data", storeState);
         });
         SystemNavigationBar.navigationHide();

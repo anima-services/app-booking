@@ -26,7 +26,7 @@ const Connection = (props) => {
     setToken] = useState();
   const [isAuth,
     setAuth] = useState(false);
-    const [authTime, setAuthTime] = useState(0);
+  const [authTime, setAuthTime] = useState(0);
 
   const [inProcess,
     setProcess] = useState(false);
@@ -56,13 +56,13 @@ const Connection = (props) => {
   /* Цикличное обновление */
   useEffect(() => {
     if (inProcess) return;
-    
+
     let nowTime = Math.floor((new Date()).getTime() / 1000);
 
     let _authPeriod = 60 * 15;
 
     if (!isAuth || token == null ||
-    (nowTime - authTime) > _authPeriod) {
+      (nowTime - authTime) > _authPeriod) {
       getToken();
       setAuthTime(nowTime);
       return;
@@ -116,7 +116,7 @@ const Connection = (props) => {
       if (responseData["token"] != null) {
         setToken(responseData["token"]);
         setAuth(true);
-        dispatch(updateData( {
+        dispatch(updateData({
           token: responseData["token"]
         }));
         LogData('Успешно авторизовались!');
@@ -144,7 +144,7 @@ const Connection = (props) => {
       let responseData = await response.json();
 
       if (responseData["id"] != null) {
-        dispatch(updateData( {
+        dispatch(updateData({
           [`space_${in_id}`]: responseData
         }));
         LogData('Получены данные о space ' + in_id);
@@ -174,8 +174,8 @@ const Connection = (props) => {
       };
 
       var queryString = Object.keys(params)
-      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
-      .join('&');
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+        .join('&');
 
       let response = await fetch(`${config.hostname}/api/reservation/?${queryString}`, {
         method: 'GET',
@@ -189,7 +189,7 @@ const Connection = (props) => {
       let responseData = await response.json();
 
       if (responseData["results"] != null) {
-        dispatch(updateData( {
+        dispatch(updateData({
           [`reservations_${in_id}`]: responseData["results"]
         }));
         LogData('Получены события space ' + in_id);
@@ -216,8 +216,8 @@ const Connection = (props) => {
       };
 
       var queryString = Object.keys(params)
-      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
-      .join('&');
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+        .join('&');
 
       let response = await fetch(`${config.hostname}/api/map/${in_id}/?${queryString}`, {
         method: 'GET',
@@ -231,7 +231,7 @@ const Connection = (props) => {
       let responseData = await response.json();
 
       if (responseData != null) {
-        dispatch(updateData( {
+        dispatch(updateData({
           mapData: responseData
         }));
         if (Array.isArray(responseData.map_objects)) {
@@ -242,7 +242,7 @@ const Connection = (props) => {
             ) continue;
             array.push(responseData.map_objects[i].space_link_info.id);
           }
-          dispatch(updateConfig( {
+          dispatch(updateConfig({
             spaceCount: responseData.map_objects.length,
             spaces: array
           }));
@@ -265,8 +265,8 @@ const Connection = (props) => {
       };
 
       var queryString = Object.keys(params)
-      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
-      .join('&');
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+        .join('&');
 
       let response = await fetch(`${config.hostname}/api/user/?${queryString}`, {
         method: 'GET',
@@ -279,7 +279,7 @@ const Connection = (props) => {
 
       let responseData = await response.json();
       if (responseData["results"] != null) {
-        dispatch(updateData( {
+        dispatch(updateData({
           usersData: responseData["results"]
         }));
         LogData('Получен список пользователей');
@@ -320,7 +320,7 @@ export async function reservationCreate(in_hostname, in_token, in_id, in_start, 
 
     if (response.status > 299) {
       in_update({
-        text: 'Не удалось создать бронирование', 
+        text: 'Не удалось создать бронирование',
         error: `ошибка в бронировании- ${JSON.stringify(responseData)}`,
         color: Styles.main.busy.borderColor
       });
