@@ -28,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
       <ColumnScreen
         leftContent={<SpaceInfo />}
         rightContent={<>
-
+          
         </>}
       />
     </Pressable>
