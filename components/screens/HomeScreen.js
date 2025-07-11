@@ -3,6 +3,7 @@ import { StyleSheet, Pressable } from 'react-native';
 
 import ColumnScreen from '../ColumnScreen';
 import SpaceInfo from '../SpaceInfo';
+import Schedule from '../Schedule';
 
 const HomeScreen = ({ navigation }) => {
   const [clickCount, setClickCount] = useState(0);
@@ -27,9 +28,7 @@ const HomeScreen = ({ navigation }) => {
     <Pressable style={styles.content} onPress={handlePress}>
       <ColumnScreen
         leftContent={<SpaceInfo />}
-        rightContent={<>
-          
-        </>}
+        rightContent={<Schedule />}
       />
     </Pressable>
   );

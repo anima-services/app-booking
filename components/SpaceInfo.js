@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useRoute } from '@react-navigation/native';
-
 import { useSelector } from "react-redux";
+
 import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 import { useSpaceData } from './hooks/useSpaceData';
 import { useEventData } from './hooks/useEventData';
@@ -18,6 +18,7 @@ const SpaceInfo = () => {
     const sizes = useResponsiveSizes();
     const spaceData = useSpaceData(data);
     const eventData = useEventData(data);
+
     const colorScheme = {
         dark: "#181818",
         light: "#FFFFFF",
@@ -25,6 +26,14 @@ const SpaceInfo = () => {
         busy: "#FF6567",
         container: "#2F2F2F",
     };
+    const statusName = {
+        "reserved": "Подтверждается",
+        "approved": "Подтверждено",
+        "canceled": "Отменен",
+        "automatically_canceled": "Отменен автоматически",
+        "finished": "Завершено",
+    }
+
     const propertyStyle = [styles.property, { color: colorScheme.light, fontSize: sizes.textSize }];
     const textStyle = [styles.text, { color: colorScheme.light, marginHorizontal: 5, fontSize: sizes.textSize }];
     return (
@@ -97,9 +106,7 @@ const SpaceInfo = () => {
                         title="Подтвердить" onPress={() => navigation.navigate('Config')}
                     />
                     :
-                    <EventStatus
-                        status={eventData.status}
-                    />
+                    <EventStatus text={statusName[eventData.status]} icon={eventData.status} />
                 }
             </View>
         </View>

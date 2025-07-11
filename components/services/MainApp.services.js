@@ -91,7 +91,22 @@ const getData = async (token, dispatch) => {
         const eventsParams = `space=${currentData.id}&start_after=${now.toISOString()}&end_before=${tomorrow.toISOString()}`;
         const eventsResponse = await api.get(`/api/reservation/?${eventsParams}`);
         if (eventsResponse.data.results != null) {
-            dispatch(setState({ events_data: eventsResponse.data.results }));
+            let _eventList = eventsResponse.data.results;
+            _eventList.sort(function (a, b) {
+                return new Date(a.start) - new Date(b.start);
+            });
+
+            _eventList = _eventList.filter(item => {
+                if (
+                    !item.status ||
+                    item.status === "canceled" ||
+                    item.status === "automatically_canceled"
+                )
+                    return false;
+                return true;
+            });
+
+            dispatch(setState({ events_data: _eventList }));
         }
 
         // Last update

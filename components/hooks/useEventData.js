@@ -1,21 +1,19 @@
 import { useEffect, useState } from 'react';
 
 export const useEventData = (data) => {
-  const [eventData, setEventData] = useState({
+  const defaultEvent = {
     isCurrent: false, show: false,
     timeUntilEnd: 0, timeUntilStart: 0,
     topic: "", participants_info: [],
-    status: "",
-  });
+    status: "", host_fullname: "",
+    start: new Date(), end: new Date()
+  };
+
+  const [eventData, setEventData] = useState(defaultEvent);
 
   useEffect(() => {
     if (!data.events_data) {
-      setEventData({
-        isCurrent: false, show: false,
-        timeUntilEnd: 0, timeUntilStart: 0,
-        topic: "", participants_info: [],
-        status: "",
-      });
+      setEventData(defaultEvent);
       return;
     }
 
@@ -37,15 +35,11 @@ export const useEventData = (data) => {
         isCurrent, show: true,
         timeUntilEnd, timeUntilStart,
         topic: event.topic, participants_info: event.participants_info,
-        status: event.status,
+        status: event.status, host_fullname: event.user_info.full_name,
+        start: event.start, end: event.end,
       });
     } else {
-      setEventData({
-        isCurrent: false, show: false,
-        timeUntilEnd: 0, timeUntilStart: 0,
-        topic: "", participants_info: [],
-        status: "",
-      });
+      setEventData(defaultEvent);
     }
   }, [data.events_data, data.last_update]);
 

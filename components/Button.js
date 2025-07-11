@@ -7,7 +7,11 @@ const Button = ({ title, disabled = false, onPress }) => {
 
     return (
         <TouchableOpacity
-            style={[styles.button, { padding: textSize * .8, borderRadius: borderRadius, marginVertical: textSize * .5 }]}
+            style={[styles.button, {
+                padding: textSize * .8,
+                borderRadius: borderRadius,
+                marginVertical: textSize * .5
+            }]}
             onPress={onPress}
         >
             <Text style={[styles.buttonText, { fontSize: textSize }]}>{title}</Text>
@@ -26,8 +30,6 @@ const colorScheme = {
 const styles = StyleSheet.create({
     button: {
         backgroundColor: colorScheme.free,
-        padding: 12,
-        borderRadius: 8,
         alignItems: 'center',
         justifyContent: 'center',
     },
