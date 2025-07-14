@@ -9,6 +9,9 @@ import Background from "./components/Background";
 
 import HomeScreen from "./components/screens/HomeScreen";
 import ConfigScreen from "./components/screens/ConfigScreen";
+import BookScreen from "./components/screens/BookScreen";
+import ApproveScreen from "./components/screens/ApproveScreen";
+
 import MainApp from "./components/services/MainApp.services";
 
 import { Provider } from 'react-redux';
@@ -23,6 +26,8 @@ export default function App() {
     const screens = [
         { name: "Home", title: "Главная", component: HomeScreen },
         { name: "Config", title: "Конфигурация", component: ConfigScreen },
+        { name: "Book", title: "Бронирование", component: BookScreen },
+        { name: "Approve", title: "Подтверждение", component: ApproveScreen },
     ];
 
     return (

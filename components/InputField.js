@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, useWindowDimensions } from 'react-native';
 
 
-const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, setText, value }) => {
+const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, setText, value, disabled = false }) => {
     const { width: screenWidth, height: screenHeight } = useWindowDimensions();
     const textSize = screenHeight * .02;
 
@@ -16,10 +16,11 @@ const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, set
     };
 
     const propertyStyle = [styles.property, { color: colorScheme.light, fontSize: screenHeight * 0.0125 }];
-    const inputStyle = [styles.text, { 
-        color: colorScheme.light, fontSize: textSize, 
+    const inputStyle = [styles.text, {
+        color: colorScheme.light, fontSize: textSize,
         includeFontPadding: false, padding: 0, margin: 0,
-        height: textSize * 2
+        flex: 1,
+        opacity: disabled ? .3 : 1,
     }];
 
     const [focused, setFocused] = useState(false);
@@ -31,9 +32,10 @@ const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, set
             paddingVertical: textSize * .5,
             borderRadius: textSize,
             marginBottom: textSize * .5,
-            flex: 1,
+            height: textSize * 4,
+            flex: 1
         }}>
-            <Text style={propertyStyle}>{name}</Text>
+            <Text style={[propertyStyle, { display: value ? 'flex' : 'none' }]}>{name}</Text>
             <TextInput
                 style={inputStyle}
                 placeholderTextColor={colorScheme.lightGray}
@@ -47,6 +49,7 @@ const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, set
                 underlineColorAndroid="transparent"
                 inputMode={inputMode}
                 secureTextEntry={secureTextEntry}
+                disabled={disabled}
             />
         </View>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from "react-redux";
 
 import { useResponsiveSizes } from './hooks/useResponsiveSizes';
@@ -13,6 +13,7 @@ import EventStatus from './EventStatus';
 import { UserImage } from './UserCard';
 
 const SpaceInfo = () => {
+    const navigation = useNavigation();
     const route = useRoute();
     const data = useSelector(state => state.data);
     const sizes = useResponsiveSizes();
@@ -38,7 +39,7 @@ const SpaceInfo = () => {
     const textStyle = [styles.text, { color: colorScheme.light, marginHorizontal: 5, fontSize: sizes.textSize }];
     return (
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
-            <Text style={[styles.title, { color: colorScheme.light, fontSize: sizes.titleSize }]}>{spaceData.title}</Text>
+            <Text style={[styles.title, { color: colorScheme.light, fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>{spaceData.title}</Text>
             {/* Вместимость */}
             <View style={[styles.rowContainer, { display: spaceData.quantity ? "flex" : "none" }]}>
                 <Text style={propertyStyle}>Вместимость:</Text>
@@ -101,9 +102,9 @@ const SpaceInfo = () => {
                         <UserImage key={i} photoUrl={item.photo} customStyle={i > 0 ? { marginLeft: -sizes.textSize } : {}} />
                     )}
                 </View>
-                {route.name != "Config" && eventData.status === "reserved" ?
+                {route.name != "Approve" && eventData.status === "reserved" ?
                     <Button
-                        title="Подтвердить" onPress={() => navigation.navigate('Config')}
+                        title="Подтвердить" onPress={() => navigation.navigate('Approve')}
                     />
                     :
                     <EventStatus text={statusName[eventData.status]} icon={eventData.status} />

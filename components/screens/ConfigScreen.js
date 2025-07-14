@@ -62,9 +62,9 @@ const ConfigScreen = ({ navigation }) => {
       leftContent={<SpaceInfo />}
       rightContent={
         <>
-          <BackButton navigation={navigation} />
+          <BackButton />
           <View style={{ marginTop: topOffset, flex: 1 }}>
-            <Text style={[styles.title, { color: colorScheme.light, fontSize: titleSize }]}>Конфигурация:</Text>
+            <Text style={[styles.title, { color: colorScheme.light, fontSize: titleSize, marginBottom: titleSize }]}>Конфигурация:</Text>
             <ScrollView>
               {/* ANIMA API */}
               <View style={styles.rowContainer}>
@@ -98,16 +98,20 @@ const ConfigScreen = ({ navigation }) => {
                   setText={value => setFormData({ ...formData, password: value })}
                 />
               </View>
-              <InputField name="Идентификатор объекта бронирования" placeholder="1" inputMode="numeric"
-                value={formData.id}
-                setText={value => setFormData({ ...formData, id: value })}
-              />
+              <View style={styles.rowContainer}>
+                <InputField name="Идентификатор объекта бронирования" placeholder="1" inputMode="numeric"
+                  value={formData.id}
+                  setText={value => setFormData({ ...formData, id: value })}
+                />
+              </View>
               {/* QBIC API */}
               <Text style={[styles.title, { color: colorScheme.light, fontSize: titleSize * .5, marginBottom: 0 }]}>Конфигурация api QBic:</Text>
-              <InputField name="Хост" placeholder="127.0.0.1" inputMode="text"
-                value={formData.qbic_hostname}
-                setText={value => setFormData({ ...formData, qbic_hostname: value })}
-              />
+              <View style={styles.rowContainer}>
+                <InputField name="Хост" placeholder="127.0.0.1" inputMode="text"
+                  value={formData.qbic_hostname}
+                  setText={value => setFormData({ ...formData, qbic_hostname: value })}
+                />
+              </View>
               <View style={styles.rowContainer}>
                 <InputField name="Логин" placeholder="user@mail.ru" inputMode="text"
                   value={formData.qbic_login}

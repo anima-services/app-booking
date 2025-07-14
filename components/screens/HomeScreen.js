@@ -27,8 +27,8 @@ const HomeScreen = ({ navigation }) => {
   return (
     <Pressable style={styles.content} onPress={handlePress}>
       <ColumnScreen
-        leftContent={<SpaceInfo />}
-        rightContent={<Schedule />}
+        leftContent={<SpaceInfo navigation={navigation}/>}
+        rightContent={<Schedule navigation={navigation}/>}
       />
     </Pressable>
   );

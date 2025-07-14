@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSelector } from "react-redux";
+import { useNavigation } from '@react-navigation/native';
 
 import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 import { useEventData } from './hooks/useEventData';
@@ -13,8 +14,10 @@ const Schedule = () => {
     const time_offset = 5;
     const time_end = 23;
 
+    const navigation = useNavigation();
     const data = useSelector(state => state.data);
     const sizes = useResponsiveSizes();
+
     const eventData = useEventData(data);
     const [timePeriod, setTimePeriod] = useState(0);
     const [now, setNow] = useState(new Date());
@@ -25,6 +28,7 @@ const Schedule = () => {
             _endDate.setHours(time_end, 0, 0);
             return countBubbles(preset, _date, _endDate);
         }));
+    const [selectedIndex, setSelectedIndex] = useState(null);
 
     useEffect(() => {
         const timer = setInterval(() => setNow(new Date()), 1000);
@@ -52,8 +56,8 @@ const Schedule = () => {
             if (_timeUntilStart > 15)
                 _table.push({
                     text: `${format_hh_mm(_date)} - ${format_hh_mm(_dateEnd)}`,
-                    start: _date,
-                    end: _dateEnd,
+                    start: _date, end: _dateEnd,
+                    format_start: format_hh_mm(_date), format_end: format_hh_mm(_dateEnd),
                     title: event.topic, dsc: `Организатор: ${eventData.host_fullname}`, disabled: true
 
                 });
@@ -84,8 +88,8 @@ const Schedule = () => {
                 if (_intervalStart > _date) {
                     _bubbleArray.push({
                         text: `${format_hh_mm(_intervalStart)} - ${format_hh_mm(_intervalEnd)}`,
-                        start: _intervalStart,
-                        end: _intervalEnd,
+                        start: new Date(_intervalStart), end: new Date(_intervalEnd),
+                        format_start: format_hh_mm(_intervalStart), format_end: format_hh_mm(_intervalEnd),
                     });
                 }
 
@@ -112,7 +116,10 @@ const Schedule = () => {
             }]}>
                 {time_presets.map((item, i) => (
                     <Tab key={i} text={`На ${[item]} мин`}
-                        selected={timePeriod === i} select={() => setTimePeriod(i)}
+                        selected={timePeriod === i} select={() => {
+                            setTimePeriod(i);
+                            setSelectedIndex(null)
+                        }}
                     />
                 ))}
             </View>
@@ -126,7 +133,8 @@ const Schedule = () => {
                     title={[eventData.topic]}
                     dsc={`Организатор: ${eventData.host_fullname}`}
                     status={[eventData.status]}
-                    selected={true}
+                    selected={selectedIndex === null}
+                    select={() => { setSelectedIndex(null) }}
                     isCurrent={eventData.isCurrent}
                     timeLeft={eventData.timeUntilStart}
                 />
@@ -143,14 +151,14 @@ const Schedule = () => {
             <ScrollView
                 contentContainerStyle={{
                     rowGap: sizes.textSize * .5,
-                    paddingBottom: sizes.textSize*10
+                    paddingBottom: sizes.textSize * 10
                 }}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
             >
                 {timeSchedule[timePeriod].map((item, i) => (
                     <Bubble key={i} text={item.text} title={item.title} dsc={item.dsc} disabled={item.disabled}
-                        select={() => console.log(eventData)}
+                        selected={i === selectedIndex} select={() => setSelectedIndex(i === selectedIndex ? null : i)}
                     />
                 ))}
             </ScrollView>
@@ -167,8 +175,19 @@ const Schedule = () => {
                 }}
             />
 
-            {/* Booking or approve button */}
-            <BookBtn text={"placeholder"} disabled={false} />
+            {/* Booking and approve button */}
+            <BookBtn
+                style={{ display: true ? "flex" : "none" }}
+                text={"Забронировать"}
+                disabled={selectedIndex === null}
+                onPress={() => navigation.navigate('Book', {
+                    timeStart: timeSchedule[timePeriod][selectedIndex].start,
+                    timeEnd: timeSchedule[timePeriod][selectedIndex].end,
+                    formatStart: timeSchedule[timePeriod][selectedIndex].format_start,
+                    formatEnd: timeSchedule[timePeriod][selectedIndex].format_end,
+                })}
+            />
+            {/* <BookBtn text={"Подтвердить"} disabled={false} onPress={navigation.navigate('Book')} /> */}
         </>
     );
 };
@@ -186,7 +205,7 @@ const Bubble = ({ text, select, selected, title, dsc, disabled = false, status, 
                     borderRadius: sizes.textSize,
                     justifyContent: "flex-start",
                 }, style]}
-            onPress={select}
+            onPress={!disabled ? select : null}
             disabled={disabled}
         >
             <View style={{ opacity: disabled ? .3 : 1, flex: 1, gap: sizes.textSize * .5 }}>
@@ -244,7 +263,7 @@ const Tab = ({ text, select, selected }) => {
     );
 };
 
-const BookBtn = ({ text, onPress, disabled = false }) => {
+const BookBtn = ({ text, onPress, disabled = false, style }) => {
     const sizes = useResponsiveSizes();
 
     return (
@@ -255,10 +274,10 @@ const BookBtn = ({ text, onPress, disabled = false }) => {
                     borderRadius: sizes.textSize,
                     backgroundColor: disabled ? colorScheme.container : colorScheme.free,
                     position: "absolute",
-                    bottom: sizes.textSize,
+                    bottom: sizes.textSize * 2,
                     left: 0, right: 0,
-                }]}
-            onPress={onPress}
+                }, style]}
+            onPress={!disabled ? onPress : null}
         >
             <Text style={[
                 disabled ? styles.button_text : styles.button_text_selected,

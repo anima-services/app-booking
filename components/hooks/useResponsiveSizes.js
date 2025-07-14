@@ -9,6 +9,8 @@ export const useResponsiveSizes = () => {
     titleSize: height * 0.045,
     subtitleSize: height * 0.0325,
     textSize: height * 0.0225,
+    text_2: height * 0.02,
     subTextSize: height * 0.015,
+    hotizontalGapSize: height * .01
   };
 }; 
