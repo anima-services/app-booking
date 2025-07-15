@@ -35,6 +35,7 @@ const BookScreen = ({ route }) => {
 
   async function sendForm() {
     try {
+      setFormReady(false);
       const response = await createReservation(
         meetinghost.map(item => item.id)[0],
         participants.map(item => item.id),
@@ -43,7 +44,15 @@ const BookScreen = ({ route }) => {
         timeEnd
       );
       console.log(response);
+      navigation.navigate('Results', {
+        success: true,
+        text: "Вы забронировали переговорную, теперь ваше бронирование отобразится в перечне слотов."
+      })
     } catch (e) {
+      navigation.navigate('Results', {
+        success: false,
+        text: "Не удалось забронировать переговорную. Обратитесь к системному администратору."
+      })
       console.error('Ошибка бронирования:', e);
     }
   }
