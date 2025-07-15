@@ -41,6 +41,7 @@ const SpaceInfo = () => {
 
     function approveEvent() {
         navigation.navigate('Approve', {
+            eventId: eventData.id,
             formatStart: format_hh_mm(eventData.start), 
             formatEnd: format_hh_mm(eventData.end), 
             topic: eventData.topic, 

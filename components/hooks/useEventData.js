@@ -5,7 +5,7 @@ export const useEventData = (data) => {
     isCurrent: false, show: false,
     timeUntilEnd: 0, timeUntilStart: 0,
     topic: "", participants_info: [], user_info: [],
-    status: "", host_fullname: "",
+    status: "", host_fullname: "", id: "",
     start: new Date(), end: new Date()
   };
 
@@ -38,6 +38,7 @@ export const useEventData = (data) => {
         participants_info: event.participants_info,
         user_info: event.user_info,
         status: event.status, host_fullname: event.user_info.full_name,
+        id: event.id,
         start: event.start, end: event.end,
       });
     } else {

@@ -10,15 +10,15 @@ import Dropdown from '../Dropdown';
 import Button from '../Button';
 
 import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
-import { createReservation } from '../services/api';
+import { approveReservation } from '../services/api';
 
 import { useSelector, useDispatch } from "react-redux";
 import { setState, updateData } from "../data/DataSlice";
 
-const BookScreen = ({ route }) => {
+const Approve = ({ route }) => {
   const navigation = useNavigation();
 
-  const { formatStart, formatEnd, topic, meetinghost, meetinghostname, participants } = route.params;
+  const { eventId, formatStart, formatEnd, topic, meetinghost, meetinghostname, participants } = route.params;
   const data = useSelector(state => state.data);
   const sizes = useResponsiveSizes();
 
@@ -34,14 +34,10 @@ const BookScreen = ({ route }) => {
   async function sendForm() {
     try {
       setFormReady(false);
-      // const response = await createReservation(
-      //   meetinghost.map(item => item.id)[0],
-      //   participants.map(item => item.id),
-      //   topic,
-      //   timeStart,
-      //   timeEnd
-      // );
-      // console.log(response);
+      const response = await approveReservation(
+        eventId, approvePerson[0].email, pincode
+      );
+      console.log(response);
       navigation.navigate('Results', {
         success: true,
         text: "Вы успешно подтвердили бронирование"
@@ -102,7 +98,7 @@ const BookScreen = ({ route }) => {
               setText={setPincode}
             />
           </View>
-          <Button title="Подтвердить" disabled={!formReady} onPress={sendForm} />
+          <Button title="Подтвердить бронирование" disabled={!formReady} onPress={sendForm} />
         </View>
       </>}
     />
@@ -128,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookScreen;
+export default Approve;
