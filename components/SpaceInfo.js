@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 import { useSpaceData } from './hooks/useSpaceData';
 import { useEventData } from './hooks/useEventData';
+import { format_hh_mm } from './Schedule';
 
 import Button from './Button';
 import EventStatus from './EventStatus';
@@ -37,6 +38,18 @@ const SpaceInfo = () => {
 
     const propertyStyle = [styles.property, { color: colorScheme.light, fontSize: sizes.textSize }];
     const textStyle = [styles.text, { color: colorScheme.light, marginHorizontal: 5, fontSize: sizes.textSize }];
+
+    function approveEvent() {
+        navigation.navigate('Approve', {
+            formatStart: format_hh_mm(eventData.start), 
+            formatEnd: format_hh_mm(eventData.end), 
+            topic: eventData.topic, 
+            meetinghost: [eventData.user_info], 
+            meetinghostname: eventData.host_fullname,
+            participants: eventData.participants_info
+        });
+    }
+
     return (
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
             <Text style={[styles.title, { color: colorScheme.light, fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>{spaceData.title}</Text>
@@ -104,7 +117,7 @@ const SpaceInfo = () => {
                 </View>
                 {route.name != "Approve" && eventData.status === "reserved" ?
                     <Button
-                        title="Подтвердить" onPress={() => navigation.navigate('Approve')}
+                        title="Подтвердить" onPress={approveEvent}
                     />
                     :
                     <EventStatus text={statusName[eventData.status]} icon={eventData.status} />

@@ -1,0 +1,131 @@
+import { useState, useEffect } from 'react';
+import { StyleSheet, Pressable, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+import ColumnScreen from '../ColumnScreen';
+import SpaceInfo from '../SpaceInfo';
+import BackButton from '../BackButton';
+import InputField from '../InputField';
+import Dropdown from '../Dropdown';
+import Button from '../Button';
+
+import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
+import { createReservation } from '../services/api';
+
+import { useSelector, useDispatch } from "react-redux";
+import { setState, updateData } from "../data/DataSlice";
+
+const BookScreen = ({ route }) => {
+  const navigation = useNavigation();
+
+  const { formatStart, formatEnd, topic, meetinghost, meetinghostname, participants } = route.params;
+  const data = useSelector(state => state.data);
+  const sizes = useResponsiveSizes();
+
+  const [approvePerson, setApprovePerson] = useState([]);
+  const [pincode, setPincode] = useState("");
+  const [formReady, setFormReady] = useState(false);
+
+  useEffect(() => {
+    setFormReady(pincode &&
+      Array.isArray(approvePerson) && approvePerson.length > 0);
+  }, [approvePerson]);
+
+  async function sendForm() {
+    try {
+      setFormReady(false);
+      // const response = await createReservation(
+      //   meetinghost.map(item => item.id)[0],
+      //   participants.map(item => item.id),
+      //   topic,
+      //   timeStart,
+      //   timeEnd
+      // );
+      // console.log(response);
+      navigation.navigate('Results', {
+        success: true,
+        text: "Вы успешно подтвердили бронирование"
+      })
+    } catch (e) {
+      navigation.navigate('Results', {
+        success: false,
+        text: "Не удалось подтвердить бронирование. Обратитесь к системному администратору."
+      })
+      console.error('Ошибка бронирования:', e);
+    }
+  }
+
+  return (
+    <ColumnScreen
+      leftContent={<SpaceInfo />}
+      rightContent={<>
+        <BackButton />
+        <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
+          <Text style={[styles.title, {
+            fontSize: sizes.titleSize,
+            marginBottom: sizes.titleSize
+          }]}>Подтверждение:</Text>
+          {/* Начало и окончание */}
+          <View style={styles.rowContainer}>
+            <InputField name="Начало" placeholder="00:00" inputMode="text"
+              value={formatStart} disabled={true}
+            />
+            <View style={{ width: sizes.hotizontalGapSize }} />
+            <InputField name="Окончание" placeholder="00:00" inputMode="text"
+              value={formatEnd} disabled={true}
+            />
+          </View>
+          {/* Тема */}
+          <View style={styles.rowContainer}>
+            <InputField name="Название встречи" placeholder="Название встречи" inputMode="text"
+              value={topic} disabled={true}
+            />
+            <View style={{ width: sizes.hotizontalGapSize }} />
+            <InputField name="Организатор" placeholder="Организатор" inputMode="text"
+              value={meetinghostname} disabled={true}
+            />
+          </View>
+          <Dropdown
+            name="Участники"
+            data={participants}
+            placeholder="Введите ФИО или почту"
+            pictureTag="photo"
+            textTag="full_name"
+            attributeTag="email"
+            maxItems={1}
+            onSelect={setApprovePerson}
+          />
+          {/* Пинкод */}
+          <View style={styles.rowContainer}>
+            <InputField name="Пинкод" placeholder="Введите ваш пинкод для подтверждения личности*" inputMode="text" secureTextEntry
+              value={pincode}
+              setText={setPincode}
+            />
+          </View>
+          <Button title="Подтвердить" disabled={!formReady} onPress={sendForm} />
+        </View>
+      </>}
+    />
+  );
+};
+
+const colorScheme = {
+  dark: "#181818",
+  light: "#FFFFFF",
+  free: "#71EB8C",
+  busy: "#FF6567",
+  container: "#2F2F2F",
+};
+
+const styles = StyleSheet.create({
+  title: {
+    fontFamily: "Onest_600SemiBold",
+    color: colorScheme.light,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    width: '100%',
+  },
+});
+
+export default BookScreen;

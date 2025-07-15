@@ -10,7 +10,7 @@ import Background from "./components/Background";
 import HomeScreen from "./components/screens/HomeScreen";
 import ConfigScreen from "./components/screens/ConfigScreen";
 import BookScreen from "./components/screens/BookScreen";
-import ApproveScreen from "./components/screens/ApproveScreen";
+import Approve from "./components/screens/Approve.screen";
 import Results from "./components/screens/Results.screen";
 
 import MainApp from "./components/services/MainApp.services";
@@ -28,7 +28,7 @@ export default function App() {
         { name: "Home", title: "Главная", component: HomeScreen },
         { name: "Config", title: "Конфигурация", component: ConfigScreen },
         { name: "Book", title: "Бронирование", component: BookScreen },
-        { name: "Approve", title: "Подтверждение", component: ApproveScreen },
+        { name: "Approve", title: "Подтверждение", component: Approve },
         { name: "Results", title: "Результат", component: Results },
     ];
 

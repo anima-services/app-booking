@@ -98,15 +98,6 @@ const Schedule = () => {
         return _bubbleArray;
     }
 
-    function format_hh_mm(in_date) {
-        const formattedTime = new Intl.DateTimeFormat('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        }).format(new Date(in_date));
-        return formattedTime;
-    }
-
     return (
         <>
             {/* Tabs */}
@@ -325,5 +316,14 @@ const styles = StyleSheet.create({
         color: colorScheme.container,
     },
 });
+
+export function format_hh_mm(in_date) {
+    const formattedTime = new Intl.DateTimeFormat('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    }).format(new Date(in_date));
+    return formattedTime;
+}
 
 export default Schedule;

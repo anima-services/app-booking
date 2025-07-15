@@ -4,7 +4,7 @@ export const useEventData = (data) => {
   const defaultEvent = {
     isCurrent: false, show: false,
     timeUntilEnd: 0, timeUntilStart: 0,
-    topic: "", participants_info: [],
+    topic: "", participants_info: [], user_info: [],
     status: "", host_fullname: "",
     start: new Date(), end: new Date()
   };
@@ -34,7 +34,9 @@ export const useEventData = (data) => {
       setEventData({
         isCurrent, show: true,
         timeUntilEnd, timeUntilStart,
-        topic: event.topic, participants_info: event.participants_info,
+        topic: event.topic, 
+        participants_info: event.participants_info,
+        user_info: event.user_info,
         status: event.status, host_fullname: event.user_info.full_name,
         start: event.start, end: event.end,
       });
