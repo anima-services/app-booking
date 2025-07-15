@@ -7,8 +7,10 @@ import SpaceInfo from '../SpaceInfo';
 import BackButton from '../BackButton';
 import InputField from '../InputField';
 import Dropdown from '../Dropdown';
+import Button from '../Button';
 
 import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
+import { createReservation } from '../services/api';
 
 import { useSelector, useDispatch } from "react-redux";
 import { setState, updateData } from "../data/DataSlice";
@@ -19,6 +21,32 @@ const BookScreen = ({ route }) => {
   const { timeStart, timeEnd, formatStart, formatEnd } = route.params;
   const data = useSelector(state => state.data);
   const sizes = useResponsiveSizes();
+
+  const [topic, setTopic] = useState("");
+  const [meetinghost, setMeetinghost] = useState([]);
+  const [participants, setParticipants] = useState([]);
+  const [formReady, setFormReady] = useState(false);
+
+  useEffect(() => {
+    setFormReady(topic &&
+      Array.isArray(meetinghost) && meetinghost.length > 0 &&
+      Array.isArray(participants) && participants.length > 0);
+  }, [topic, meetinghost, participants]);
+
+  async function sendForm() {
+    try {
+      const response = await createReservation(
+        meetinghost.map(item => item.id)[0],
+        participants.map(item => item.id),
+        topic,
+        timeStart,
+        timeEnd
+      );
+      console.log(response);
+    } catch (e) {
+      console.error('Ошибка бронирования:', e);
+    }
+  }
 
   return (
     <ColumnScreen
@@ -37,12 +65,11 @@ const BookScreen = ({ route }) => {
               value={formatEnd} disabled={true}
             />
           </View>
-
           {/* Тема */}
           <View style={styles.rowContainer}>
             <InputField name="Название встречи" placeholder="Название встречи*" inputMode="text"
-              value={null}
-              setText={null}
+              value={topic}
+              setText={setTopic}
             />
           </View>
           <Dropdown
@@ -52,6 +79,7 @@ const BookScreen = ({ route }) => {
             pictureTag="photo"
             textTag="full_name"
             attributeTag="email"
+            onSelect={setMeetinghost}
           />
           <Dropdown
             name="Участники"
@@ -61,14 +89,16 @@ const BookScreen = ({ route }) => {
             textTag="full_name"
             attributeTag="email"
             maxItems={15}
+            onSelect={setParticipants}
           />
           {/* Пинкод */}
-          <View style={styles.rowContainer}>
-            <InputField name="Пинкод" placeholder="Введите ваш пинкод для подтверждения личности*" inputMode="text"
+          {/* <View style={styles.rowContainer}>
+            <InputField name="Пинкод" placeholder="Введите ваш пинкод для подтверждения личности*" inputMode="text" secureTextEntry
               value={null}
               setText={null}
             />
-          </View>
+          </View> */}
+          <Button title="Забронировать" disabled={!formReady} onPress={sendForm} />
         </View>
       </>}
     />

@@ -10,11 +10,15 @@ const Button = ({ title, disabled = false, onPress }) => {
             style={[styles.button, {
                 padding: textSize * .8,
                 borderRadius: borderRadius,
-                marginVertical: textSize * .5
+                marginVertical: textSize * .5,
+                backgroundColor: disabled ? colorScheme.container : colorScheme.free,
             }]}
-            onPress={onPress}
+            onPress={!disabled ? onPress : null}
         >
-            <Text style={[styles.buttonText, { fontSize: textSize }]}>{title}</Text>
+            <Text style={[styles.buttonText, {
+                fontSize: textSize, opacity: disabled ? .3 : 1,
+                color: disabled ? colorScheme.light : colorScheme.dark
+            }]}>{title}</Text>
         </TouchableOpacity>
     );
 };
@@ -29,13 +33,11 @@ const colorScheme = {
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: colorScheme.free,
         alignItems: 'center',
         justifyContent: 'center',
     },
     buttonText: {
         fontFamily: 'Onest_500Medium',
-        color: colorScheme.dark,
     },
 });
 

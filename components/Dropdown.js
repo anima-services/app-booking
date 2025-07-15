@@ -6,7 +6,7 @@ import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 
 import { UserImage } from "./UserCard";
 
-const Dropdown = ({ name, data, placeholder, pictureTag, textTag, attributeTag, maxItems = 1 }) => {
+const Dropdown = ({ name, data, placeholder, pictureTag, textTag, attributeTag, maxItems = 1, onSelect }) => {
     const sizes = useResponsiveSizes();
     const [focused, setFocused] = useState(false);
     const [text, setText] = useState("");
@@ -27,6 +27,10 @@ const Dropdown = ({ name, data, placeholder, pictureTag, textTag, attributeTag, 
             setShowList(true);
         }
     };
+
+    useEffect(() => {
+        onSelect(selected.map((item) => data[item]));
+    }, [selected]);
 
     useEffect(() => {
         setList(data.filter((item, i) => {
