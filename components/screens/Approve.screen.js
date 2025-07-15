@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Pressable, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import ColumnScreen from '../ColumnScreen';
@@ -12,14 +12,11 @@ import Button from '../Button';
 import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
 import { approveReservation } from '../services/api';
 
-import { useSelector, useDispatch } from "react-redux";
-import { setState, updateData } from "../data/DataSlice";
-
 const Approve = ({ route }) => {
   const navigation = useNavigation();
 
   const { eventId, formatStart, formatEnd, topic, meetinghost, meetinghostname, participants } = route.params;
-  const data = useSelector(state => state.data);
+
   const sizes = useResponsiveSizes();
 
   const [approvePerson, setApprovePerson] = useState([]);
@@ -29,7 +26,7 @@ const Approve = ({ route }) => {
   useEffect(() => {
     setFormReady(pincode &&
       Array.isArray(approvePerson) && approvePerson.length > 0);
-  }, [approvePerson]);
+  }, [pincode, approvePerson]);
 
   async function sendForm() {
     try {
@@ -83,7 +80,7 @@ const Approve = ({ route }) => {
           </View>
           <Dropdown
             name="Участники"
-            data={participants}
+            data={[...meetinghost, ...participants]}
             placeholder="Введите ФИО или почту"
             pictureTag="photo"
             textTag="full_name"
