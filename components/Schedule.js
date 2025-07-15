@@ -58,7 +58,7 @@ const Schedule = () => {
                     text: `${format_hh_mm(_date)} - ${format_hh_mm(_dateEnd)}`,
                     start: _date, end: _dateEnd,
                     format_start: format_hh_mm(_date), format_end: format_hh_mm(_dateEnd),
-                    title: event.topic, dsc: `Организатор: ${eventData.host_fullname}`, disabled: true
+                    title: event.topic, dsc: `Организатор: ${event.host_fullname}`, disabled: true
 
                 });
             _date = new Date(event.end);

@@ -26,6 +26,7 @@ const Dropdown = ({ name, data, placeholder, pictureTag, textTag, attributeTag, 
         } else {
             setShowList(true);
         }
+        setText("");
     };
 
     useEffect(() => {
@@ -59,7 +60,9 @@ const Dropdown = ({ name, data, placeholder, pictureTag, textTag, attributeTag, 
                 if (prev.length >= maxItems) {
                     return [...prev.slice(1), index];
                 } else {
-                    return [...prev, index];
+                    const _array = [...prev, index];
+                    if (_array.length === maxItems) setShowList(false);
+                    return _array;
                 }
             }
         });
