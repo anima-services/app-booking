@@ -10,7 +10,7 @@ import Button from "../Button";
 import { useSelector, useDispatch } from "react-redux";
 import { setState, setLogs } from "../data/DataSlice";
 
-const ConfigScreen = ({ navigation }) => {
+const Config = ({ navigation }) => {
   const data = useSelector(state => state.data);
   const dispatch = useDispatch();
 
@@ -67,8 +67,8 @@ const ConfigScreen = ({ navigation }) => {
             <Text style={[styles.title, { color: colorScheme.light, fontSize: titleSize, marginBottom: titleSize }]}>Конфигурация:</Text>
             <ScrollView>
               {/* ANIMA API */}
-              <View style={styles.rowContainer}>
-                <InputField name="Префикс хоста" placeholder="https://" inputMode="text"
+              <View style={[styles.rowContainer, { gap: gapSize }]}>
+                <InputField name="Префикс хоста (https://)" placeholder="Префикс хоста" inputMode="text"
                   value={formData.hostname_prefix}
                   setText={value => setFormData({
                     ...formData,
@@ -76,8 +76,8 @@ const ConfigScreen = ({ navigation }) => {
                     hostname: value + formData.hostname_main
                   })}
                 />
-                <View style={{ width: gapSize }} />
-                <InputField name="Хост" placeholder="127.0.0.1" inputMode="text"
+
+                <InputField name="Хост (127.0.0.1)" placeholder="Хост" inputMode="text"
                   value={formData.hostname_main}
                   setText={value =>
                     setFormData({
@@ -87,44 +87,46 @@ const ConfigScreen = ({ navigation }) => {
                     })}
                 />
               </View>
-              <View style={styles.rowContainer}>
-                <InputField name="Логин внешнего админа" placeholder="user@mail.ru" inputMode="text"
+              <View style={[styles.rowContainer, { gap: gapSize }]}>
+                <InputField name="Логин внешнего админа" placeholder="Логин внешнего админа" inputMode="text"
                   value={formData.login}
                   setText={value => setFormData({ ...formData, login: value })}
                 />
-                <View style={{ width: gapSize }} />
-                <InputField name="Пароль внешнего админа" placeholder="12345678" inputMode="text" secureTextEntry
+
+                <InputField name="Пароль внешнего админа" placeholder="Пароль внешнего админа" inputMode="text" secureTextEntry
                   value={formData.password}
                   setText={value => setFormData({ ...formData, password: value })}
                 />
               </View>
-              <View style={styles.rowContainer}>
-                <InputField name="Идентификатор объекта бронирования" placeholder="1" inputMode="numeric"
+              <View style={[styles.rowContainer, { gap: gapSize }]}>
+                <InputField name="Идентификатор объекта бронирования" placeholder="Идентификатор объекта бронирования" inputMode="numeric"
                   value={formData.id}
                   setText={value => setFormData({ ...formData, id: value })}
                 />
               </View>
               {/* QBIC API */}
               <Text style={[styles.title, { color: colorScheme.light, fontSize: titleSize * .5, marginBottom: 0 }]}>Конфигурация api QBic:</Text>
-              <View style={styles.rowContainer}>
-                <InputField name="Хост" placeholder="127.0.0.1" inputMode="text"
+              <View style={[styles.rowContainer, { gap: gapSize }]}>
+                <InputField name="Хост (127.0.0.1)" placeholder="Хост" inputMode="text"
                   value={formData.qbic_hostname}
                   setText={value => setFormData({ ...formData, qbic_hostname: value })}
                 />
               </View>
-              <View style={styles.rowContainer}>
-                <InputField name="Логин" placeholder="user@mail.ru" inputMode="text"
+              <View style={[styles.rowContainer, { gap: gapSize }]}>
+                <InputField name="Логин" placeholder="Логин" inputMode="text"
                   value={formData.qbic_login}
                   setText={value => setFormData({ ...formData, qbic_login: value })}
                 />
-                <View style={{ width: gapSize }} />
-                <InputField name="Пароль" placeholder="12345678" inputMode="text" secureTextEntry
+
+                <InputField name="Пароль" placeholder="Пароль" inputMode="text" secureTextEntry
                   value={formData.qbic_password}
                   setText={value => setFormData({ ...formData, qbic_password: value })}
                 />
               </View>
-              <Button title="Применить настройки" onPress={handleSave} />
-              <Button title="Логи приложения" onPress={() => navigation.navigate('Logs')} />
+              <View style={[styles.rowContainer, { gap: gapSize }]}>
+                <Button title="Применить настройки" onPress={handleSave} style={{ flex: 1 }} />
+                <Button title="Логи приложения" onPress={() => navigation.navigate('Logs')} style={{ flex: 1 }} />
+              </View>
             </ScrollView>
           </View>
         </>
@@ -144,4 +146,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ConfigScreen;
+export default Config;

@@ -15,7 +15,7 @@ import { createReservation } from '../services/api';
 import { useSelector, useDispatch } from "react-redux";
 import { setLogs } from "../data/DataSlice";
 
-const BookScreen = ({ route }) => {
+const Book = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -134,4 +134,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookScreen;
+export default Book;

@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { View, StatusBar, Text } from 'react-native';
+import React, { useState } from "react";
+import { Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { useEventData } from "./components/hooks/useEventData";
-
 import { fontsLoaded } from "./components/StaticImports";
 import Background from "./components/Background";
 
-import HomeScreen from "./components/screens/HomeScreen";
-import ConfigScreen from "./components/screens/ConfigScreen";
-import BookScreen from "./components/screens/BookScreen";
+import Home from "./components/screens/Home.screen";
+import Config from "./components/screens/Config.screen";
+import Book from "./components/screens/Book.screen";
 import Approve from "./components/screens/Approve.screen";
 import Results from "./components/screens/Results.screen";
 import Logs from "./components/screens/Logs.screen";
@@ -19,7 +17,7 @@ import Logs from "./components/screens/Logs.screen";
 import MainApp from "./components/services/MainApp.services";
 import QBicHandler from "./components/services/qbic.services";
 
-import { Provider, useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
 import { Store } from './components/data/Store';
 import DataManager from "./components/data/DataManager";
 import BusyListener from "./components/BusyListener";
@@ -30,9 +28,9 @@ export default function App() {
     let checkFonts = fontsLoaded();
 
     const screens = [
-        { name: "Home", title: "Главная", component: HomeScreen },
-        { name: "Config", title: "Конфигурация", component: ConfigScreen },
-        { name: "Book", title: "Бронирование", component: BookScreen },
+        { name: "Home", title: "Главная", component: Home },
+        { name: "Config", title: "Конфигурация", component: Config },
+        { name: "Book", title: "Бронирование", component: Book },
         { name: "Approve", title: "Подтверждение", component: Approve },
         { name: "Results", title: "Результат", component: Results },
         { name: "Logs", title: "Результат", component: Logs },

@@ -5,7 +5,7 @@ import ColumnScreen from '../ColumnScreen';
 import SpaceInfo from '../SpaceInfo';
 import Schedule from '../Schedule';
 
-const HomeScreen = ({ navigation }) => {
+const Home = ({ navigation }) => {
   const [clickCount, setClickCount] = useState(0);
   const [lastClickTime, setLastClickTime] = useState(0);
 
@@ -45,4 +45,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default Home;
