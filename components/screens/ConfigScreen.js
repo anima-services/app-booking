@@ -8,7 +8,7 @@ import InputField from '../InputField';
 import Button from "../Button";
 
 import { useSelector, useDispatch } from "react-redux";
-import { setState, updateData } from "../data/DataSlice";
+import { setState, setLogs } from "../data/DataSlice";
 
 const ConfigScreen = ({ navigation }) => {
   const data = useSelector(state => state.data);
@@ -45,12 +45,12 @@ const ConfigScreen = ({ navigation }) => {
       newFormData = { ...newFormData, [`${key}`]: data[key] ?? "" };
     }
     setFormData(newFormData);
-    console.log("Данные загружены!", data);
+    if (dispatch) dispatch(setLogs("Config: Данные загружены!"));
   };
 
   const handleSave = () => {
     dispatch(setState(formData));
-    console.log("Данные сохранены!", formData);
+    if (dispatch) dispatch(setLogs("Config: Данные сохранены!"));
   };
 
   useEffect(() => {
@@ -124,6 +124,7 @@ const ConfigScreen = ({ navigation }) => {
                 />
               </View>
               <Button title="Применить настройки" onPress={handleSave} />
+              <Button title="Логи приложения" onPress={() => navigation.navigate('Logs')} />
             </ScrollView>
           </View>
         </>

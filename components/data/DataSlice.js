@@ -2,7 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export const DataSlice = createSlice({
     name: 'data',
-    initialState: {},
+    initialState: {
+        logs: [],
+    },
     reducers: {
         updateData: (state, action) => {
             try {
@@ -16,8 +18,18 @@ export const DataSlice = createSlice({
                 }
             } catch (e) { console.log("Неудачная попытка обновления данных приложения! (setState)"); }
         },
+        setLogs: (state, action) => {
+            try {
+                const logText = `${new Date().toLocaleString('ru')} >>> ${action.payload}`;
+                state.logs.push(logText);
+                console.log(logText);
+                if (state.logs.length > 100) state.logs.shift();
+            } catch (e) {
+                state.logs = [];
+            }
+        },
     },
 });
 
-export const { setState, updateData } = DataSlice.actions;
+export const { setState, updateData, setLogs } = DataSlice.actions;
 export default DataSlice.reducer;

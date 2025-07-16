@@ -4,6 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { useEventData } from "./components/hooks/useEventData";
+
 import { fontsLoaded } from "./components/StaticImports";
 import Background from "./components/Background";
 
@@ -12,12 +14,15 @@ import ConfigScreen from "./components/screens/ConfigScreen";
 import BookScreen from "./components/screens/BookScreen";
 import Approve from "./components/screens/Approve.screen";
 import Results from "./components/screens/Results.screen";
+import Logs from "./components/screens/Logs.screen";
 
 import MainApp from "./components/services/MainApp.services";
+import QBicHandler from "./components/services/qbic.services";
 
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { Store } from './components/data/Store';
 import DataManager from "./components/data/DataManager";
+import BusyListener from "./components/BusyListener";
 
 const Stack = createStackNavigator();
 
@@ -30,7 +35,10 @@ export default function App() {
         { name: "Book", title: "Бронирование", component: BookScreen },
         { name: "Approve", title: "Подтверждение", component: Approve },
         { name: "Results", title: "Результат", component: Results },
+        { name: "Logs", title: "Результат", component: Logs },
     ];
+
+    const [isBusy, setBusy] = useState(false);
 
     return (
         <Provider store={Store}>{
@@ -39,7 +47,7 @@ export default function App() {
                 <SafeAreaProvider>
                     <NavigationContainer>
                         {/* Фоновый компонент */}
-                        <Background isBusy={false} />
+                        <Background isBusy={isBusy} />
 
                         {/* Навигационный стек поверх фона */}
                         <Stack.Navigator
@@ -56,7 +64,10 @@ export default function App() {
                             />)}
                         </Stack.Navigator>
                     </NavigationContainer>
+                    {/* Services */}
                     <MainApp />
+                    <QBicHandler isBusy={isBusy} />
+                    <BusyListener setBusy={setBusy} />
                 </SafeAreaProvider>
         }
             <DataManager />
