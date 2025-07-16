@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import axios from 'axios';
 import { useDispatch } from "react-redux";
-import { setState } from "../data/DataSlice";
+import { setState, setLogs } from "../data/DataSlice";
 import { Store } from '../data/Store';
 
 // Проверка наличия необходимых данных
@@ -27,7 +27,7 @@ const getToken = async (dispatch) => {
             dispatch(setState({ token: response.data.token }));
             return response.data.token;
         } else {
-            console.log('Не удалось авторизоваться');
+            if (dispatch) dispatch(setLogs('Не удалось авторизоваться'));
             return null;
         }
     } catch (error) {
@@ -43,7 +43,7 @@ const getToken = async (dispatch) => {
             errorMsg += error.message;
         }
         errorMsg += ` | Axios: ${error.toString()}`;
-        console.error(errorMsg);
+        if (dispatch) dispatch(setLogs(errorMsg));
         return null;
     }
 };
@@ -124,7 +124,7 @@ const getData = async (token, dispatch) => {
             errorMsg += error.message;
         }
         errorMsg += ` | Axios: ${error.toString()}`;
-        console.error(errorMsg);
+        if (dispatch) dispatch(setLogs(errorMsg));
     }
 };
 
@@ -139,7 +139,7 @@ const MainApp = () => {
         if (!isMountedRef.current) return;
         const checkResult = checkData();
         if (!checkResult.success) {
-            console.error(checkResult.error);
+            if (dispatch) dispatch(setLogs(checkResult.error.toString()));
             return;
         }
 

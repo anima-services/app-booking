@@ -1,23 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, Text, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
 
 import ColumnScreen from '../ColumnScreen';
 import SpaceInfo from '../SpaceInfo';
 import BackButton from '../BackButton';
-import InputField from '../InputField';
 import Button from "../Button";
 
-import { useSelector, useDispatch } from "react-redux";
-import { setState, updateData } from "../data/DataSlice";
+import { useSelector } from "react-redux";
 
 const Logs = ({ navigation }) => {
     const data = useSelector(state => state.data);
-    const dispatch = useDispatch();
 
     const { width: screenWidth, height: screenHeight } = useWindowDimensions();
     const topOffset = screenHeight * .2;
     const titleSize = screenHeight * .045;
-    const gapSize = screenHeight * .01;
 
     const colorScheme = {
         dark: "#181818",
@@ -26,36 +22,6 @@ const Logs = ({ navigation }) => {
         busy: "#FF6567",
         container: "#2F2F2F",
     };
-
-    const [formData, setFormData] = useState({
-        hostname: "",
-        hostname_main: "",
-        hostname_prefix: "",
-        id: "",
-        login: "",
-        password: "",
-        qbic_hostname: "",
-        qbic_login: "",
-        qbic_password: "",
-    });
-
-    const handleLoad = () => {
-        let newFormData = {};
-        for (var key in formData) {
-            newFormData = { ...newFormData, [`${key}`]: data[key] ?? "" };
-        }
-        setFormData(newFormData);
-        console.log("Данные загружены!", data);
-    };
-
-    const handleSave = () => {
-        dispatch(setState(formData));
-        console.log("Данные сохранены!", formData);
-    };
-
-    useEffect(() => {
-        handleLoad();
-    }, []);
 
     return (
         <ColumnScreen

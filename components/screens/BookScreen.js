@@ -13,10 +13,11 @@ import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
 import { createReservation } from '../services/api';
 
 import { useSelector, useDispatch } from "react-redux";
-import { setState, updateData } from "../data/DataSlice";
+import { setLogs } from "../data/DataSlice";
 
 const BookScreen = ({ route }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const { timeStart, timeEnd, formatStart, formatEnd } = route.params;
   const data = useSelector(state => state.data);
@@ -43,7 +44,6 @@ const BookScreen = ({ route }) => {
         timeStart,
         timeEnd
       );
-      console.log(response);
       navigation.navigate('Results', {
         success: true,
         text: "Вы забронировали переговорную, теперь ваше бронирование отобразится в перечне слотов."
@@ -53,6 +53,7 @@ const BookScreen = ({ route }) => {
         success: false,
         text: "Не удалось забронировать переговорную. Обратитесь к системному администратору."
       })
+      if (dispatch) dispatch(setLogs('Ошибка бронирования: ' + e.toString()));
       console.error('Ошибка бронирования:', e);
     }
   }

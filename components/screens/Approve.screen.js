@@ -12,8 +12,12 @@ import Button from '../Button';
 import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
 import { approveReservation } from '../services/api';
 
+import { setLogs } from '../data/DataSlice';
+import { useDispatch } from "react-redux";
+
 const Approve = ({ route }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const { eventId, formatStart, formatEnd, topic, meetinghost, meetinghostname, participants } = route.params;
 
@@ -34,7 +38,6 @@ const Approve = ({ route }) => {
       const response = await approveReservation(
         eventId, approvePerson[0].email, pincode
       );
-      console.log(response);
       navigation.navigate('Results', {
         success: true,
         text: "Вы успешно подтвердили бронирование"
@@ -44,7 +47,8 @@ const Approve = ({ route }) => {
         success: false,
         text: "Не удалось подтвердить бронирование. Обратитесь к системному администратору."
       })
-      console.error('Ошибка бронирования:', e);
+      if (dispatch) dispatch(setLogs('Ошибка подтверждения: ' + e.toString()));
+      console.error('Ошибка подтверждения:', e);
     }
   }
 
