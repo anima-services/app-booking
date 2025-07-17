@@ -8,10 +8,10 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     env:
       APP_NAME: ${{ github.event.repository.name }}
-
     steps:
       - uses: actions/checkout@v3
 
@@ -21,17 +21,23 @@ jobs:
 
       - run: npm ci
 
-      - run: |
+      - name: Bump version in package.json
+        run: |
           npm version patch --no-git-tag-version
           git config --global user.email "ci@example.com"
           git config --global user.name "CI Bot"
           git add package.json package-lock.json
           git commit -m "chore: bump version [skip ci]" || echo "No changes to commit"
-          git push
 
-      # - run: |
-      #     npm install -g expo-cli
-      #     expo build:android --non-interactive --no-wait
+      - name: Push version bump
+        run: |
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: |
+          npm install -g expo-cli
+          # expo build:android --non-interactive --no-wait
 
       - run: tar czf source.tar.gz .
 
