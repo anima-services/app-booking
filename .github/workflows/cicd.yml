@@ -39,7 +39,8 @@ jobs:
           npm install -g expo-cli
           # expo build:android --non-interactive --no-wait
 
-      - run: tar czf source.tar.gz .
+      - name: Archive source code for deploy
+        run: tar --exclude='.git' --exclude='source.tar.gz' -czf source.tar.gz ./*
 
       - uses: appleboy/scp-action@v0.1.7
         with:
