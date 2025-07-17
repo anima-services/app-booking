@@ -1,0 +1,57 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      APP_NAME: ${{ github.event.repository.name }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - run: npm ci
+
+      - run: |
+          npm version patch --no-git-tag-version
+          git config --global user.email "ci@example.com"
+          git config --global user.name "CI Bot"
+          git add package.json package-lock.json
+          git commit -m "chore: bump version [skip ci]" || echo "No changes to commit"
+          git push
+
+      # - run: |
+      #     npm install -g expo-cli
+      #     expo build:android --non-interactive --no-wait
+
+      - run: tar czf source.tar.gz .
+
+      - uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VDS_HOST }}
+          username: ${{ secrets.VDS_USER }}
+          key: ${{ secrets.VDS_KEY }}
+          source: "source.tar.gz"
+          target: ${{ secrets.VDS_PATH }}
+
+      - uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.VDS_HOST }}
+          username: ${{ secrets.VDS_USER }}
+          key: ${{ secrets.VDS_KEY }}
+          script: |
+            cd ${{ secrets.VDS_PATH }}
+            tar xzf source.tar.gz
+            docker build -t $APP_NAME:latest .
+            docker stop $APP_NAME || true
+            docker rm $APP_NAME || true
+            docker run -d --name $APP_NAME -p 8085:8085 $APP_NAME:latest
