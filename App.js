@@ -39,36 +39,37 @@ export default function App() {
     const [isBusy, setBusy] = useState(false);
 
     return (
-        <Provider store={Store}>{
-            !checkFonts ?
-                <Text>Шрифты загружаются</Text> :
-                <SafeAreaProvider>
-                    <NavigationContainer>
-                        {/* Фоновый компонент */}
-                        <Background isBusy={isBusy} />
-
-                        {/* Навигационный стек поверх фона */}
-                        <Stack.Navigator
-                            screenOptions={{
-                                headerTransparent: true,
-                                headerTitleStyle: { color: 'white' },
-                                headerTintColor: 'white',
-                            }}
-                        >
-                            {screens.map((item, i) => <Stack.Screen key={i}
-                                name={item.name}
-                                component={item.component}
-                                options={{ title: item.title, headerShown: false, cardStyle: { backgroundColor: 'transparent' } }}
-                            />)}
-                        </Stack.Navigator>
-                    </NavigationContainer>
-                    {/* Services */}
-                    <MainApp />
-                    <QBicHandler isBusy={isBusy} />
-                    <BusyListener setBusy={setBusy} />
-                </SafeAreaProvider>
-        }
+        <Provider store={Store}>
             <DataManager />
+            {
+                !checkFonts ?
+                    <Text>Шрифты загружаются</Text> :
+                    <SafeAreaProvider>
+                        <NavigationContainer>
+                            {/* Фоновый компонент */}
+                            <Background isBusy={isBusy} />
+
+                            {/* Навигационный стек поверх фона */}
+                            <Stack.Navigator
+                                screenOptions={{
+                                    headerTransparent: true,
+                                    headerTitleStyle: { color: 'white' },
+                                    headerTintColor: 'white',
+                                }}
+                            >
+                                {screens.map((item, i) => <Stack.Screen key={i}
+                                    name={item.name}
+                                    component={item.component}
+                                    options={{ title: item.title, headerShown: false, cardStyle: { backgroundColor: 'transparent' } }}
+                                />)}
+                            </Stack.Navigator>
+                        </NavigationContainer>
+                        {/* Services */}
+                        <MainApp />
+                        <QBicHandler isBusy={isBusy} />
+                        <BusyListener setBusy={setBusy} />
+                    </SafeAreaProvider>
+            }
         </Provider>
     )
 }

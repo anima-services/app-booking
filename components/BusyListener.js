@@ -8,7 +8,7 @@ export default function BusyListener({ setBusy }) {
 
     useEffect(() => {
         setBusy(isCurrent);
-    }, [isCurrent, setBusy]);
+    }, [isCurrent, data.last_update]);
 
     return null; 
 } 

@@ -20,7 +20,7 @@ const QBicHandler = ({ isBusy = false }) => {
 }
 
 // Получение токена QBic
-export const getQbicToken = async () => {
+export const getQbicToken = async (dispatch) => {
     const data = Store.getState().data;
     const nowTime = Math.floor(Date.now() / 1000);
     if (
@@ -71,11 +71,11 @@ export const getQbicToken = async () => {
 export const setQbicLedColor = async (busy, dispatch) => {
     const data = Store.getState().data;
     const token = await getQbicToken(dispatch);
-    if (!token || data.panel !== 'qbic') return;
+    if (!token) return;
     try {
         const color = busy ? { red: 100, green: 0, blue: 0 } : { red: 0, green: 100, blue: 0 };
         const response = await axios.post(
-            `http://${data.panelHost}:8080/v1/led/front_led`,
+            `http://${data.qbic_hostname}:8080/v1/led/front_led`,
             color,
             {
                 headers: {
