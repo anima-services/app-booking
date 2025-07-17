@@ -1,4 +1,4 @@
-name: CI/CD
+name: Build APK Only
 
 on:
   push:
@@ -6,56 +6,56 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  build-apk:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    env:
-      APP_NAME: ${{ github.event.repository.name }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - run: npm ci
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      - name: Bump version in package.json
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Bump version and push
         run: |
           npm version patch --no-git-tag-version
           git config --global user.email "ci@example.com"
           git config --global user.name "CI Bot"
           git add package.json package-lock.json
           git commit -m "chore: bump version [skip ci]" || echo "No changes to commit"
-
-      - name: Push version bump
-        run: |
           git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
 
-      - name: Archive source code for deploy
-        run: tar --exclude='.git' --exclude='source.tar.gz' -czf source.tar.gz ./*
+      - name: Build APK
+        run: eas build --platform android --non-interactive --output=./builds
 
-      - uses: appleboy/scp-action@v0.1.7
+      - name: Get version from package.json
+        id: get_version
+        run: echo "VERSION=$(node -p \"require('./package.json').version\")" >> $GITHUB_ENV
+
+      - name: Create GitHub Release and upload APK
+        uses: softprops/action-gh-release@v1
         with:
-          host: ${{ secrets.VDS_HOST }}
-          username: ${{ secrets.VDS_USER }}
-          key: ${{ secrets.VDS_KEY }}
-          source: "source.tar.gz"
-          target: ${{ secrets.VDS_PATH }}
-
-      - uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.VDS_HOST }}
-          username: ${{ secrets.VDS_USER }}
-          key: ${{ secrets.VDS_KEY }}
-          script: |
-            cd ${{ secrets.VDS_PATH }}
-            tar xzf source.tar.gz
-            docker build -t ${{ github.event.repository.name }}:latest .
-            docker stop ${{ github.event.repository.name }} || true
-            docker rm ${{ github.event.repository.name }} || true
-            docker run -d --name ${{ github.event.repository.name }} -p 8085:8085 ${{ github.event.repository.name }}:latest
+          tag_name: v${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
+          files: ./builds/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
