@@ -7,6 +7,8 @@ import BackButton from '../BackButton';
 import InputField from '../InputField';
 import Button from "../Button";
 
+import AppUpdate from "../services/appUpdater.services";
+
 import { useSelector, useDispatch } from "react-redux";
 import { setState, setLogs } from "../data/DataSlice";
 
@@ -127,6 +129,12 @@ const Config = ({ navigation }) => {
                 <Button title="Применить настройки" onPress={handleSave} style={{ flex: 1 }} />
                 <Button title="Логи приложения" onPress={() => navigation.navigate('Logs')} style={{ flex: 1 }} />
               </View>
+              <Text style={[styles.title, {
+                color: colorScheme.light,
+                fontSize: titleSize * .5,
+                marginBottom: 0
+              }]}>Обновление:</Text>
+              <AppUpdate />
             </ScrollView>
           </View>
         </>
