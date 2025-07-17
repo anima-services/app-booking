@@ -35,9 +35,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: |
-          npm install -g expo-cli
-          # expo build:android --non-interactive --no-wait
 
       - name: Archive source code for deploy
         run: tar --exclude='.git' --exclude='source.tar.gz' -czf source.tar.gz ./*
