@@ -60,7 +60,12 @@ export default function App() {
                                 {screens.map((item, i) => <Stack.Screen key={i}
                                     name={item.name}
                                     component={item.component}
-                                    options={{ title: item.title, headerShown: false, cardStyle: { backgroundColor: 'transparent' } }}
+                                    options={{
+                                        title: item.title,
+                                        headerShown: false,
+                                        cardStyle: { backgroundColor: 'transparent' },
+                                        animation: 'scale_from_center',
+                                    }}
                                 />)}
                             </Stack.Navigator>
                         </NavigationContainer>
