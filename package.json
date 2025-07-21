@@ -7,7 +7,9 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "build": "expo build -p android",
+    "build": "npx eas build --platform android --local --profile preview",
+    "rename:apk": "node scripts/rename-apk.js",
+    "build:apk:local": "npm run build && npm run rename:apk",
     "postinstall": "patch-package"
   },
   "rnpm": {
@@ -49,7 +51,7 @@
     "react-native-calendar-timetable": "^1.0.6",
     "react-native-modal-datetime-picker": "^17.1.0",
     "react-native-reanimated": "~3.6.2",
-    "react-native-safe-area-context": "^5.5.1",
+    "react-native-safe-area-context": "^4.8.0",
     "react-native-svg": "^14.1.0",
     "react-native-system-navigation-bar": "^2.6.4",
     "react-native-web": "~0.19.6",
