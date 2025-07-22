@@ -140,20 +140,24 @@ const Schedule = () => {
             </View>
 
             {/* Bubbles */}
-            <ScrollView
-                contentContainerStyle={{
-                    rowGap: sizes.textSize * .5,
-                    paddingBottom: sizes.textSize * 10
-                }}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-            >
-                {timeSchedule[timePeriod].map((item, i) => (
-                    <Bubble key={i} text={item.text} title={item.title} dsc={item.dsc} disabled={item.disabled}
-                        selected={i === selectedIndex} select={() => setSelectedIndex(i === selectedIndex ? null : i)}
-                    />
-                ))}
-            </ScrollView>
+            {time_presets.map((preset, k) => (
+                <ScrollView
+                    key={k}
+                    style={{ display: timePeriod === k ? 'flex' : 'none' }}
+                    contentContainerStyle={{
+                        rowGap: sizes.textSize * .5,
+                        paddingBottom: sizes.textSize * 10
+                    }}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                >
+                    {timeSchedule[k].map((item, i) => (
+                        <Bubble key={i} text={item.text} title={item.title} dsc={item.dsc} disabled={item.disabled}
+                            selected={i === selectedIndex} select={() => setSelectedIndex(i === selectedIndex ? null : i)}
+                        />
+                    ))}
+                </ScrollView>
+            ))}
 
             {/* Gradient overlay */}
             <LinearGradient
