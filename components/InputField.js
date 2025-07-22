@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Dimensions } from 'react-native';
 
 
 const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, setText, value, disabled = false }) => {
-    const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+    const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
     const textSize = screenHeight * .02;
 
     const colorScheme = {

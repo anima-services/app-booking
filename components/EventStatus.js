@@ -1,8 +1,8 @@
-import { StyleSheet, useWindowDimensions, TouchableOpacity, Text, View } from 'react-native';
+import { StyleSheet, Dimensions, TouchableOpacity, Text, View } from 'react-native';
 import Svg, { Circle, Path, G } from 'react-native-svg';
 
 const EventStatus = ({ text, icon, onPress, style, busyColored = false, isBusy }) => {
-    const { height: screenHeight } = useWindowDimensions();
+    const { height: screenHeight } = Dimensions.get('screen');
     const textSize = screenHeight * .0175;
     const borderRadius = screenHeight * .02;
 

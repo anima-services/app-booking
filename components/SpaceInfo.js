@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from "react-redux";
@@ -16,10 +16,12 @@ import { UserImage } from './UserCard';
 const SpaceInfo = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const data = useSelector(state => state.data);
+    const events_data = useSelector(state => state.data.events_data);
+    const space_data = useSelector(state => state.data.space_data);
+    const space_size = useSelector(state => state.data.space_size);
     const sizes = useResponsiveSizes();
-    const spaceData = useSpaceData(data);
-    const eventData = useEventData(data);
+    const spaceData = useSpaceData(space_data, space_size);
+    const eventData = useEventData(events_data);
 
     const colorScheme = {
         dark: "#181818",
@@ -42,18 +44,24 @@ const SpaceInfo = () => {
     function approveEvent() {
         navigation.navigate('Approve', {
             eventId: eventData.id,
-            formatStart: format_hh_mm(eventData.start), 
-            formatEnd: format_hh_mm(eventData.end), 
-            topic: eventData.topic, 
-            meetinghost: [eventData.user_info], 
+            formatStart: format_hh_mm(eventData.start),
+            formatEnd: format_hh_mm(eventData.end),
+            topic: eventData.topic,
+            meetinghost: [eventData.user_info],
             meetinghostname: eventData.host_fullname,
             participants: eventData.participants_info
         });
     }
 
+    const handlePress = () => {
+        navigation.navigate('Config');
+      };
+
     return (
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
-            <Text style={[styles.title, { color: colorScheme.light, fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>{spaceData.title}</Text>
+            <Pressable style={styles.content} onLongPress={handlePress} delayLongPress={5000}>
+                <Text style={[styles.title, { color: colorScheme.light, fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>{spaceData.title}</Text>
+            </Pressable>
             {/* Вместимость */}
             <View style={[styles.rowContainer, { display: spaceData.quantity ? "flex" : "none" }]}>
                 <Text style={propertyStyle}>Вместимость:</Text>

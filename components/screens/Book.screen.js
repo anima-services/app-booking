@@ -20,7 +20,7 @@ const Book = ({ route }) => {
   const dispatch = useDispatch();
 
   const { timeStart, timeEnd, formatStart, formatEnd } = route.params;
-  const data = useSelector(state => state.data);
+  const users_data = useSelector(state => state.data.users_data);
   const sizes = useResponsiveSizes();
 
   const [topic, setTopic] = useState("");
@@ -84,7 +84,7 @@ const Book = ({ route }) => {
           </View>
           <Dropdown
             name="Организатор"
-            data={data.users_data}
+            data={users_data}
             placeholder="Введите ФИО или почту"
             pictureTag="photo"
             textTag="full_name"
@@ -93,7 +93,7 @@ const Book = ({ route }) => {
           />
           <Dropdown
             name="Участники"
-            data={data.users_data}
+            data={users_data}
             placeholder="Введите ФИО или почту"
             pictureTag="photo"
             textTag="full_name"

@@ -15,10 +15,11 @@ const Schedule = () => {
     const time_end = 23;
 
     const navigation = useNavigation();
-    const data = useSelector(state => state.data);
+    const events_data = useSelector(state => state.data.events_data);
+    const last_update = useSelector(state => state.data.last_update);
     const sizes = useResponsiveSizes();
 
-    const eventData = useEventData(data);
+    const eventData = useEventData(events_data, last_update);
     const [timePeriod, setTimePeriod] = useState(0);
     const [now, setNow] = useState(new Date());
     const [timeSchedule, setSchedule] = useState(
@@ -36,16 +37,16 @@ const Schedule = () => {
     }, []);
 
     useEffect(() => {
-        if (data.events_data && Array.isArray(data.events_data))
+        if (events_data && Array.isArray(events_data))
             setSchedule(time_presets.map(countTable));
-    }, [data.events_data, now]);
+    }, [events_data, now]);
 
     function countTable(preset = 10) {
         let _table = [];
         let _date = new Date();
         let _dateEnd = new Date(_date);
 
-        for (const event of data.events_data) {
+        for (const event of events_data) {
             _dateEnd = new Date(event.start);
             _table.push(...countBubbles(preset, _date, _dateEnd));
 
@@ -99,7 +100,7 @@ const Schedule = () => {
     }
 
     return (
-        <>
+        <View style={{ flex: 1 }}>
             {/* Tabs */}
             <View style={[styles.rowContainer, {
                 gap: sizes.textSize * .5,
@@ -179,7 +180,7 @@ const Schedule = () => {
                 })}
             />
             {/* <BookBtn text={"Подтвердить"} disabled={false} onPress={navigation.navigate('Book')} /> */}
-        </>
+        </View>
     );
 };
 

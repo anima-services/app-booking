@@ -1,7 +1,7 @@
-import { useWindowDimensions } from 'react-native';
+import { Dimensions } from 'react-native';
 
 export const useResponsiveSizes = () => {
-  const { width, height } = useWindowDimensions();
+  const { width, height } = Dimensions.get('screen');
   return {
     topOffset: height * 0.2,
     bottomOffset: height * 0.05,

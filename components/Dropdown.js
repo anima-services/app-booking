@@ -34,6 +34,7 @@ const Dropdown = ({ name, data, placeholder, pictureTag, textTag, attributeTag, 
     }, [selected]);
 
     useEffect(() => {
+        if (!Array.isArray(data)) return;
         setList(data.filter((item, i) => {
             let _text = item[textTag];
             let _picture = item[pictureTag];

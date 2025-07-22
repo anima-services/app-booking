@@ -4,6 +4,9 @@ export const DataSlice = createSlice({
     name: 'data',
     initialState: {
         logs: [],
+        space_size: 15,
+        events_data: [],
+        space_data: {},
     },
     reducers: {
         updateData: (state, action) => {

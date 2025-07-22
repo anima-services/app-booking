@@ -1,7 +1,7 @@
 import {
   View,
   StyleSheet,
-  useWindowDimensions,
+  Dimensions,
   Text,
   Button
 } from 'react-native';
@@ -10,7 +10,7 @@ import Svg, { Path } from 'react-native-svg';
 import CurrentDate from './CurrentDate';
 
 const Background = ({ isBusy }) => {
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
   const marginSize = screenHeight * .01;
 
   const columnWidth = (screenWidth / 2) - marginSize * 1.5;

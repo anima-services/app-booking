@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 
 import ColumnScreen from '../ColumnScreen';
 import SpaceInfo from '../SpaceInfo';
@@ -9,9 +9,9 @@ import Button from "../Button";
 import { useSelector } from "react-redux";
 
 const Logs = ({ navigation }) => {
-    const data = useSelector(state => state.data);
+    const logs = useSelector(state => state.data.logs);
 
-    const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+    const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
     const topOffset = screenHeight * .2;
     const titleSize = screenHeight * .045;
 
@@ -36,7 +36,7 @@ const Logs = ({ navigation }) => {
                             marginBottom: titleSize
                         }]}>Логи приложения:</Text>
                         <ScrollView>
-                            {data.logs.map((item, i) => (
+                            {logs.map((item, i) => (
 
                                 <Text key={i}
                                     style={[styles.text, {

@@ -4,166 +4,291 @@ import { useDispatch } from "react-redux";
 import { setState, setLogs } from "../data/DataSlice";
 import { Store } from '../data/Store';
 
-// Проверка наличия необходимых данных
-const checkData = () => {
-    const currentData = Store.getState().data;
-    if (!currentData.hostname || !currentData.login || !currentData.password)
-        return { success: false, error: "hostname, login или password не установлены!" };
-    if (!currentData.id)
-        return { success: false, error: "id не установлен!" };
-    return { success: true };
+// Проверка наличия и корректности данных
+const validateConfiguration = (data) => {
+    if (!data.hostname || !data.login || !data.password) {
+        return { valid: false, error: `hostname, login или password не установлены!` };
+    }
+    
+    if (!data.id) {
+        return { valid: false, error: "id не установлен!" };
+    }
+    
+    // Проверка формата URL
+    try {
+        new URL(data.hostname);
+    } catch (error) {
+        return { valid: false, error: "Некорректный формат hostname! Должен содержать протокол (http/https)" };
+    }
+    
+    return { valid: true };
 };
 
-// Получение токена
-const getToken = async (dispatch) => {
-    const currentData = Store.getState().data;
+// Обработка сетевых ошибок
+const handleRequestError = (error, context, dispatch) => {
+    let errorMessage = `Ошибка ${context}: `;
+    
+    if (axios.isCancel(error)) {
+        console.log(`Запрос ${context} отменен`);
+        return;
+    }
+
+    if (error.response) {
+        errorMessage += `Статус: ${error.response.status} ${error.response.statusText}`;
+        if (error.response.data) {
+            errorMessage += ` | Данные: ${JSON.stringify(error.response.data)}`;
+        }
+    } else if (error.code === 'ECONNABORTED') {
+        errorMessage += `Таймаут соединения (${error.config?.timeout || 15000}мс)`;
+    } else if (error.request) {
+        errorMessage += 'Сервер не ответил';
+    } else {
+        errorMessage += error.message;
+    }
+
+    console.error(`[${context}] ${errorMessage}`, error);
+    dispatch(setLogs(errorMessage));
+};
+
+// Получение токена аутентификации
+const fetchAuthToken = async (config, dispatch, signal) => {
+    const url = `${config.hostname}/api/user/login/`;
+    dispatch(setLogs(`Получение токена от ${config.hostname}`));
+    
     try {
         const response = await axios.post(
-            `${currentData.hostname}/api/user/login/`,
-            { email: currentData.login, password: currentData.password },
-            { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' } }
+            url,
+            { email: config.login, password: config.password },
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 15000,
+                signal
+            }
         );
-        if (response.data.token) {
-            dispatch(setState({ token: response.data.token }));
-            return response.data.token;
-        } else {
-            if (dispatch) dispatch(setLogs('Не удалось авторизоваться'));
+
+        if (!response.data?.token) {
+            const errorMsg = 'Сервер не вернул токен авторизации';
+            dispatch(setLogs(errorMsg));
             return null;
         }
+
+        dispatch(setState({ token: response.data.token }));
+        dispatch(setLogs(`Токен получен!`));
+        return response.data.token;
     } catch (error) {
-        let errorMsg = 'Ошибка авторизации: ';
-        if (error.response) {
-            errorMsg += `Ответ сервера: ${error.response.status} ${error.response.statusText}`;
-            if (error.response.data && typeof error.response.data === 'object') {
-                errorMsg += ` | ${JSON.stringify(error.response.data)}`;
-            }
-        } else if (error.request) {
-            errorMsg += 'Нет ответа от сервера (network error)';
-        } else {
-            errorMsg += error.message;
-        }
-        errorMsg += ` | Axios: ${error.toString()}`;
-        if (dispatch) dispatch(setLogs(errorMsg));
+        handleRequestError(error, 'авторизации', dispatch);
         return null;
     }
 };
 
-// Получение всех данных
-const getData = async (token, dispatch) => {
-    const currentData = Store.getState().data;
-    try {
-        const api = axios.create({
-            baseURL: currentData.hostname,
-            timeout: 5000,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${token}`,
-            },
-        });
+// Запрос основной информации (редкие обновления)
+const fetchCoreData = async (config, token, dispatch, signal) => {
+    const apiClient = axios.create({
+        baseURL: config.hostname,
+        timeout: 15000,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${token}`,
+        },
+    });
+    dispatch(setLogs(`Получение основных данных от ${config.hostname}`));
 
-        // Space
-        const spaceResponse = await api.get(`/api/space/${currentData.id}/`);
+    try {
+        // Запрос информации о пространстве
+        const spaceResponse = await apiClient.get(
+            `/api/space/${config.id}/`,
+            { signal }
+        );
+        
         if (spaceResponse.data.id != null) {
             dispatch(setState({ space_data: spaceResponse.data }));
+            dispatch(setLogs(`Информация о пространстве получена!`));
         }
 
-        // Space size
+        // Запрос размера пространства
         if (spaceResponse.data.size && Number.isFinite(spaceResponse.data.size)) {
-            const spaceSize = await api.get(`/api/space/space_size/${spaceResponse.data.size}/`);
-            if (spaceSize.data.name != null) {
-                dispatch(setState({ space_size: spaceSize.data.name }));
+            const sizeResponse = await apiClient.get(
+                `/api/space/space_size/${spaceResponse.data.size}/`,
+                { signal }
+            );
+            
+            if (sizeResponse.data.name != null) {
+                dispatch(setState({ space_size: sizeResponse.data.name }));
+                dispatch(setLogs(`Размеры пространства получены!`));
             }
         }
 
-        // Users
-        const usersResponse = await api.get(`/api/user/?limit=255`);
+        // Запрос пользователей
+        const usersResponse = await apiClient.get(
+            '/api/user/?limit=255',
+            { signal }
+        );
+        
         if (usersResponse.data.results != null) {
             dispatch(setState({ users_data: usersResponse.data.results }));
+            dispatch(setLogs(`Пользователи получены!`));
         }
+    } catch (error) {
+        handleRequestError(error, 'получения основных данных', dispatch);
+    }
+};
 
-        // Events
+// Запрос событий (частые обновления)
+const fetchEventsData = async (config, token, dispatch, signal) => {
+    const apiClient = axios.create({
+        baseURL: config.hostname,
+        timeout: 15000,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${token}`,
+        },
+    });
+    dispatch(setLogs(`Получение событий от ${config.hostname}`));
+
+    try {
+        // Запрос событий
         const now = new Date();
         now.setHours(0, 0, 0, 0);
         const tomorrow = new Date(now);
         tomorrow.setDate(now.getDate() + 1);
 
-        const eventsParams = `space=${currentData.id}&start_after=${now.toISOString()}&end_before=${tomorrow.toISOString()}`;
-        const eventsResponse = await api.get(`/api/reservation/?${eventsParams}`);
+        const eventsParams = new URLSearchParams({
+            space: config.id,
+            start_after: now.toISOString(),
+            end_before: tomorrow.toISOString()
+        });
+
+        const eventsResponse = await apiClient.get(
+            `/api/reservation/?${eventsParams}`,
+            { signal }
+        );
+        
         if (eventsResponse.data.results != null) {
-            let _eventList = eventsResponse.data.results;
-            _eventList.sort(function (a, b) {
-                return new Date(a.start) - new Date(b.start);
-            });
+            const filteredEvents = eventsResponse.data.results
+                .filter(item => item.status && 
+                      !["canceled", "automatically_canceled"].includes(item.status))
+                .sort((a, b) => new Date(a.start) - new Date(b.start));
 
-            _eventList = _eventList.filter(item => {
-                if (
-                    !item.status ||
-                    item.status === "canceled" ||
-                    item.status === "automatically_canceled"
-                )
-                    return false;
-                return true;
-            });
-
-            dispatch(setState({ events_data: _eventList }));
+            dispatch(setState({ events_data: filteredEvents }));
+            dispatch(setLogs(`События получены!`));
         }
 
-        // Last update
-        dispatch(setState({ last_update: (new Date()).toISOString() }));
+        // Обновление времени последнего обновления
+        dispatch(setState({ last_update: new Date().toISOString() }));
     } catch (error) {
-        let errorMsg = 'Ошибка при получении данных: ';
-        if (error.response) {
-            errorMsg += `Ответ сервера: ${error.response.status} ${error.response.statusText}`;
-            if (error.response.data && typeof error.response.data === 'object') {
-                errorMsg += ` | ${JSON.stringify(error.response.data)}`;
-            }
-        } else if (error.request) {
-            errorMsg += 'Нет ответа от сервера (network error)';
-        } else {
-            errorMsg += error.message;
-        }
-        errorMsg += ` | Axios: ${error.toString()}`;
-        if (dispatch) dispatch(setLogs(errorMsg));
+        handleRequestError(error, 'получения событий', dispatch);
     }
 };
 
-const REFRESH_INTERVAL = 1000; // ms
+// Интервалы обновления
+const CORE_DATA_REFRESH_INTERVAL = 5 * 60 * 1000; 
+const EVENTS_REFRESH_INTERVAL = 60 * 1000; 
 
 const MainApp = () => {
     const dispatch = useDispatch();
     const isMountedRef = useRef(true);
+    const activeControllerRef = useRef(null);
+    const lastCoreUpdateRef = useRef(0);
 
-    // Всегда используем актуальные данные из Store
-    const fetchData = async () => {
+    // Запрос основных данных (редкие)
+    const fetchCore = useRef(async (signal) => {
         if (!isMountedRef.current) return;
-        const checkResult = checkData();
-        if (!checkResult.success) {
-            if (dispatch) dispatch(setLogs(checkResult.error.toString()));
+
+        const config = Store.getState().data;
+        const validation = validateConfiguration(config);
+        if (!validation.valid) {
+            dispatch(setLogs(validation.error));
             return;
         }
 
-        const currentData = Store.getState().data;
-        let token = currentData.token;
+        let token = config.token;
         if (!token || typeof token !== 'string' || token.length === 0) {
-            token = await getToken(dispatch);
-            if (!token) {
-                return;
-            }
+            token = await fetchAuthToken(config, dispatch, signal);
+            if (!token) return;
         }
 
-        await getData(token, dispatch);
-    };
+        await fetchCoreData(config, token, dispatch, signal);
+        lastCoreUpdateRef.current = Date.now();
+    });
+
+    // Запрос событий (частые)
+    const fetchEvents = useRef(async (signal) => {
+        if (!isMountedRef.current) return;
+
+        const config = Store.getState().data;
+        const validation = validateConfiguration(config);
+        if (!validation.valid) {
+            dispatch(setLogs(validation.error));
+            return;
+        }
+
+        let token = config.token;
+        if (!token || typeof token !== 'string' || token.length === 0) {
+            token = await fetchAuthToken(config, dispatch, signal);
+            if (!token) return;
+        }
+
+        await fetchEventsData(config, token, dispatch, signal);
+    });
+
+    // Комбинированный запрос (основные данные + события)
+    const fetchData = useRef(async () => {
+        if (!isMountedRef.current) return;
+
+        // Отменяем предыдущий запрос
+        if (activeControllerRef.current) {
+            activeControllerRef.current.abort();
+        }
+        
+        // Создаем новый контроллер
+        const controller = new AbortController();
+        activeControllerRef.current = controller;
+
+        try {
+            // Проверяем, нужно ли обновлять основные данные
+            const needsCoreUpdate = Date.now() - lastCoreUpdateRef.current > CORE_DATA_REFRESH_INTERVAL;
+            
+            if (needsCoreUpdate) {
+                await fetchCore.current(controller.signal);
+            }
+            
+            // Всегда обновляем события
+            await fetchEvents.current(controller.signal);
+        } catch (error) {
+            // Ошибки обрабатываются внутри функций
+        } finally {
+            if (activeControllerRef.current === controller) {
+                activeControllerRef.current = null;
+            }
+        }
+    });
 
     useEffect(() => {
         isMountedRef.current = true;
-        fetchData(); // первый вызов сразу
-        const interval = setInterval(() => {
-            fetchData();
-        }, REFRESH_INTERVAL);
+        activeControllerRef.current = null;
+        lastCoreUpdateRef.current = 0; // Сброс времени последнего обновления
+
+        // Первоначальный запрос (полный)
+        fetchData.current();
+
+        // Интервал для частого обновления событий
+        const intervalId = setInterval(() => {
+            fetchData.current();
+        }, EVENTS_REFRESH_INTERVAL);
+
         return () => {
             isMountedRef.current = false;
-            clearInterval(interval);
+            clearInterval(intervalId);
+            
+            if (activeControllerRef.current) {
+                activeControllerRef.current.abort();
+                activeControllerRef.current = null;
+            }
         };
     }, [dispatch]);
 

@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import Svg, { Path } from "react-native-svg"
 
 import { useNavigation } from '@react-navigation/native';
@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 const BackButton = () => {
     const navigation = useNavigation();
 
-    const { height: screenHeight } = useWindowDimensions();
+    const { height: screenHeight } = Dimensions.get('screen');
     const buttonSize = screenHeight * .02;
 
     return (

@@ -28,8 +28,16 @@ const DataManager = (props) => {
 
     const dispatch = useDispatch();
     useEffect(() => {
+        // if (SystemNavigationBar)
+        //     SystemNavigationBar.navigationHide();
+
         getData("data").then((value) => {
             console.log('Инициализированы данные приложения:', value);
+            dispatch(setState(value));
+        });
+
+        getData("app-data").then((value) => {
+            console.log('Инициализированы legacy данные приложения:', value);
             dispatch(setState(
                 updateOldDate(value)
             ));
@@ -39,7 +47,6 @@ const DataManager = (props) => {
             let storeState = Store.getState().data;
             storeData("data", storeState);
         });
-        SystemNavigationBar.navigationHide();
     }, []);
 
     return (<></>);
@@ -50,7 +57,7 @@ function updateOldDate(in_data) {
     let _data = {};
 
     /* check if old data exists */
-    if (in_data.config) {
+    if (in_data && in_data.config) {
         for (const key in oldToNewData) {
             if (!oldToNewData[key]) continue;
             if (!in_data.config[key]) continue;
@@ -74,7 +81,7 @@ function updateOldDate(in_data) {
 }
 
 const oldToNewData = {
-    hostname: null,
+    hostname: "hostname",
     hostname_main: "hostname_main",
     hostname_prefix: "hostname_prefix",
     login: "login",

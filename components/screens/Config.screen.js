@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 
 import ColumnScreen from '../ColumnScreen';
 import SpaceInfo from '../SpaceInfo';
@@ -16,7 +16,7 @@ const Config = ({ navigation }) => {
   const data = useSelector(state => state.data);
   const dispatch = useDispatch();
 
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
   const topOffset = screenHeight * .2;
   const titleSize = screenHeight * .045;
   const gapSize = screenHeight * .01;

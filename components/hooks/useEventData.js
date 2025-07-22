@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export const useEventData = (data) => {
+export const useEventData = (events_data, last_update) => {
   const defaultEvent = {
     isCurrent: false, show: false,
     timeUntilEnd: 0, timeUntilStart: 0,
@@ -12,7 +12,7 @@ export const useEventData = (data) => {
   const [eventData, setEventData] = useState(defaultEvent);
 
   useEffect(() => {
-    if (!data.events_data) {
+    if (!events_data) {
       setEventData(defaultEvent);
       return;
     }
@@ -20,7 +20,7 @@ export const useEventData = (data) => {
     const date = new Date();
     let isCurrent, timeUntilStart, timeUntilEnd;
 
-    const event = data.events_data.find((item) => {
+    const event = events_data.find((item) => {
       const startDate = new Date(item.start);
       const endDate = new Date(item.end);
       const canceled = item.status === "automatically_canceled" || item.status === "canceled";
@@ -44,7 +44,7 @@ export const useEventData = (data) => {
     } else {
       setEventData(defaultEvent);
     }
-  }, [data.events_data, data.last_update]);
+  }, [events_data, last_update]);
 
   return eventData;
 }; 

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Text } from 'react-native';
+import { Text, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { useFonts } from 'expo-font';
 
-import { fontsLoaded } from "./components/StaticImports";
+import { fontAssets } from "./components/StaticImports";
 import Background from "./components/Background";
 
 import Home from "./components/screens/Home.screen";
@@ -25,7 +26,7 @@ import BusyListener from "./components/BusyListener";
 const Stack = createStackNavigator();
 
 export default function App() {
-    let checkFonts = fontsLoaded();
+    const [fontsLoaded] = useFonts(fontAssets);
 
     const screens = [
         { name: "Home", title: "Главная", component: Home },
@@ -38,43 +39,44 @@ export default function App() {
 
     const [isBusy, setBusy] = useState(false);
 
+    if (!fontsLoaded) {
+        return <Text>Шрифты загружаются</Text>;
+    }
+
     return (
         <Provider store={Store}>
             <DataManager />
-            {
-                !checkFonts ?
-                    <Text>Шрифты загружаются</Text> :
-                    <SafeAreaProvider>
-                        <NavigationContainer>
-                            {/* Фоновый компонент */}
-                            <Background isBusy={isBusy} />
+            <SafeAreaProvider style={{ backgroundColor: '#000000', flex: 1 }}>
+                <NavigationContainer>
+                    {/* Фоновый компонент */}
+                    <Background isBusy={isBusy} />
 
-                            {/* Навигационный стек поверх фона */}
-                            <Stack.Navigator
-                                screenOptions={{
-                                    headerTransparent: true,
-                                    headerTitleStyle: { color: 'white' },
-                                    headerTintColor: 'white',
-                                }}
-                            >
-                                {screens.map((item, i) => <Stack.Screen key={i}
-                                    name={item.name}
-                                    component={item.component}
-                                    options={{
-                                        title: item.title,
-                                        headerShown: false,
-                                        cardStyle: { backgroundColor: 'transparent' },
-                                        animation: 'scale_from_center',
-                                    }}
-                                />)}
-                            </Stack.Navigator>
-                        </NavigationContainer>
-                        {/* Services */}
-                        <MainApp />
-                        <QBicHandler isBusy={isBusy} />
-                        <BusyListener setBusy={setBusy} />
-                    </SafeAreaProvider>
-            }
+                    {/* Навигационный стек поверх фона */}
+                    <Stack.Navigator
+                        screenOptions={{
+                            headerTransparent: true,
+                            headerTitleStyle: { color: 'white' },
+                            headerTintColor: 'white',
+                        }}
+                    >
+                        {screens.map((item, i) => <Stack.Screen key={i}
+                            name={item.name}
+                            component={item.component}
+                            options={{
+                                title: item.title,
+                                headerShown: false,
+                                cardStyle: { backgroundColor: 'transparent' },
+                                animation: 'scale_from_center',
+                            }}
+                        />)}
+                    </Stack.Navigator>
+                </NavigationContainer>
+                {/* Services */}
+                <MainApp />
+                <QBicHandler isBusy={isBusy} />
+                <BusyListener setBusy={setBusy} />
+                <StatusBar hidden={true} translucent={true}></StatusBar>
+            </SafeAreaProvider>
         </Provider>
     )
 }
