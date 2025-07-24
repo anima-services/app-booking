@@ -166,7 +166,7 @@ const Schedule = () => {
                 style={{
                     position: 'absolute',
                     bottom: 0,
-                    width: '100%',
+                    left: 0, right: 0,
                     height: sizes.textSize * 10,
                 }}
             />

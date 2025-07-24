@@ -1,14 +1,27 @@
 import { View, StyleSheet } from 'react-native';
 
+import { useResponsiveSizes } from './hooks/useResponsiveSizes';
+
 const ColumnScreen = ({ leftContent, rightContent }) => {
+    const sizes = useResponsiveSizes();
+
+    const columnStyle = [styles.column, {
+        marginHorizontal: sizes.windowWidth*.025,
+        marginVertical: sizes.windowHeight*.05,
+    }];
+
+    const containerStyle = [styles.container, {
+       
+    }];
+
     return (
-        <View style={styles.container}>
+        <View style={containerStyle}>
             {/* Левая колонка */}
-            <View style={[styles.column, {}]}>
+            <View style={columnStyle}>
                 {leftContent}
             </View>
             {/* Правая колонка */}
-            <View style={[styles.column, {}]}>
+            <View style={columnStyle}>
                 {rightContent}
             </View>
         </View>
@@ -17,26 +30,19 @@ const ColumnScreen = ({ leftContent, rightContent }) => {
 
 const styles = StyleSheet.create({
     container: {
-        position: "absolute",
-        width: "100%",
-        height: "100%",
+        flex: 1,
         flexDirection: 'row',
     },
     column: {
-        height: '90%',
-        width: '45%',
-        marginHorizontal: '2.5%',
-        marginTop: '5%',
+        flex: 1,
+        // height: '90%',
+        // width: '45%',
+        // marginHorizontal: '2.5%',
+        // marginTop: '5%',
 
         // Отладка:
         // backgroundColor: "yellow",
         // opacity: .5,
-    },
-
-    buttonContainer: {
-        width: '70%',
-        borderRadius: 10,
-        overflow: 'hidden',
     },
 });
 

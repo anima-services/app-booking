@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 const Logs = ({ navigation }) => {
     const logs = useSelector(state => state.data.logs);
 
-    const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
+    const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
     const topOffset = screenHeight * .2;
     const titleSize = screenHeight * .045;
 

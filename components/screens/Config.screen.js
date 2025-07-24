@@ -16,7 +16,7 @@ const Config = ({ navigation }) => {
   const data = useSelector(state => state.data);
   const dispatch = useDispatch();
 
-  const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const topOffset = screenHeight * .2;
   const titleSize = screenHeight * .045;
   const gapSize = screenHeight * .01;

@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 const BackButton = () => {
     const navigation = useNavigation();
 
-    const { height: screenHeight } = Dimensions.get('screen');
+    const { height: screenHeight } = Dimensions.get('window');
     const buttonSize = screenHeight * .02;
 
     return (

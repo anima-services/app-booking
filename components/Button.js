@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions, TouchableOpacity, Text } from 'react-native';
 
 const Button = ({ title, disabled = false, onPress, style }) => {
-    const { height: screenHeight } = Dimensions.get('screen');
+    const { height: screenHeight } = Dimensions.get('window');
     const textSize = screenHeight * .0225;
     const borderRadius = screenHeight * .02;
 

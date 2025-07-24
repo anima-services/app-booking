@@ -1,21 +1,22 @@
 import {
   View,
   StyleSheet,
-  Dimensions,
   Text,
-  Button
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-
 import CurrentDate from './CurrentDate';
+import { useResponsiveSizes } from './hooks/useResponsiveSizes'; // Импорт хука
 
 const Background = ({ isBusy }) => {
-  const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
-  const marginSize = screenHeight * .01;
+  // Используем хук для получения адаптивных размеров
+  const sizes = useResponsiveSizes();
 
-  const columnWidth = (screenWidth / 2) - marginSize * 1.5;
-  const hexHeight = screenHeight - marginSize * 2;
+  // Вычисляем marginSize на основе высоты экрана из хука
+  const marginSize = sizes.windowHeight * .01;
 
+  // Пересчитываем размеры на основе данных из хука
+  const columnWidth = (sizes.windowWidth / 2) - marginSize * 1.5;
+  const hexHeight = sizes.windowHeight - marginSize * 2;
   const logoHeight = marginSize * 4;
   const logoWidth = logoHeight * 47 / 13;
 
@@ -26,7 +27,6 @@ const Background = ({ isBusy }) => {
     busy: "#FF6567",
   };
 
-  // Путь для шестиугольника
   const hexPath = "M0 20C0 8.9543 8.95431 0 20 0H312.5H462.75C473.796 0 482.75 8.95431 482.75 20V21C482.75 32.0457 491.704 41 502.75 41H605C616.046 41 625 49.9543 625 61V380V760C625 771.046 616.046 780 605 780H20C8.95431 780 0 771.046 0 760V20Z";
 
   return (
@@ -80,7 +80,8 @@ const Background = ({ isBusy }) => {
         position: "absolute",
         top: marginSize * 3,
         left: marginSize * 4,
-        width: logoWidth, height: logoHeight
+        width: logoWidth,
+        height: logoHeight
       }}>
         <Svg width="100%" height="100%" viewBox="0 0 47 13" fill="none" xmlns="http://www.w3.org/2000/svg">
           <Path d="M34.1471 4.25391C32.7895 4.25391 31.8049 4.84418 31.1438 5.71305C30.5831 4.83119 29.5985 4.25391 28.2409 4.25391C27.0698 4.25391 26.221 4.72612 25.7299 5.31639V4.47467H24.2695V12.2816H25.7299V8.14024V7.72823C25.7311 7.14168 25.965 6.57958 26.3802 6.16526C26.7954 5.75095 27.358 5.51826 27.9445 5.51826C28.0207 5.51801 28.0967 5.52195 28.1724 5.53007H28.1995C28.2657 5.53833 28.3318 5.54778 28.3955 5.56076H28.4038C28.5456 5.59047 28.684 5.63437 28.817 5.6918C29.2155 5.86259 29.5551 6.1466 29.7937 6.5086C30.0323 6.8706 30.1594 7.29467 30.1592 7.72823V12.2769H31.6184V9.05044V7.74122C31.6184 7.15166 31.8526 6.58624 32.2695 6.16935C32.6864 5.75247 33.2518 5.51826 33.8413 5.51826C34.4309 5.51826 34.9963 5.75247 35.4132 6.16935C35.8301 6.58624 36.0643 7.15166 36.0643 7.74122V12.2816H37.5234V7.63143C37.5246 5.66229 36.2685 4.25391 34.1471 4.25391Z" fill={colorScheme.light} />
@@ -101,6 +102,7 @@ const Background = ({ isBusy }) => {
   );
 };
 
+// Стили остаются без изменений
 const styles = StyleSheet.create({
   statusbar: {
     position: 'absolute',
@@ -110,10 +112,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-
-    // Отладка:
-    // backgroundColor: "green",
-    // opacity: .5,
   },
   statusText: {
     fontFamily: "Onest_500Medium",
@@ -124,14 +122,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   column: {
-    height: '100%',
+    flex: 1,
   },
   hexContainer: {
     width: '100%',
     position: 'relative',
-  },
-  contentContainer: {
-    padding: 10,
   },
 });
 

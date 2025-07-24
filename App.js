@@ -65,7 +65,7 @@ export default function App() {
                             options={{
                                 title: item.title,
                                 headerShown: false,
-                                cardStyle: { backgroundColor: 'transparent' },
+                                cardStyle: { backgroundColor: 'transparent', flex: 1 },
                                 animation: 'scale_from_center',
                             }}
                         />)}
@@ -75,7 +75,7 @@ export default function App() {
                 <MainApp />
                 <QBicHandler isBusy={isBusy} />
                 <BusyListener setBusy={setBusy} />
-                <StatusBar hidden={true} translucent={true}></StatusBar>
+                <StatusBar hidden={true} translucent={true} />
             </SafeAreaProvider>
         </Provider>
     )
