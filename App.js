@@ -1,7 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useFonts } from 'expo-font';
 
@@ -15,6 +13,8 @@ import Approve from "./components/screens/Approve.screen";
 import Results from "./components/screens/Results.screen";
 import Logs from "./components/screens/Logs.screen";
 
+import NavigationService from "./components/services/Navigation.services";
+
 import MainApp from "./components/services/MainApp.services";
 import QBicHandler from "./components/services/qbic.services";
 
@@ -23,19 +23,37 @@ import { Store } from './components/data/Store';
 import DataManager from "./components/data/DataManager";
 import BusyListener from "./components/BusyListener";
 
-const Stack = createStackNavigator();
-
 export default function App() {
     const [fontsLoaded] = useFonts(fontAssets);
+    const [currentScreen, setCurrentScreen] = useState(NavigationService.getCurrentScreen());
 
-    const screens = [
-        { name: "Home", title: "Главная", component: Home },
-        { name: "Config", title: "Конфигурация", component: Config },
-        { name: "Book", title: "Бронирование", component: Book },
-        { name: "Approve", title: "Подтверждение", component: Approve },
-        { name: "Results", title: "Результат", component: Results },
-        { name: "Logs", title: "Результат", component: Logs },
-    ];
+    useEffect(() => {
+        const unsubscribe = NavigationService.addListener(() => {
+            setCurrentScreen(NavigationService.getCurrentScreen());
+        });
+        return unsubscribe;
+    }, []);
+
+    const renderScreen = () => {
+        const { screen, params } = currentScreen;
+
+        const screenProps = {
+            navigate: NavigationService.navigate,
+            goBack: NavigationService.goBack,
+            resetToHome: NavigationService.resetToHome,
+            params
+        };
+
+        switch (screen) {
+            case 'Home': return <Home {...screenProps} />;
+            case 'Config': return <Config {...screenProps} />;
+            case 'Book': return <Book {...screenProps} />;
+            case 'Approve': return <Approve {...screenProps} />;
+            case 'Results': return <Results {...screenProps} />;
+            case 'Logs': return <Logs {...screenProps} />;
+            default: return <Home {...screenProps} />;
+        }
+    };
 
     const [isBusy, setBusy] = useState(false);
 
@@ -47,30 +65,12 @@ export default function App() {
         <Provider store={Store}>
             <DataManager />
             <SafeAreaProvider style={{ backgroundColor: '#000000', flex: 1 }}>
-                <NavigationContainer>
-                    {/* Фоновый компонент */}
-                    <Background isBusy={isBusy} />
+                {/* Фоновый компонент */}
+                <Background isBusy={isBusy} />
 
-                    {/* Навигационный стек поверх фона */}
-                    <Stack.Navigator
-                        screenOptions={{
-                            headerTransparent: true,
-                            headerTitleStyle: { color: 'white' },
-                            headerTintColor: 'white',
-                        }}
-                    >
-                        {screens.map((item, i) => <Stack.Screen key={i}
-                            name={item.name}
-                            component={item.component}
-                            options={{
-                                title: item.title,
-                                headerShown: false,
-                                cardStyle: { backgroundColor: 'transparent', flex: 1 },
-                                animation: 'scale_from_center',
-                            }}
-                        />)}
-                    </Stack.Navigator>
-                </NavigationContainer>
+                {/* Навигационный стек поверх фона */}
+                {renderScreen()}
+
                 {/* Services */}
                 <MainApp />
                 <QBicHandler isBusy={isBusy} />

@@ -1,17 +1,14 @@
 import { StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import Svg, { Path } from "react-native-svg"
 
-import { useNavigation } from '@react-navigation/native';
-
-const BackButton = () => {
-    const navigation = useNavigation();
+const BackButton = ({ goBack }) => {
 
     const { height: screenHeight } = Dimensions.get('window');
     const buttonSize = screenHeight * .02;
 
     return (
         <TouchableOpacity
-            onPress={() => navigation.navigate('Home')}
+            onPress={goBack}
             // onPress={() => navigation.goBack()}
             style={[styles.button, { width: buttonSize, height: buttonSize }]}>
             <Svg

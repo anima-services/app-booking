@@ -12,7 +12,7 @@ import AppUpdate from "../services/appUpdater.services";
 import { useSelector, useDispatch } from "react-redux";
 import { setState, setLogs } from "../data/DataSlice";
 
-const Config = ({ navigation }) => {
+const Config = ({ navigate, goBack, resetToHome, params }) => {
   const data = useSelector(state => state.data);
   const dispatch = useDispatch();
 
@@ -61,10 +61,10 @@ const Config = ({ navigation }) => {
 
   return (
     <ColumnScreen
-      leftContent={<SpaceInfo />}
+      leftContent={<SpaceInfo navigate={navigate}/>}
       rightContent={
         <>
-          <BackButton />
+          <BackButton goBack={goBack}/>
           <View style={{ marginTop: topOffset, flex: 1 }}>
             <Text style={[styles.title, { color: colorScheme.light, fontSize: titleSize, marginBottom: titleSize }]}>Конфигурация:</Text>
             <ScrollView>
@@ -127,7 +127,7 @@ const Config = ({ navigation }) => {
               </View>
               <View style={[styles.rowContainer, { gap: gapSize }]}>
                 <Button title="Применить настройки" onPress={handleSave} style={{ flex: 1 }} />
-                <Button title="Логи приложения" onPress={() => navigation.navigate('Logs')} style={{ flex: 1 }} />
+                <Button title="Логи приложения" onPress={() => navigate('Logs')} style={{ flex: 1 }} />
               </View>
               <Text style={[styles.title, {
                 color: colorScheme.light,

@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import Svg, { Rect, Path } from "react-native-svg"
 
 import ColumnScreen from '../ColumnScreen';
@@ -9,21 +8,20 @@ import Button from '../Button';
 
 import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
 
-const Results = ({ route }) => {
-  const navigation = useNavigation();
-
-  const { success, text } = route.params;
-  const sizes = useResponsiveSizes();
-
+const Results = ({ goBack, resetToHome, params }) => {
+  const { success, text } = params;
+  
   function goHome() {
-    navigation.navigate('Home');
+    resetToHome();
   }
+
+  const sizes = useResponsiveSizes();
 
   return (
     <ColumnScreen
-      leftContent={<SpaceInfo />}
+      leftContent={<SpaceInfo navigate={navigate}/>}
       rightContent={<>
-        <BackButton />
+        <BackButton goBack={goBack}/>
         <View style={{ flex: 1, justifyContent: 'center'}}>
           <View style={{ alignItems: 'center' }}>
             <Svg

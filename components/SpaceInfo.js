@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from "react-redux";
 
 import { useResponsiveSizes } from './hooks/useResponsiveSizes';
@@ -13,9 +12,7 @@ import Button from './Button';
 import EventStatus from './EventStatus';
 import { UserImage } from './UserCard';
 
-const SpaceInfo = () => {
-    const navigation = useNavigation();
-    const route = useRoute();
+const SpaceInfo = ({ navigate, currentScreen }) => {
     const events_data = useSelector(state => state.data.events_data);
     const space_data = useSelector(state => state.data.space_data);
     const space_size = useSelector(state => state.data.space_size);
@@ -42,7 +39,7 @@ const SpaceInfo = () => {
     const textStyle = [styles.text, { color: colorScheme.light, marginHorizontal: 5, fontSize: sizes.textSize }];
 
     function approveEvent() {
-        navigation.navigate('Approve', {
+        navigate('Approve', {
             eventId: eventData.id,
             formatStart: format_hh_mm(eventData.start),
             formatEnd: format_hh_mm(eventData.end),
@@ -54,8 +51,10 @@ const SpaceInfo = () => {
     }
 
     const handlePress = () => {
-        navigation.navigate('Config');
-      };
+        if (currentScreen !== 'Config') {
+            navigate('Config');
+        }
+    };
 
     return (
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
@@ -124,7 +123,7 @@ const SpaceInfo = () => {
                         <UserImage key={i} photoUrl={item.photo} customStyle={i > 0 ? { marginLeft: -sizes.textSize } : {}} />
                     )}
                 </View>
-                {route.name != "Approve" && eventData.status === "reserved" ?
+                {currentScreen != "Approve" && eventData.status === "reserved" ?
                     <Button
                         title="Подтвердить" onPress={approveEvent}
                     />
