@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Text, StatusBar, Animated } from 'react-native';
+import { Text, StatusBar, Animated, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useFonts } from 'expo-font';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import { fontAssets } from "./components/StaticImports";
 import Background from "./components/Background";
@@ -30,6 +31,10 @@ export default function App() {
 
 
     useEffect(() => {
+        if (Platform.OS === 'android') {
+            NavigationBar.setVisibilityAsync('hidden');
+        }
+
         const unsubscribe = NavigationService.addListener(() => {
             fadeAnim.setValue(0);
             setCurrentScreen(NavigationService.getCurrentScreen());
@@ -39,6 +44,10 @@ export default function App() {
     }, []);
 
     useEffect(() => {
+        if (Platform.OS === 'android') {
+            NavigationBar.setVisibilityAsync('hidden');
+        }
+
         Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 300,

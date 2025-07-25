@@ -5,8 +5,6 @@ import { useDispatch } from 'react-redux';
 import { Store } from './Store';
 import { setState } from './DataSlice';
 
-import SystemNavigationBar from 'react-native-system-navigation-bar';
-
 const DataManager = (props) => {
     const storeData = async (name, value) => {
         try {

@@ -32,8 +32,8 @@ const Background = ({ isBusy }) => {
   return (
     <View style={[styles.container, { backgroundColor: isBusy ? colorScheme.busy : colorScheme.free }]}>
       {/* Левая колонка */}
-      <View style={[styles.column, { width: columnWidth, margin: marginSize, marginRight: marginSize * .5 }]}>
-        <View style={[styles.hexContainer, { height: hexHeight }]}>
+      <View style={[styles.column, { margin: marginSize, marginRight: marginSize * .5 }]}>
+        <View style={styles.hexContainer}>
           <Svg
             width="100%"
             height="100%"
@@ -47,7 +47,7 @@ const Background = ({ isBusy }) => {
 
       {/* Правая колонка */}
       <View style={[styles.column, { width: columnWidth, margin: marginSize, marginLeft: marginSize * .5 }]}>
-        <View style={[styles.hexContainer, { height: hexHeight }]}>
+        <View style={styles.hexContainer}>
           <Svg
             width="100%"
             height="100%"
@@ -117,6 +117,10 @@ const styles = StyleSheet.create({
     fontFamily: "Onest_500Medium",
   },
   container: {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     zIndex: -1,
     position: 'absolute',
