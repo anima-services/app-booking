@@ -115,13 +115,13 @@ const AppUpdate = () => {
     }, []);
 
     return (
-        <View>
+        <View style={{ display: Platform.OS === 'android' ? 'flex' : 'none' }}>
             <Text style={styles.text}>Текущая версия: {currentVersion}</Text>
             {isUpdateAvailable ? (
                 <View>
                     <Text style={styles.text}>Последняя версия на сервере: {updateVersion}</Text>
                     <Button
-                        title="Скачать обновление"
+                        title={isDownloading ? 'Загрузка...' : "Скачать обновление"}
                         onPress={() => downloadUpdate(downloadUrl)}
                         disabled={isDownloading}
                     />

@@ -129,11 +129,6 @@ const Config = ({ navigate, goBack, resetToHome, params }) => {
                 <Button title="Применить настройки" onPress={handleSave} style={{ flex: 1 }} />
                 <Button title="Логи приложения" onPress={() => navigate('Logs')} style={{ flex: 1 }} />
               </View>
-              <Text style={[styles.title, {
-                color: colorScheme.light,
-                fontSize: titleSize * .5,
-                marginBottom: 0
-              }]}>Обновление:</Text>
               <AppUpdate />
             </ScrollView>
           </View>
