@@ -114,8 +114,10 @@ const AppUpdate = () => {
         checkForUpdate();
     }, []);
 
+    if (Platform.OS !== 'android') return null;
+
     return (
-        <View style={{ display: Platform.OS === 'android' ? 'flex' : 'none' }}>
+        <View>
             <Text style={styles.text}>Текущая версия: {currentVersion}</Text>
             {isUpdateAvailable ? (
                 <View>
@@ -125,7 +127,6 @@ const AppUpdate = () => {
                         onPress={() => downloadUpdate(downloadUrl)}
                         disabled={isDownloading}
                     />
-                    {isDownloading && <Text>Загрузка...</Text>}
                 </View>
             ) : (
                 <Text style={styles.text}>У вас установлена последняя версия.</Text>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Text, StatusBar } from 'react-native';
+import React, { useState, useEffect, useRef } from "react";
+import { Text, StatusBar, Animated } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useFonts } from 'expo-font';
 
@@ -26,13 +26,25 @@ import BusyListener from "./components/BusyListener";
 export default function App() {
     const [fontsLoaded] = useFonts(fontAssets);
     const [currentScreen, setCurrentScreen] = useState(NavigationService.getCurrentScreen());
+    const fadeAnim = useRef(new Animated.Value(1)).current;
+
 
     useEffect(() => {
         const unsubscribe = NavigationService.addListener(() => {
+            fadeAnim.setValue(0);
             setCurrentScreen(NavigationService.getCurrentScreen());
         });
+
         return unsubscribe;
     }, []);
+
+    useEffect(() => {
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true,
+        }).start();
+    }, [currentScreen]);
 
     const renderScreen = () => {
         const { screen, params } = currentScreen;
@@ -69,7 +81,14 @@ export default function App() {
                 <Background isBusy={isBusy} />
 
                 {/* Навигационный стек поверх фона */}
-                {renderScreen()}
+                <Animated.View
+                    style={{
+                        flex: 1,
+                        opacity: fadeAnim,
+                    }}
+                >
+                    {renderScreen()}
+                </Animated.View>
 
                 {/* Services */}
                 <MainApp />
