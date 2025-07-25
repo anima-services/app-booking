@@ -134,6 +134,7 @@ const fetchCoreData = async (config, token, dispatch, signal) => {
         }
     } catch (error) {
         handleRequestError(error, 'получения основных данных', dispatch);
+        dispatch(setState({ token: "" }));
     }
 };
 
@@ -182,6 +183,7 @@ const fetchEventsData = async (config, token, dispatch, signal) => {
         dispatch(setState({ last_update: new Date().toISOString() }));
     } catch (error) {
         handleRequestError(error, 'получения событий', dispatch);
+        dispatch(setState({ token: "" }));
     }
 };
 

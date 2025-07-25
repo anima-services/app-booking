@@ -13,8 +13,8 @@ export const useResponsiveSizes = () => {
       setSizes(calculateSizes(width, height));
     };
 
-    Dimensions.addEventListener('change', updateSizes);
-    return () => Dimensions.removeEventListener('change', updateSizes);
+    const subscription = Dimensions.addEventListener('change', updateSizes);
+    return () => subscription.remove();
   }, []);
 
   return sizes;

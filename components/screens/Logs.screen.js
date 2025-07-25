@@ -8,7 +8,7 @@ import Button from "../Button";
 
 import { useSelector } from "react-redux";
 
-const Logs = ({ navigation }) => {
+const Logs = ({ navigate, goBack, resetToHome, params }) => {
     const logs = useSelector(state => state.data.logs);
 
     const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -25,10 +25,10 @@ const Logs = ({ navigation }) => {
 
     return (
         <ColumnScreen
-            leftContent={<SpaceInfo />}
+            leftContent={<SpaceInfo navigate={navigate}/>}
             rightContent={
                 <>
-                    <BackButton />
+                    <BackButton goBack={goBack}/>
                     <View style={{ marginTop: topOffset, flex: 1 }}>
                         <Text style={[styles.title, {
                             color: colorScheme.light,
@@ -45,7 +45,7 @@ const Logs = ({ navigation }) => {
                                         marginBottom: 0
                                     }]}>{item}</Text>
                             ))}
-                            <Button title="Назад" onPress={() => navigation.navigate('Config')} />
+                            <Button title="Назад" onPress={() => navigate('Config')} />
                         </ScrollView>
                     </View>
                 </>

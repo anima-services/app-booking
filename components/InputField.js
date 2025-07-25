@@ -49,7 +49,10 @@ const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, set
                 underlineColorAndroid="transparent"
                 inputMode={inputMode}
                 secureTextEntry={secureTextEntry}
-                disabled={disabled}
+                editable={!disabled}
+                selectTextOnFocus={!disabled}
+                contextMenuHidden={disabled} // For iOS
+                caretHidden={disabled}
             />
         </View>
     );

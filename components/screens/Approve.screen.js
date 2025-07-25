@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
 import ColumnScreen from '../ColumnScreen';
 import SpaceInfo from '../SpaceInfo';
@@ -15,11 +14,10 @@ import { approveReservation } from '../services/api';
 import { setLogs } from '../data/DataSlice';
 import { useDispatch } from "react-redux";
 
-const Approve = ({ route }) => {
-  const navigation = useNavigation();
+const Approve = ({ navigate, goBack, resetToHome, params }) => {
   const dispatch = useDispatch();
 
-  const { eventId, formatStart, formatEnd, topic, meetinghost, meetinghostname, participants } = route.params;
+  const { eventId, formatStart, formatEnd, topic, meetinghost, meetinghostname, participants } = params;
 
   const sizes = useResponsiveSizes();
 
@@ -38,12 +36,12 @@ const Approve = ({ route }) => {
       const response = await approveReservation(
         eventId, approvePerson[0].email, pincode
       );
-      navigation.navigate('Results', {
+      navigate('Results', {
         success: true,
         text: "Вы успешно подтвердили бронирование"
       })
     } catch (e) {
-      navigation.navigate('Results', {
+      navigate('Results', {
         success: false,
         text: "Не удалось подтвердить бронирование. Обратитесь к системному администратору."
       })
@@ -54,9 +52,9 @@ const Approve = ({ route }) => {
 
   return (
     <ColumnScreen
-      leftContent={<SpaceInfo />}
+      leftContent={<SpaceInfo navigate={navigate}/>}
       rightContent={<>
-        <BackButton />
+        <BackButton goBack={goBack}/>
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
           <Text style={[styles.title, {
             fontSize: sizes.titleSize,

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, Pressable, Text, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
 import ColumnScreen from '../ColumnScreen';
 import SpaceInfo from '../SpaceInfo';
@@ -15,11 +14,10 @@ import { createReservation } from '../services/api';
 import { useSelector, useDispatch } from "react-redux";
 import { setLogs } from "../data/DataSlice";
 
-const Book = ({ route }) => {
-  const navigation = useNavigation();
+const Book = ({ navigate, goBack, resetToHome, params }) => {
   const dispatch = useDispatch();
 
-  const { timeStart, timeEnd, formatStart, formatEnd } = route.params;
+  const { timeStart, timeEnd, formatStart, formatEnd } = params;
   const users_data = useSelector(state => state.data.users_data);
   const sizes = useResponsiveSizes();
 
@@ -44,12 +42,12 @@ const Book = ({ route }) => {
         timeStart,
         timeEnd
       );
-      navigation.navigate('Results', {
+      navigate('Results', {
         success: true,
         text: "Вы забронировали переговорную, теперь ваше бронирование отобразится в перечне слотов."
       })
     } catch (e) {
-      navigation.navigate('Results', {
+      navigate('Results', {
         success: false,
         text: "Не удалось забронировать переговорную. Обратитесь к системному администратору."
       })
@@ -60,9 +58,9 @@ const Book = ({ route }) => {
 
   return (
     <ColumnScreen
-      leftContent={<SpaceInfo />}
+      leftContent={<SpaceInfo navigate={navigate}/>}
       rightContent={<>
-        <BackButton />
+        <BackButton goBack={goBack}/>
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
           <Text style={[styles.title, { fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>Вы бронируете:</Text>
           {/* Начало и окончание */}
