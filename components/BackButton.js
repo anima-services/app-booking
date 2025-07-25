@@ -4,13 +4,12 @@ import Svg, { Path } from "react-native-svg"
 const BackButton = ({ goBack }) => {
 
     const { height: screenHeight } = Dimensions.get('window');
-    const buttonSize = screenHeight * .02;
+    const buttonSize = screenHeight * .03;
 
     return (
         <TouchableOpacity
             onPress={goBack}
-            // onPress={() => navigation.goBack()}
-            style={[styles.button, { width: buttonSize, height: buttonSize }]}>
+            style={[styles.button, { width: buttonSize, height: buttonSize, marginTop: buttonSize*.8 }]}>
             <Svg
                 width="100%"
                 height="100%"
