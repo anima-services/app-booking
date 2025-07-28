@@ -64,7 +64,7 @@ const Config = ({ navigate, goBack, resetToHome, params }) => {
       leftContent={<SpaceInfo navigate={navigate}/>}
       rightContent={
         <>
-          <BackButton goBack={goBack}/>
+          <BackButton goBack={resetToHome}/>
           <View style={{ marginTop: topOffset, flex: 1 }}>
             <Text style={[styles.title, { color: colorScheme.light, fontSize: titleSize, marginBottom: titleSize }]}>Конфигурация:</Text>
             <ScrollView>

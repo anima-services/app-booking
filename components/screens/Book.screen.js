@@ -9,7 +9,7 @@ import Dropdown from '../Dropdown';
 import Button from '../Button';
 
 import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
-import { createReservation } from '../services/api';
+import { createReservation, getReservations } from '../services/api';
 
 import { useSelector, useDispatch } from "react-redux";
 import { setLogs } from "../data/DataSlice";
@@ -42,6 +42,8 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
         timeStart,
         timeEnd
       );
+      console.log(response);
+      await getReservations(dispatch);
       navigate('Results', {
         success: true,
         text: "Вы забронировали переговорную, теперь ваше бронирование отобразится в перечне слотов."
@@ -60,7 +62,7 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
     <ColumnScreen
       leftContent={<SpaceInfo navigate={navigate}/>}
       rightContent={<>
-        <BackButton goBack={goBack}/>
+        <BackButton goBack={resetToHome}/>
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
           <Text style={[styles.title, { fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>Вы бронируете:</Text>
           {/* Начало и окончание */}

@@ -8,7 +8,7 @@ import Button from '../Button';
 
 import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
 
-const Results = ({ goBack, resetToHome, params }) => {
+const Results = ({ navigate, goBack, resetToHome, params }) => {
   const { success, text } = params;
   
   function goHome() {
@@ -21,7 +21,7 @@ const Results = ({ goBack, resetToHome, params }) => {
     <ColumnScreen
       leftContent={<SpaceInfo navigate={navigate}/>}
       rightContent={<>
-        <BackButton goBack={goBack}/>
+        <BackButton goBack={resetToHome}/>
         <View style={{ flex: 1, justifyContent: 'center'}}>
           <View style={{ alignItems: 'center' }}>
             <Svg

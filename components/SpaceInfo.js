@@ -44,7 +44,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
             formatStart: format_hh_mm(eventData.start),
             formatEnd: format_hh_mm(eventData.end),
             topic: eventData.topic,
-            meetinghost: [eventData.user_info],
+            meetinghost: eventData.user_info,
             meetinghostname: eventData.host_fullname,
             participants: eventData.participants_info
         });

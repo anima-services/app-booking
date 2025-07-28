@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import { setState, setLogs } from "../data/DataSlice";
 import { Store } from '../data/Store';
 
+import { getReservations } from "./api";
+
 // Проверка наличия и корректности данных
 const validateConfiguration = (data) => {
     if (!data.hostname || !data.login || !data.password) {
@@ -15,11 +17,11 @@ const validateConfiguration = (data) => {
     }
     
     // Проверка формата URL
-    try {
-        new URL(data.hostname);
-    } catch (error) {
-        return { valid: false, error: "Некорректный формат hostname! Должен содержать протокол (http/https)" };
-    }
+    // try {
+    //     new URL(data.hostname);
+    // } catch (error) {
+    //     return { valid: false, error: "Некорректный формат hostname! Должен содержать протокол (http/https)" };
+    // }
     
     return { valid: true };
 };
@@ -140,47 +142,10 @@ const fetchCoreData = async (config, token, dispatch, signal) => {
 
 // Запрос событий (частые обновления)
 const fetchEventsData = async (config, token, dispatch, signal) => {
-    const apiClient = axios.create({
-        baseURL: config.hostname,
-        timeout: 15000,
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Token ${token}`,
-        },
-    });
     dispatch(setLogs(`Получение событий от ${config.hostname}`));
 
     try {
-        // Запрос событий
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-        const tomorrow = new Date(now);
-        tomorrow.setDate(now.getDate() + 1);
-
-        const eventsParams = new URLSearchParams({
-            space: config.id,
-            start_after: now.toISOString(),
-            end_before: tomorrow.toISOString()
-        });
-
-        const eventsResponse = await apiClient.get(
-            `/api/reservation/?${eventsParams}`,
-            { signal }
-        );
-        
-        if (eventsResponse.data.results != null) {
-            const filteredEvents = eventsResponse.data.results
-                .filter(item => item.status && 
-                      !["canceled", "automatically_canceled"].includes(item.status))
-                .sort((a, b) => new Date(a.start) - new Date(b.start));
-
-            dispatch(setState({ events_data: filteredEvents }));
-            dispatch(setLogs(`События получены!`));
-        }
-
-        // Обновление времени последнего обновления
-        dispatch(setState({ last_update: new Date().toISOString() }));
+        getReservations(dispatch, signal);
     } catch (error) {
         handleRequestError(error, 'получения событий', dispatch);
         dispatch(setState({ token: "" }));

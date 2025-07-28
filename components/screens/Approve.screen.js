@@ -9,7 +9,7 @@ import Dropdown from '../Dropdown';
 import Button from '../Button';
 
 import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
-import { approveReservation } from '../services/api';
+import { approveReservation, getReservations } from '../services/api';
 
 import { setLogs } from '../data/DataSlice';
 import { useDispatch } from "react-redux";
@@ -24,11 +24,18 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
   const [approvePerson, setApprovePerson] = useState([]);
   const [pincode, setPincode] = useState("");
   const [formReady, setFormReady] = useState(false);
+  const [approvePeople, setApprovePeople] = useState([]);
 
   useEffect(() => {
     setFormReady(pincode &&
       Array.isArray(approvePerson) && approvePerson.length > 0);
   }, [pincode, approvePerson]);
+
+  useEffect(() => {
+    if (!participants.find((item) => meetinghost.email === item.email))
+      setApprovePeople([meetinghost, ...participants]);
+    else setApprovePeople(participants);
+  }, []);
 
   async function sendForm() {
     try {
@@ -36,6 +43,8 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
       const response = await approveReservation(
         eventId, approvePerson[0].email, pincode
       );
+      console.log(response);
+      await getReservations(dispatch);
       navigate('Results', {
         success: true,
         text: "Вы успешно подтвердили бронирование"
@@ -52,9 +61,9 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
 
   return (
     <ColumnScreen
-      leftContent={<SpaceInfo navigate={navigate}/>}
+      leftContent={<SpaceInfo navigate={navigate} />}
       rightContent={<>
-        <BackButton goBack={goBack}/>
+        <BackButton goBack={resetToHome} />
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
           <Text style={[styles.title, {
             fontSize: sizes.titleSize,
@@ -82,7 +91,7 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
           </View>
           <Dropdown
             name="Участники"
-            data={[...meetinghost, ...participants]}
+            data={approvePeople}
             placeholder="Введите ФИО или почту"
             pictureTag="photo"
             textTag="full_name"
@@ -92,7 +101,7 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
           />
           {/* Пинкод */}
           <View style={styles.rowContainer}>
-            <InputField name="Пинкод" placeholder="Введите ваш пинкод для подтверждения личности*" inputMode="text" secureTextEntry
+            <InputField name="Пинкод" placeholder="Введите ваш пинкод для подтверждения личности*" inputMode="numeric" secureTextEntry
               value={pincode}
               setText={setPincode}
             />
