@@ -15,8 +15,9 @@ import { UserImage } from "./UserCard";
 const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attributeTag, maxItems = 1, onSelect }) => {
     const sizes = useResponsiveSizes();
     const [text, setText] = useState("");
-    const [list, setList] = useState(data);
+    const [list, setList] = useState([]);
     const [selected, setSelected] = useState([]);
+    const [formattedData, setFormatted] = useState([]);
     const [showList, setShowList] = useState(false);
     const [buttonLayout, setButtonLayout] = useState({
         x: 0, y: 0, width: 0, height: 0
@@ -31,22 +32,31 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
         setText("");
     };
 
-    useEffect(() => {
-        if (!Array.isArray(data)) {
-            onSelect([]);
-            return;
-        }
-
-        const validSelected = selected.filter(index =>
-            index >= 0 && index < data.length
-        );
-
-        onSelect(validSelected.map(index => data[index]));
-    }, [selected, data, onSelect]);
-
+    // Первичная отрисовка
     useEffect(() => {
         if (!Array.isArray(data)) return;
-        setList(data.filter((item, i) => {
+        setFormatted(data.map((item, i) => {
+            let _text = item[textTag];
+            let _picture = item[pictureTag];
+            let _attribute = item[attributeTag];
+
+
+            return {
+                [textTag]: _text,
+                [pictureTag]: _picture,
+                [attributeTag]: _attribute,
+                "origin": item,
+                "selected": false
+            };
+        }));
+    }, [])
+    useEffect(() => {
+        setList([...formattedData]);
+    }, [formattedData])
+
+    // Фильтрация данных
+    const filterData = (array) => {
+        return array.filter((item, i) => {
             let _text = item[textTag];
             let _picture = item[pictureTag];
             let _attribute = item[attributeTag];
@@ -58,26 +68,57 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
             if (!_byText && !_byAttribute) return false;
 
             return true;
-        }));
-    }, [text, data, textTag, attributeTag, pictureTag]);
-
-    const handleSelect = (index) => {
-        setText("");
-        setSelected((prev) => {
-            const alreadySelected = prev.includes(index);
-            if (alreadySelected) {
-                return prev.filter(i => i !== index);
-            } else {
-                if (prev.length >= maxItems) {
-                    return [...prev.slice(1), index];
-                } else {
-                    const _array = [...prev, index];
-                    if (_array.length === maxItems) setShowList(false);
-                    return _array;
-                }
-            }
         });
     };
+
+    // Сортировка данных
+    const sortData = (array) => {
+        array.sort((a, b) => {
+            if (a.selected == b.selected) return 0;
+            else if (a.selected) return -1;
+            else return 1;
+        });
+        return array;
+    };
+
+    useEffect(() => {
+        updateArray();
+    }, [text]);
+
+    const selectItem = (in_item) => {
+        /* Проверка maxItems-1 */
+        let _items = 0;
+        let _newArray = list.filter(item => {
+            if (item.selected && _items < maxItems - 1) {
+                _items++;
+                return true;
+            } else {
+                item.selected = false;
+                return false;
+            }
+        });
+
+        /* Обновление списка */
+        in_item.selected = !in_item.selected;
+        setText("");
+        updateArray();
+
+        /* Обновление onSelect */
+        let _originArray = list.filter(item => item.selected).map(item => item.origin);
+        setSelected(_originArray);
+        onSelect(_originArray);
+
+        /* Скрытие DropDown */
+        if (_originArray.length >= maxItems) setShowList(false);
+    }
+
+    const updateArray = () => {
+        let _newArray = [...formattedData];
+        _newArray = filterData(_newArray);
+        _newArray = sortData(_newArray);
+        setList([..._newArray]);
+    }
+
 
     // Рассчитываем позицию для списка
     const listTop = buttonLayout.y + buttonLayout.height + sizes.text_2 * 0.5;
@@ -198,8 +239,7 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                     </View>
                     <ScrollView style={{ flex: 1 }}>
                         {list.map((item, i) => {
-                            const dataIndex = data.indexOf(item);
-                            const isSelected = selected.includes(dataIndex);
+                            const isSelected = item.selected;
                             return (
                                 <TouchableOpacity
                                     key={i}
@@ -208,7 +248,7 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                                         gap: sizes.text_2 * .5,
                                         borderRadius: sizes.text_2 * 0.5,
                                     }]}
-                                    onPress={() => handleSelect(dataIndex)}
+                                    onPress={() => { selectItem(item) }}
                                 >
                                     <UserImage photoUrl={item[pictureTag]} />
                                     <Text style={styles.text}>
