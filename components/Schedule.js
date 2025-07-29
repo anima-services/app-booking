@@ -24,7 +24,12 @@ const Schedule = ({ navigate }) => {
 
     // Оптимизация: уменьшена частота обновления времени
     useEffect(() => {
-        const timer = setInterval(() => setNow(new Date()), 60000);
+        const timer = setInterval(() => {
+            const currentTime = new Date();
+            const newMinutes = currentTime.getMinutes() + 3;
+            currentTime.setMinutes(newMinutes);
+            setNow(currentTime);
+        }, 60000);
         return () => clearInterval(timer);
     }, []);
 
@@ -34,8 +39,8 @@ const Schedule = ({ navigate }) => {
             return time_presets.map(countTable);
         }
         return time_presets.map((preset) => {
-            const _date = new Date();
-            const _endDate = new Date(_date);
+            const _date = new Date(now);
+            const _endDate = new Date(now);
             _endDate.setHours(time_end, 0, 0);
             return countBubbles(preset, _date, _endDate);
         });
@@ -62,8 +67,8 @@ const Schedule = ({ navigate }) => {
 
     function countTable(preset = 10) {
         let _table = [];
-        let _date = new Date();
-        let _dateEnd = new Date(_date);
+        let _date = new Date(now);
+        let _dateEnd = new Date(now);
 
         for (const event of events_data) {
             _dateEnd = new Date(event.start);
@@ -132,7 +137,7 @@ const Schedule = ({ navigate }) => {
             }]}>
                 {time_presets.map((item, i) => (
                     <Tab key={i} text={`На ${item} мин`}
-                        selected={timePeriod === i} 
+                        selected={timePeriod === i}
                         select={() => handleTimePeriodChange(i)}
                     />
                 ))}
@@ -174,12 +179,12 @@ const Schedule = ({ navigate }) => {
                     showsHorizontalScrollIndicator={false}
                 >
                     {timeSchedule[k].map((item, i) => (
-                        <Bubble key={`${k}-${i}`} 
-                            text={item.text} 
-                            title={item.title} 
-                            dsc={item.dsc} 
+                        <Bubble key={`${k}-${i}`}
+                            text={item.text}
+                            title={item.title}
+                            dsc={item.dsc}
                             disabled={item.disabled}
-                            selected={i === selectedIndex} 
+                            selected={i === selectedIndex}
                             select={() => handleBubblePress(i)}
                         />
                     ))}
@@ -210,17 +215,17 @@ const Schedule = ({ navigate }) => {
 };
 
 // Оптимизация: memo для компонентов
-const Bubble = memo(({ 
-    text, 
-    select, 
-    selected, 
-    title, 
-    dsc, 
-    disabled = false, 
-    status, 
-    style, 
-    isCurrent, 
-    timeLeft 
+const Bubble = memo(({
+    text,
+    select,
+    selected,
+    title,
+    dsc,
+    disabled = false,
+    status,
+    style,
+    isCurrent,
+    timeLeft
 }) => {
     const sizes = useResponsiveSizes();
 
