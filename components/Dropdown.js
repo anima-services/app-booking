@@ -14,7 +14,6 @@ import { UserImage } from "./UserCard";
 
 const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attributeTag, maxItems = 1, onSelect }) => {
     const sizes = useResponsiveSizes();
-    const [focused, setFocused] = useState(false);
     const [text, setText] = useState("");
     const [list, setList] = useState(data);
     const [selected, setSelected] = useState([]);
@@ -63,6 +62,7 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
     }, [text, data, textTag, attributeTag, pictureTag]);
 
     const handleSelect = (index) => {
+        setText("");
         setSelected((prev) => {
             const alreadySelected = prev.includes(index);
             if (alreadySelected) {
@@ -189,13 +189,11 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                             selectionColor={colorScheme.light}
                             cursorColor={colorScheme.light}
                             placeholder={placeholder}
-                            onFocus={() => setFocused(true)}
-                            onBlur={() => setFocused(false)}
                             value={text}
                             onChangeText={setText}
                             underlineColorAndroid="transparent"
                             inputMode="text"
-                            autoFocus={true}
+                            autoFocus={false}
                         />
                     </View>
                     <ScrollView style={{ flex: 1 }}>
