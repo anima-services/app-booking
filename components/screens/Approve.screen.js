@@ -26,7 +26,11 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
   const [approvePerson, setApprovePerson] = useState([]);
   const [pincode, setPincode] = useState("");
   const [formReady, setFormReady] = useState(false);
-  const [approvePeople, setApprovePeople] = useState([]);
+  const [approvePeople, setApprovePeople] = useState(() => {
+    if (!participants.find((item) => meetinghost.email === item.email))
+      return [meetinghost, ...participants];
+    else return participants;
+  });
 
   const styles = StyleSheet.create({
     title: {
@@ -43,12 +47,6 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
     setFormReady(pincode &&
       Array.isArray(approvePerson) && approvePerson.length > 0);
   }, [pincode, approvePerson]);
-
-  useEffect(() => {
-    if (!participants.find((item) => meetinghost.email === item.email))
-      setApprovePeople([meetinghost, ...participants]);
-    else setApprovePeople(participants);
-  }, []);
 
   async function sendForm() {
     try {
