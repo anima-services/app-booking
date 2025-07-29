@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSelector } from "react-redux";
 
 import { useResponsiveSizes } from './hooks/useResponsiveSizes';
+import { useTheme } from './ThemeContext';
 import { useEventData } from './hooks/useEventData';
 
 import EventStatus from './EventStatus';
@@ -14,6 +15,7 @@ const Schedule = ({ navigate }) => {
     const time_end = 23;
 
     const events_data = useSelector(state => state.data.events_data);
+    const { theme, toggleTheme } = useTheme();
     const last_update = useSelector(state => state.data.last_update);
     const sizes = useResponsiveSizes();
 
@@ -21,6 +23,37 @@ const Schedule = ({ navigate }) => {
     const [timePeriod, setTimePeriod] = useState(0);
     const [now, setNow] = useState(new Date());
     const [selectedIndex, setSelectedIndex] = useState(null);
+
+    const styles = StyleSheet.create({
+        rowContainer: {
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            alignContent: "start",
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        button: {
+            backgroundColor: theme.container,
+            color: theme.light,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        button_selected: {
+            backgroundColor: theme.light,
+            color: theme.container,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        button_text: {
+            fontFamily: 'Onest_500Medium',
+            color: theme.light,
+        },
+        button_text_selected: {
+            fontFamily: 'Onest_500Medium',
+            color: theme.container,
+        },
+    });
 
     // Оптимизация: уменьшена частота обновления времени
     useEffect(() => {
@@ -159,7 +192,7 @@ const Schedule = ({ navigate }) => {
                 />
                 <View
                     style={{
-                        borderBottomColor: colorScheme.container,
+                        borderBottomColor: theme.container,
                         borderBottomWidth: StyleSheet.hairlineWidth,
                         marginVertical: sizes.textSize * .5,
                     }}
@@ -193,7 +226,7 @@ const Schedule = ({ navigate }) => {
 
             {/* Gradient overlay */}
             <LinearGradient
-                colors={['transparent', colorScheme.dark]}
+                colors={['transparent', theme.dark]}
                 pointerEvents="none"
                 style={{
                     position: 'absolute',
@@ -228,6 +261,38 @@ const Bubble = memo(({
     timeLeft
 }) => {
     const sizes = useResponsiveSizes();
+    const { theme, toggleTheme } = useTheme();
+
+    const styles = StyleSheet.create({
+        rowContainer: {
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            alignContent: "start",
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        button: {
+            backgroundColor: theme.container,
+            color: theme.light,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        button_selected: {
+            backgroundColor: theme.light,
+            color: theme.container,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        button_text: {
+            fontFamily: 'Onest_500Medium',
+            color: theme.light,
+        },
+        button_text_selected: {
+            fontFamily: 'Onest_500Medium',
+            color: theme.container,
+        },
+    });
 
     return (
         <TouchableOpacity
@@ -279,6 +344,38 @@ const Bubble = memo(({
 
 const Tab = memo(({ text, select, selected }) => {
     const sizes = useResponsiveSizes();
+    const { theme, toggleTheme } = useTheme();
+
+    const styles = StyleSheet.create({
+        rowContainer: {
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            alignContent: "start",
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        button: {
+            backgroundColor: theme.container,
+            color: theme.light,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        button_selected: {
+            backgroundColor: theme.light,
+            color: theme.container,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        button_text: {
+            fontFamily: 'Onest_500Medium',
+            color: theme.light,
+        },
+        button_text_selected: {
+            fontFamily: 'Onest_500Medium',
+            color: theme.container,
+        },
+    });
 
     return (
         <TouchableOpacity
@@ -300,6 +397,38 @@ const Tab = memo(({ text, select, selected }) => {
 
 const BookBtn = memo(({ text, onPress, disabled = false, style }) => {
     const sizes = useResponsiveSizes();
+    const { theme, toggleTheme } = useTheme();
+
+    const styles = StyleSheet.create({
+        rowContainer: {
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            alignContent: "start",
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        button: {
+            backgroundColor: theme.container,
+            color: theme.light,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        button_selected: {
+            backgroundColor: theme.light,
+            color: theme.container,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        button_text: {
+            fontFamily: 'Onest_500Medium',
+            color: theme.light,
+        },
+        button_text_selected: {
+            fontFamily: 'Onest_500Medium',
+            color: theme.container,
+        },
+    });
 
     return (
         <TouchableOpacity
@@ -307,7 +436,7 @@ const BookBtn = memo(({ text, onPress, disabled = false, style }) => {
                 styles.button, {
                     padding: sizes.textSize,
                     borderRadius: sizes.textSize,
-                    backgroundColor: disabled ? colorScheme.container : colorScheme.free,
+                    backgroundColor: disabled ? theme.container : theme.free,
                     position: "absolute",
                     bottom: sizes.textSize * 2,
                     left: 0, right: 0,
@@ -320,45 +449,6 @@ const BookBtn = memo(({ text, onPress, disabled = false, style }) => {
             ]}>{text}</Text>
         </TouchableOpacity>
     );
-});
-
-const colorScheme = {
-    dark: "#181818",
-    light: "#FFFFFF",
-    free: "#71EB8C",
-    busy: "#FF6567",
-    container: "#2F2F2F",
-};
-
-const styles = StyleSheet.create({
-    rowContainer: {
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        alignContent: "start",
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    button: {
-        backgroundColor: colorScheme.container,
-        color: colorScheme.light,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    button_selected: {
-        backgroundColor: colorScheme.light,
-        color: colorScheme.container,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    button_text: {
-        fontFamily: 'Onest_500Medium',
-        color: colorScheme.light,
-    },
-    button_text_selected: {
-        fontFamily: 'Onest_500Medium',
-        color: colorScheme.container,
-    },
 });
 
 export function format_hh_mm(in_date) {

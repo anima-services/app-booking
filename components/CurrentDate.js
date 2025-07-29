@@ -2,9 +2,11 @@ import { StyleSheet, View, Text } from 'react-native';
 import { useState, useEffect } from 'react';
 
 import { useResponsiveSizes } from './hooks/useResponsiveSizes';
+import { useTheme } from './ThemeContext';
 
 const CurrentDate = ({style}) => {
     const sizes = useResponsiveSizes();
+    const { theme, toggleTheme } = useTheme();
     const [now, setNow] = useState(new Date());
 
     useEffect(() => {
@@ -22,6 +24,17 @@ const CurrentDate = ({style}) => {
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const timeStr = `${hours}:${minutes}`;
 
+    const styles = StyleSheet.create({
+        text: {
+            color: theme.light,
+            fontFamily: "Onest_500Medium",
+        },
+        container: {
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+    });
+
     return (
         <View style={[styles.container, style]}>
             <Text style={[styles.text, { fontSize: sizes.textSize }]}>{dateStr}</Text>
@@ -34,31 +47,12 @@ const CurrentDate = ({style}) => {
                 width: sizes.textSize * .2,
                 height: sizes.textSize * .2,
                 borderRadius: sizes.textSize * .1,
-                backgroundColor: colorScheme.light,
+                backgroundColor: theme.light,
                 marginHorizontal: sizes.textSize * .2
             }} />
             <Text style={[styles.text, { fontSize: sizes.textSize }]}>{timeStr}</Text>
         </View>
     );
 };
-
-const colorScheme = {
-    dark: "#181818",
-    light: "#FFFFFF",
-    free: "#71EB8C",
-    busy: "#FF6567",
-    container: "#2F2F2F",
-};
-
-const styles = StyleSheet.create({
-    text: {
-        color: colorScheme.light,
-        fontFamily: "Onest_500Medium",
-    },
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-});
 
 export default CurrentDate;

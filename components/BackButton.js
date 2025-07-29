@@ -1,10 +1,13 @@
 import { StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import Svg, { Path } from "react-native-svg"
 
+import { useTheme } from './ThemeContext';
+
 const BackButton = ({ goBack }) => {
 
     const { height: screenHeight } = Dimensions.get('window');
     const buttonSize = screenHeight * .03;
+    const { theme, toggleTheme } = useTheme();
 
     return (
         <TouchableOpacity
@@ -19,7 +22,7 @@ const BackButton = ({ goBack }) => {
             >
                 <Path
                     d="M17 1L1 17M1 1l16 16"
-                    stroke="#fff"
+                    stroke={theme.light}
                     strokeWidth={2}
                     strokeLinecap="round"
                     strokeLinejoin="round"

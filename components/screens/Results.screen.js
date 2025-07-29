@@ -7,6 +7,7 @@ import BackButton from '../BackButton';
 import Button from '../Button';
 
 import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
+import { useTheme } from '../ThemeContext';
 
 const Results = ({ navigate, goBack, resetToHome, params }) => {
   const { success, text } = params;
@@ -16,6 +17,19 @@ const Results = ({ navigate, goBack, resetToHome, params }) => {
   }
 
   const sizes = useResponsiveSizes();
+  const { theme, toggleTheme } = useTheme();
+
+  const styles = StyleSheet.create({
+    title: {
+      fontFamily: "Onest_600SemiBold",
+      color: theme.light,
+      textAlign: 'center',
+    },
+    rowContainer: {
+      flexDirection: 'row',
+      width: '100%',
+    },
+  });
 
   return (
     <ColumnScreen
@@ -32,19 +46,19 @@ const Results = ({ navigate, goBack, resetToHome, params }) => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <Rect x={1.5} y={1} width={34} height={34} rx={17} fill={colorScheme.free} />
+              <Rect x={1.5} y={1} width={34} height={34} rx={17} fill={theme.free} />
               <Rect
                 x={1.5}
                 y={1}
                 width={34}
                 height={34}
                 rx={17}
-                stroke={colorScheme.free}
+                stroke={theme.free}
                 strokeWidth={2}
               />
               <Path
                 d="M27 11L13.923 24 10 20.104"
-                stroke={colorScheme.container}
+                stroke={theme.container}
                 strokeWidth={2}
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -60,25 +74,5 @@ const Results = ({ navigate, goBack, resetToHome, params }) => {
     />
   );
 };
-
-const colorScheme = {
-  dark: "#181818",
-  light: "#FFFFFF",
-  free: "#71EB8C",
-  busy: "#FF6567",
-  container: "#2F2F2F",
-};
-
-const styles = StyleSheet.create({
-  title: {
-    fontFamily: "Onest_600SemiBold",
-    color: colorScheme.light,
-    textAlign: 'center',
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    width: '100%',
-  },
-});
 
 export default Results;

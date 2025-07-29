@@ -9,6 +9,7 @@ import Dropdown from '../Dropdown';
 import Button from '../Button';
 
 import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
+import { useTheme } from '../ThemeContext';
 import { approveReservation, getReservations } from '../services/api';
 
 import { setLogs } from '../data/DataSlice';
@@ -20,11 +21,23 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
   const { eventId, formatStart, formatEnd, topic, meetinghost, meetinghostname, participants } = params;
 
   const sizes = useResponsiveSizes();
+  const { theme, toggleTheme } = useTheme();
 
   const [approvePerson, setApprovePerson] = useState([]);
   const [pincode, setPincode] = useState("");
   const [formReady, setFormReady] = useState(false);
   const [approvePeople, setApprovePeople] = useState([]);
+
+  const styles = StyleSheet.create({
+    title: {
+      fontFamily: "Onest_600SemiBold",
+      color: theme.light,
+    },
+    rowContainer: {
+      flexDirection: 'row',
+      width: '100%',
+    },
+  });
 
   useEffect(() => {
     setFormReady(pincode &&
@@ -112,24 +125,5 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
     />
   );
 };
-
-const colorScheme = {
-  dark: "#181818",
-  light: "#FFFFFF",
-  free: "#71EB8C",
-  busy: "#FF6567",
-  container: "#2F2F2F",
-};
-
-const styles = StyleSheet.create({
-  title: {
-    fontFamily: "Onest_600SemiBold",
-    color: colorScheme.light,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    width: '100%',
-  },
-});
 
 export default Approve;

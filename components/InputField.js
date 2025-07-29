@@ -1,23 +1,16 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Dimensions } from 'react-native';
+import { useTheme } from './ThemeContext';
 
 
 const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, setText, value, disabled = false }) => {
     const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
     const textSize = screenHeight * .02;
+    const { theme, toggleTheme } = useTheme();
 
-    const colorScheme = {
-        dark: "#181818",
-        light: "#FFFFFF",
-        free: "#71EB8C",
-        busy: "#FF6567",
-        container: "#2F2F2F",
-        lightGray: "#808080",
-    };
-
-    const propertyStyle = [styles.property, { color: colorScheme.light, fontSize: screenHeight * 0.0125 }];
+    const propertyStyle = [styles.property, { color: theme.light, fontSize: screenHeight * 0.0125 }];
     const inputStyle = [styles.text, {
-        color: colorScheme.light, fontSize: textSize,
+        color: theme.light, fontSize: textSize,
         includeFontPadding: false, padding: 0, margin: 0,
         flex: 1,
         opacity: disabled ? .3 : 1,
@@ -27,7 +20,7 @@ const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, set
 
     return (
         <View style={{
-            backgroundColor: colorScheme.container,
+            backgroundColor: theme.container,
             paddingHorizontal: textSize,
             paddingVertical: textSize * .5,
             borderRadius: textSize,
@@ -38,9 +31,9 @@ const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, set
             <Text style={[propertyStyle, { display: value ? 'flex' : 'none' }]}>{name}</Text>
             <TextInput
                 style={inputStyle}
-                placeholderTextColor={colorScheme.lightGray}
-                selectionColor={colorScheme.light}
-                cursorColor={colorScheme.light}
+                placeholderTextColor={theme.lightGray}
+                selectionColor={theme.light}
+                cursorColor={theme.light}
                 placeholder={placeholder}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}

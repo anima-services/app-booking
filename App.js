@@ -15,6 +15,7 @@ import Results from "./components/screens/Results.screen";
 import Logs from "./components/screens/Logs.screen";
 
 import NavigationService from "./components/services/Navigation.services";
+import { ThemeProvider } from "./components/ThemeContext";
 
 import MainApp from "./components/services/MainApp.services";
 import QBicHandler from "./components/services/qbic.services";
@@ -86,24 +87,26 @@ export default function App() {
         <Provider store={Store}>
             <DataManager />
             <SafeAreaProvider style={{ backgroundColor: '#000000', flex: 1 }}>
-                {/* Фоновый компонент */}
-                <Background isBusy={isBusy} />
+                <ThemeProvider>
+                    {/* Фоновый компонент */}
+                    <Background isBusy={isBusy} />
 
-                {/* Навигационный стек поверх фона */}
-                <Animated.View
-                    style={{
-                        flex: 1,
-                        opacity: fadeAnim,
-                    }}
-                >
-                    {renderScreen()}
-                </Animated.View>
+                    {/* Навигационный стек поверх фона */}
+                    <Animated.View
+                        style={{
+                            flex: 1,
+                            opacity: fadeAnim,
+                        }}
+                    >
+                        {renderScreen()}
+                    </Animated.View>
 
-                {/* Services */}
-                <MainApp />
-                <QBicHandler isBusy={isBusy} />
-                <BusyListener setBusy={setBusy} />
-                <StatusBar hidden={true} translucent={true} />
+                    {/* Services */}
+                    <MainApp />
+                    <QBicHandler isBusy={isBusy} />
+                    <BusyListener setBusy={setBusy} />
+                    <StatusBar hidden={true} translucent={true} />
+                </ThemeProvider>
             </SafeAreaProvider>
         </Provider>
     )

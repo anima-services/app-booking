@@ -9,6 +9,7 @@ import Dropdown from '../Dropdown';
 import Button from '../Button';
 
 import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
+import { useTheme } from '../ThemeContext';
 import { createReservation, getReservations } from '../services/api';
 
 import { useSelector, useDispatch } from "react-redux";
@@ -20,11 +21,23 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
   const { timeStart, timeEnd, formatStart, formatEnd } = params;
   const users_data = useSelector(state => state.data.users_data);
   const sizes = useResponsiveSizes();
+  const { theme, toggleTheme } = useTheme();
 
   const [topic, setTopic] = useState("");
   const [meetinghost, setMeetinghost] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [formReady, setFormReady] = useState(false);
+
+  const styles = StyleSheet.create({
+    title: {
+      fontFamily: "Onest_600SemiBold",
+      color: theme.light,
+    },
+    rowContainer: {
+      flexDirection: 'row',
+      width: '100%',
+    },
+  });
 
   useEffect(() => {
     setFormReady(topic &&
@@ -60,9 +73,9 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
 
   return (
     <ColumnScreen
-      leftContent={<SpaceInfo navigate={navigate}/>}
+      leftContent={<SpaceInfo navigate={navigate} />}
       rightContent={<>
-        <BackButton goBack={resetToHome}/>
+        <BackButton goBack={resetToHome} />
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
           <Text style={[styles.title, { fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>Вы бронируете:</Text>
           {/* Начало и окончание */}
@@ -114,24 +127,5 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
     />
   );
 };
-
-const colorScheme = {
-  dark: "#181818",
-  light: "#FFFFFF",
-  free: "#71EB8C",
-  busy: "#FF6567",
-  container: "#2F2F2F",
-};
-
-const styles = StyleSheet.create({
-  title: {
-    fontFamily: "Onest_600SemiBold",
-    color: colorScheme.light,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    width: '100%',
-  },
-});
 
 export default Book;

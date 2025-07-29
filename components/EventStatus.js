@@ -1,8 +1,11 @@
 import { StyleSheet, Dimensions, TouchableOpacity, Text, View } from 'react-native';
 import Svg, { Circle, Path, G } from 'react-native-svg';
 
+import { useTheme } from './ThemeContext';
+
 const EventStatus = ({ text, icon, onPress, style, busyColored = false, isBusy }) => {
     const { height: screenHeight } = Dimensions.get('window');
+    const { theme, toggleTheme } = useTheme();
     const textSize = screenHeight * .0175;
     const borderRadius = screenHeight * .02;
 
@@ -10,8 +13,8 @@ const EventStatus = ({ text, icon, onPress, style, busyColored = false, isBusy }
         <TouchableOpacity
             style={[styles.button, {
                 backgroundColor: busyColored
-                    ? isBusy ? colorScheme.busy : colorScheme.free
-                    : colorScheme.light,
+                    ? isBusy ? theme.busy : theme.free
+                    : theme.light,
                 paddingHorizontal: textSize * .8,
                 paddingVertical: textSize * .5,
                 borderRadius: borderRadius,
@@ -28,9 +31,9 @@ const EventStatus = ({ text, icon, onPress, style, busyColored = false, isBusy }
                     xmlns="http://www.w3.org/2000/svg"
                     style={{ marginRight: textSize * .5, display: icon === "reserved" ? "flex" : "none" }}
                 >
-                    <Circle cx={3} cy={3} r={3} fill={colorScheme.container} />
-                    <Circle opacity={0.55} cx={11} cy={3} r={3} fill={colorScheme.container} />
-                    <Circle opacity={0.2} cx={19} cy={3} r={3} fill={colorScheme.container} />
+                    <Circle cx={3} cy={3} r={3} fill={theme.container} />
+                    <Circle opacity={0.55} cx={11} cy={3} r={3} fill={theme.container} />
+                    <Circle opacity={0.2} cx={19} cy={3} r={3} fill={theme.container} />
                 </Svg>
                 <Svg
                     width={textSize}
@@ -42,7 +45,7 @@ const EventStatus = ({ text, icon, onPress, style, busyColored = false, isBusy }
                 >
                     <Path
                         d="M14.167 7.39v.613a6.667 6.667 0 11-3.953-6.093m3.953.756L7.501 9.34l-2-2"
-                        stroke={colorScheme.container}
+                        stroke={theme.container}
                         strokeWidth={1.5}
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -59,7 +62,7 @@ const EventStatus = ({ text, icon, onPress, style, busyColored = false, isBusy }
                     <G clipPath="url(#clip0_797_1913)">
                         <Path
                             d="M8 4v4l2.667 1.333m4-1.333A6.667 6.667 0 111.334 8a6.667 6.667 0 0113.333 0z"
-                            stroke={colorScheme.dark}
+                            stroke={theme.dark}
                             strokeWidth={1.5}
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -70,25 +73,17 @@ const EventStatus = ({ text, icon, onPress, style, busyColored = false, isBusy }
                     width: textSize * .8,
                     height: textSize * .8,
                     borderRadius: textSize * .4,
-                    backgroundColor: colorScheme.light,
+                    backgroundColor: theme.light,
                     marginRight: textSize * .5,
                     display: isBusy ? "flex" : "none"
                 }} />
                 <Text style={[styles.buttonText, {
-                    color: isBusy ? colorScheme.light : colorScheme.dark,
+                    color: isBusy ? theme.light : theme.dark,
                     fontSize: textSize
                 }]}>{text}</Text>
             </View>
         </TouchableOpacity>
     );
-};
-
-const colorScheme = {
-    dark: "#181818",
-    light: "#FFFFFF",
-    free: "#71EB8C",
-    busy: "#FF6567",
-    container: "#2F2F2F",
 };
 
 const styles = StyleSheet.create({

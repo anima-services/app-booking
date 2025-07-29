@@ -10,10 +10,12 @@ import {
 } from 'react-native';
 import Svg, { Circle, Path } from "react-native-svg"
 import { useResponsiveSizes } from './hooks/useResponsiveSizes';
+import { useTheme } from "./ThemeContext";
 import { UserImage } from "./UserCard";
 
 const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attributeTag, maxItems = 1, onSelect }) => {
     const sizes = useResponsiveSizes();
+    const { theme, toggleTheme } = useTheme();
     const [text, setText] = useState("");
     const [list, setList] = useState([]);
     const [selected, setSelected] = useState([]);
@@ -130,13 +132,13 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
             position: 'absolute',
             padding: sizes.text_2 * .5,
             borderRadius: sizes.text_2,
-            backgroundColor: colorScheme.container,
+            backgroundColor: theme.container,
         },
         searchContainer: {
             flex: 1
         },
         inputStyle: {
-            color: colorScheme.light,
+            color: theme.light,
             includeFontPadding: false,
             padding: 0,
             margin: 0,
@@ -151,7 +153,7 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
         },
         text: {
             fontFamily: "Onest_500Medium",
-            color: colorScheme.light,
+            color: theme.light,
             fontSize: sizes.textSize
         },
     });
@@ -166,7 +168,7 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                     setButtonLayout({ x, y, width, height });
                 }}
                 style={[styles.rowContainer, {
-                    backgroundColor: colorScheme.container,
+                    backgroundColor: theme.container,
                     paddingHorizontal: sizes.text_2,
                     paddingVertical: sizes.text_2 * .5,
                     borderRadius: sizes.text_2,
@@ -211,7 +213,7 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                     <View style={[
                         styles.searchContainer,
                         {
-                            backgroundColor: colorScheme.lightContainer,
+                            backgroundColor: theme.lightContainer,
                             paddingHorizontal: sizes.text_2,
                             paddingVertical: sizes.text_2 * .5,
                             borderRadius: sizes.text_2,
@@ -221,9 +223,9 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                     ]}>
                         <TextInput
                             style={[styles.inputStyle, { fontSize: sizes.text_2 }]}
-                            placeholderTextColor={colorScheme.lightGray}
-                            selectionColor={colorScheme.light}
-                            cursorColor={colorScheme.light}
+                            placeholderTextColor={theme.lightGray}
+                            selectionColor={theme.light}
+                            cursorColor={theme.light}
                             placeholder={placeholder}
                             value={text}
                             onChangeText={setText}
@@ -250,7 +252,7 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                                         {item[textTag]}
                                     </Text>
                                     <View style={{
-                                        backgroundColor: colorScheme.lightContainer,
+                                        backgroundColor: theme.lightContainer,
                                         paddingHorizontal: sizes.text_2 * .5,
                                         paddingVertical: sizes.text_2 * .25,
                                         borderRadius: sizes.text_2,
@@ -285,16 +287,6 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
             </>)}
         </>
     );
-};
-
-const colorScheme = {
-    dark: "#181818",
-    light: "#FFFFFF",
-    free: "#71EB8C",
-    busy: "#FF6567",
-    container: "#2F2F2F",
-    lightContainer: "#4F4F4F",
-    lightGray: "#808080",
 };
 
 export default Dropdown;

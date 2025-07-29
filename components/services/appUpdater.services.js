@@ -8,12 +8,21 @@ import packageJson from "../../package.json";
 const currentVersion = packageJson.version;
 
 import Button from "../Button";
+import { useTheme } from "../ThemeContext";
 
 const AppUpdate = () => {
     const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
     const [downloadUrl, setDownloadUrl] = useState("");
     const [isDownloading, setIsDownloading] = useState(false);
     const [updateVersion, setUpdateVersion] = useState(currentVersion);
+    const { theme, toggleTheme } = useTheme();
+
+    const styles = StyleSheet.create({
+        text: {
+            fontFamily: 'Onest_500Medium',
+            color: theme.free
+        },
+    });
 
     // Получение последнего релиза с GitHub
     const getLatestRelease = async () => {
@@ -134,20 +143,5 @@ const AppUpdate = () => {
         </View>
     );
 };
-
-const colorScheme = {
-    dark: "#181818",
-    light: "#FFFFFF",
-    free: "#71EB8C",
-    busy: "#FF6567",
-    container: "#2F2F2F",
-};
-
-const styles = StyleSheet.create({
-    text: {
-        fontFamily: 'Onest_500Medium',
-        color: colorScheme.free
-    },
-});
 
 export default AppUpdate;

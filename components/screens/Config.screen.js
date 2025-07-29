@@ -8,6 +8,7 @@ import InputField from '../InputField';
 import Button from "../Button";
 
 import AppUpdate from "../services/appUpdater.services";
+import { useTheme } from "../ThemeContext";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setState, setLogs } from "../data/DataSlice";
@@ -15,19 +16,21 @@ import { setState, setLogs } from "../data/DataSlice";
 const Config = ({ navigate, goBack, resetToHome, params }) => {
   const data = useSelector(state => state.data);
   const dispatch = useDispatch();
+  const {
+    theme,
+    themeName,
+    customColors,
+    toggleTheme,
+    setColor,
+    resetColor,
+    resetAllColors,
+    availableColors
+  } = useTheme();
 
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const topOffset = screenHeight * .2;
   const titleSize = screenHeight * .045;
   const gapSize = screenHeight * .01;
-
-  const colorScheme = {
-    dark: "#181818",
-    light: "#FFFFFF",
-    free: "#71EB8C",
-    busy: "#FF6567",
-    container: "#2F2F2F",
-  };
 
   const [formData, setFormData] = useState({
     hostname: "",
@@ -61,12 +64,12 @@ const Config = ({ navigate, goBack, resetToHome, params }) => {
 
   return (
     <ColumnScreen
-      leftContent={<SpaceInfo navigate={navigate}/>}
+      leftContent={<SpaceInfo navigate={navigate} />}
       rightContent={
         <>
-          <BackButton goBack={resetToHome}/>
+          <BackButton goBack={resetToHome} />
           <View style={{ marginTop: topOffset, flex: 1 }}>
-            <Text style={[styles.title, { color: colorScheme.light, fontSize: titleSize, marginBottom: titleSize }]}>Конфигурация:</Text>
+            <Text style={[styles.title, { color: theme.light, fontSize: titleSize, marginBottom: titleSize }]}>Конфигурация:</Text>
             <ScrollView>
               {/* ANIMA API */}
               <View style={[styles.rowContainer, { gap: gapSize }]}>
@@ -107,7 +110,7 @@ const Config = ({ navigate, goBack, resetToHome, params }) => {
                 />
               </View>
               {/* QBIC API */}
-              <Text style={[styles.title, { color: colorScheme.light, fontSize: titleSize * .5, marginBottom: 0 }]}>Конфигурация api QBic:</Text>
+              <Text style={[styles.title, { color: theme.light, fontSize: titleSize * .5, marginBottom: 0 }]}>Конфигурация api QBic:</Text>
               <View style={[styles.rowContainer, { gap: gapSize }]}>
                 <InputField name="Хост (127.0.0.1)" placeholder="Хост" inputMode="text"
                   value={formData.qbic_hostname}
@@ -129,6 +132,16 @@ const Config = ({ navigate, goBack, resetToHome, params }) => {
                 <Button title="Применить настройки" onPress={handleSave} style={{ flex: 1 }} />
                 <Button title="Логи приложения" onPress={() => navigate('Logs')} style={{ flex: 1 }} />
               </View>
+              {/* Цветовые схемы */}
+              <Text style={[styles.title, { color: theme.light, fontSize: titleSize * .5, marginBottom: 0 }]}>Цветовые схемы:</Text>
+              {availableColors.map(colorKey => (
+                <InputField key={colorKey} name={colorKey} placeholder={theme[colorKey]} inputMode="text"
+                  value={theme[colorKey]}
+                  setText={value => setColor(colorKey, value)}
+                />
+              ))}
+              <Button title="Cбросить настройки цветов" onPress={resetAllColors} style={{ flex: 1 }} />
+              <Button title="Переключить тему" onPress={toggleTheme} style={{ flex: 1 }} />
               <AppUpdate />
             </ScrollView>
           </View>

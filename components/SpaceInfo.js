@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 import { useSpaceData } from './hooks/useSpaceData';
 import { useEventData } from './hooks/useEventData';
+import { useTheme } from './ThemeContext';
 import { format_hh_mm } from './Schedule';
 
 import Button from './Button';
@@ -17,16 +18,11 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
     const space_data = useSelector(state => state.data.space_data);
     const space_size = useSelector(state => state.data.space_size);
     const sizes = useResponsiveSizes();
+    const { theme, toggleTheme } = useTheme();
     const spaceData = useSpaceData(space_data, space_size);
     const eventData = useEventData(events_data);
 
-    const colorScheme = {
-        dark: "#181818",
-        light: "#FFFFFF",
-        free: "#71EB8C",
-        busy: "#FF6567",
-        container: "#2F2F2F",
-    };
+
     const statusName = {
         "reserved": "Подтверждается",
         "approved": "Подтверждено",
@@ -35,8 +31,8 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
         "finished": "Завершено",
     }
 
-    const propertyStyle = [styles.property, { color: colorScheme.light, fontSize: sizes.textSize }];
-    const textStyle = [styles.text, { color: colorScheme.light, marginHorizontal: 5, fontSize: sizes.textSize }];
+    const propertyStyle = [styles.property, { color: theme.light, fontSize: sizes.textSize }];
+    const textStyle = [styles.text, { color: theme.light, marginHorizontal: 5, fontSize: sizes.textSize }];
 
     function approveEvent() {
         navigate('Approve', {
@@ -59,7 +55,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
     return (
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
             <Pressable style={styles.content} onLongPress={handlePress} delayLongPress={5000}>
-                <Text style={[styles.title, { color: colorScheme.light, fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>{spaceData.title}</Text>
+                <Text style={[styles.title, { color: theme.light, fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>{spaceData.title}</Text>
             </Pressable>
             {/* Вместимость */}
             <View style={[styles.rowContainer, { display: spaceData.quantity ? "flex" : "none" }]}>
@@ -68,7 +64,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
                 <Svg width={sizes.textSize} height={sizes.textSize} viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg" >
                     <Path
                         d="M19.166 17.25v-1.833a3.668 3.668 0 00-2.75-3.551m-3.208-10.85a3.668 3.668 0 010 6.8m1.375 9.434c0-1.709 0-2.563-.28-3.236a3.667 3.667 0 00-1.984-1.985c-.673-.279-1.528-.279-3.236-.279h-2.75c-1.708 0-2.563 0-3.237.28a3.667 3.667 0 00-1.984 1.984c-.279.673-.279 1.527-.279 3.236M11.375 4.417a3.667 3.667 0 11-7.334 0 3.667 3.667 0 017.334 0z"
-                        stroke={colorScheme.light}
+                        stroke={theme.light}
                         strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
                     />
                 </Svg>
@@ -79,7 +75,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
                 <View style={styles.propertiesContainer}>
                     {spaceData.properties.map((item, i) => (
                         <View key={i} style={{
-                            backgroundColor: colorScheme.container,
+                            backgroundColor: theme.container,
                             padding: sizes.textSize * .25,
                             borderRadius: sizes.textSize
                         }}>
@@ -90,7 +86,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
             </View>
             {/* Текущее бронирование */}
             <View style={{
-                backgroundColor: colorScheme.container,
+                backgroundColor: theme.container,
                 padding: sizes.textSize,
                 paddingBottom: sizes.textSize * .25,
                 borderRadius: sizes.textSize,
@@ -99,7 +95,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
                 width: "80%",
                 display: eventData.show ? "flex" : "none"
             }}>
-                <Text style={[styles.text, { color: colorScheme.light, fontSize: sizes.subtitleSize }]}>{{
+                <Text style={[styles.text, { color: theme.light, fontSize: sizes.subtitleSize }]}>{{
                     true: "Текущее бронирование",
                     false: "Ближайшее бронирование"
                 }[eventData.isCurrent]}</Text>

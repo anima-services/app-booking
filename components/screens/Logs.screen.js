@@ -7,21 +7,15 @@ import BackButton from '../BackButton';
 import Button from "../Button";
 
 import { useSelector } from "react-redux";
+import { useTheme } from "../ThemeContext";
 
 const Logs = ({ navigate, goBack, resetToHome, params }) => {
     const logs = useSelector(state => state.data.logs);
 
     const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+    const { theme, toggleTheme } = useTheme();
     const topOffset = screenHeight * .2;
     const titleSize = screenHeight * .045;
-
-    const colorScheme = {
-        dark: "#181818",
-        light: "#FFFFFF",
-        free: "#71EB8C",
-        busy: "#FF6567",
-        container: "#2F2F2F",
-    };
 
     return (
         <ColumnScreen
@@ -31,7 +25,7 @@ const Logs = ({ navigate, goBack, resetToHome, params }) => {
                     <BackButton goBack={resetToHome}/>
                     <View style={{ marginTop: topOffset, flex: 1 }}>
                         <Text style={[styles.title, {
-                            color: colorScheme.light,
+                            color: theme.light,
                             fontSize: titleSize,
                             marginBottom: titleSize
                         }]}>Логи приложения:</Text>
@@ -40,7 +34,7 @@ const Logs = ({ navigate, goBack, resetToHome, params }) => {
 
                                 <Text key={i}
                                     style={[styles.text, {
-                                        color: colorScheme.light,
+                                        color: theme.light,
                                         fontSize: titleSize * .4,
                                         marginBottom: 0
                                     }]}>{item}</Text>
