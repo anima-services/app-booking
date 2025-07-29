@@ -81,10 +81,6 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
         return array;
     };
 
-    useEffect(() => {
-        updateArray();
-    }, [text]);
-
     const selectItem = (in_item) => {
         /* Проверка maxItems-1 */
         let _items = 0;
@@ -114,7 +110,6 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
 
     const updateArray = () => {
         let _newArray = [...formattedData];
-        _newArray = filterData(_newArray);
         _newArray = sortData(_newArray);
         setList([..._newArray]);
     }
@@ -238,7 +233,7 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                         />
                     </View>
                     <ScrollView style={{ flex: 1 }}>
-                        {list.map((item, i) => {
+                        {filterData(list).map((item, i) => {
                             const isSelected = item.selected;
                             return (
                                 <TouchableOpacity
