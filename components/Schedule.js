@@ -62,7 +62,7 @@ const Schedule = ({ navigate }) => {
             const newMinutes = currentTime.getMinutes() + 3;
             currentTime.setMinutes(newMinutes);
             setNow(currentTime);
-        }, 60000);
+        }, 6000);
         return () => clearInterval(timer);
     }, []);
 
@@ -105,6 +105,7 @@ const Schedule = ({ navigate }) => {
 
         for (const event of events_data) {
             _dateEnd = new Date(event.start);
+            if (_dateEnd < _date) continue;
             _table.push(...countBubbles(preset, _date, _dateEnd));
 
             _date = new Date(event.start);
