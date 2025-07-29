@@ -109,7 +109,6 @@ const Schedule = ({ navigate }) => {
 
             _date = new Date(event.start);
             _dateEnd = new Date(event.end);
-
             const _timeUntilStart = Math.ceil((_date - new Date(now)) / 60000);
             if (_timeUntilStart > 15) {
                 _table.push({
@@ -119,7 +118,7 @@ const Schedule = ({ navigate }) => {
                     format_start: format_hh_mm(_date),
                     format_end: format_hh_mm(_dateEnd),
                     title: event.topic,
-                    dsc: `Организатор: ${event.host_fullname}`,
+                    dsc: `Организатор: ${event.user_info.full_name}`,
                     disabled: true
                 });
             }
