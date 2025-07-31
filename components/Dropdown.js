@@ -177,7 +177,9 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                     gap: sizes.text_2,
                 }]}>
                 <Text style={[styles.text, { fontSize: sizes.text_2 }]}>{name}</Text>
-                <Text style={[styles.text, { fontSize: sizes.text_2, opacity: .3 }]}>{`Выбрано: ${selected.length}/${maxItems}`}</Text>
+                <Text style={[styles.text, { fontSize: sizes.text_2, opacity: .3 }]}>
+                    {`Выбрано: ${selected.length}${maxItems < 100 ? "/" + maxItems : ""}`}
+                </Text>
                 <Svg
                     width={sizes.text_2}
                     height={sizes.text_2}

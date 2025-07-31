@@ -111,7 +111,7 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
             pictureTag="photo"
             textTag="full_name"
             attributeTag="email"
-            maxItems={15}
+            maxItems={1000}
             onSelect={setParticipants}
           />
           {/* Пинкод */}
