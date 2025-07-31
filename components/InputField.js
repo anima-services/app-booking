@@ -32,7 +32,6 @@ const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, set
             <TextInput
                 style={inputStyle}
                 placeholderTextColor={theme.lightGray}
-                selectionColor={theme.light}
                 cursorColor={theme.light}
                 placeholder={placeholder}
                 onFocus={() => setFocused(true)}
@@ -46,6 +45,7 @@ const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, set
                 selectTextOnFocus={!disabled}
                 contextMenuHidden={disabled} // For iOS
                 caretHidden={disabled}
+                disableFullscreenUI={true}
             />
         </View>
     );

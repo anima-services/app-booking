@@ -6,7 +6,7 @@ import { useTheme } from './ThemeContext';
 const BackButton = ({ goBack }) => {
 
     const { height: screenHeight } = Dimensions.get('window');
-    const buttonSize = screenHeight * .03;
+    const buttonSize = screenHeight * .05;
     const { theme, toggleTheme } = useTheme();
 
     return (

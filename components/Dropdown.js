@@ -6,9 +6,9 @@ import {
     TextInput,
     Text,
     View,
-    Dimensions
+    Dimensions,
 } from 'react-native';
-import Svg, { Circle, Path } from "react-native-svg"
+import Svg, { Circle, Path, G } from "react-native-svg"
 import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 import { useTheme } from "./ThemeContext";
 import { UserImage } from "./UserCard";
@@ -186,13 +186,15 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                     xmlns="http://www.w3.org/2000/svg"
                     style={{ position: "absolute", right: sizes.text_2 }}
                 >
-                    <Path
-                        d="M5 7.5l5 5 5-5"
-                        stroke="#fff"
-                        strokeWidth={1.5}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    />
+                    <G transform={showList ? "rotate(180, 10, 10)" : "rotate(0, 10, 10)"}>
+                        <Path
+                            d="M5 7.5l5 5 5-5"
+                            stroke="#fff"
+                            strokeWidth={1.5}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                    </G>
                 </Svg>
             </TouchableOpacity>
             {showList && (<>
@@ -201,39 +203,16 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                     activeOpacity={1}
                     onPress={() => setShowList(false)}
                 />
-                <View style={[
-                    styles.listContainer,
-                    {
-                        top: listTop,
-                        width: buttonLayout.width,
-                        maxHeight: listHeight,
-                        zIndex: 10,
-                    }
-                ]}>
-                    <View style={[
-                        styles.searchContainer,
+                <View
+                    style={[
+                        styles.listContainer,
                         {
-                            backgroundColor: theme.lightContainer,
-                            paddingHorizontal: sizes.text_2,
-                            paddingVertical: sizes.text_2 * .5,
-                            borderRadius: sizes.text_2,
-                            marginBottom: sizes.text_2 * .5,
-                            height: sizes.text_2 * 4,
+                            top: listTop,
+                            width: buttonLayout.width,
+                            maxHeight: listHeight,
+                            zIndex: 10,
                         }
                     ]}>
-                        <TextInput
-                            style={[styles.inputStyle, { fontSize: sizes.text_2 }]}
-                            placeholderTextColor={theme.lightGray}
-                            selectionColor={theme.light}
-                            cursorColor={theme.light}
-                            placeholder={placeholder}
-                            value={text}
-                            onChangeText={setText}
-                            underlineColorAndroid="transparent"
-                            inputMode="text"
-                            autoFocus={false}
-                        />
-                    </View>
                     <ScrollView style={{ flex: 1 }}>
                         {filterData(list).map((item, i) => {
                             const isSelected = item.selected;
@@ -283,6 +262,31 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                             );
                         })}
                     </ScrollView>
+                    <View style={[
+                        styles.searchContainer,
+                        {
+                            backgroundColor: theme.lightContainer,
+                            paddingHorizontal: sizes.text_2,
+                            paddingVertical: sizes.text_2 * .5,
+                            borderRadius: sizes.text_2,
+                            marginVertical: sizes.text_2 * .25,
+                            height: sizes.text_2 * 4,
+                        }
+                    ]}>
+                        <TextInput
+                            style={[styles.inputStyle, { fontSize: sizes.text_2 }]}
+                            placeholderTextColor={theme.lightGray}
+                            selectionColor={theme.light}
+                            cursorColor={theme.light}
+                            placeholder={placeholder}
+                            value={text}
+                            onChangeText={setText}
+                            underlineColorAndroid="transparent"
+                            inputMode="text"
+                            autoFocus={false}
+                            disableFullscreenUI={true}
+                        />
+                    </View>
                 </View>
             </>)}
         </>

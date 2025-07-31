@@ -11,7 +11,7 @@ import { useTheme } from '../ThemeContext';
 
 const Results = ({ navigate, goBack, resetToHome, params }) => {
   const { success, text } = params;
-  
+
   function goHome() {
     resetToHome();
   }
@@ -33,10 +33,10 @@ const Results = ({ navigate, goBack, resetToHome, params }) => {
 
   return (
     <ColumnScreen
-      leftContent={<SpaceInfo navigate={navigate}/>}
+      leftContent={<SpaceInfo navigate={navigate} />}
       rightContent={<>
-        <BackButton goBack={resetToHome}/>
-        <View style={{ flex: 1, justifyContent: 'center'}}>
+        <BackButton goBack={resetToHome} />
+        <View style={{ flex: 1, justifyContent: 'center' }}>
           <View style={{ alignItems: 'center' }}>
             <Svg
               width={sizes.titleSize}
@@ -59,6 +59,32 @@ const Results = ({ navigate, goBack, resetToHome, params }) => {
               <Path
                 d="M27 11L13.923 24 10 20.104"
                 stroke={theme.container}
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </Svg>
+            <Svg
+              width={sizes.titleSize}
+              height={sizes.titleSize}
+              style={{ display: success ? 'none' : 'flex' }}
+              viewBox="0 0 37 36"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <Rect x={1.5} y={1} width={34} height={34} rx={17} fill="#FF6567" />
+              <Rect
+                x={1.5}
+                y={1}
+                width={34}
+                height={34}
+                rx={17}
+                stroke="#FF6567"
+                strokeWidth={2}
+              />
+              <Path
+                d="M25.5 11l-14 14m0-14l14 14"
+                stroke="#fff"
                 strokeWidth={2}
                 strokeLinecap="round"
                 strokeLinejoin="round"

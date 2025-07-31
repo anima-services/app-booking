@@ -59,10 +59,10 @@ const Schedule = ({ navigate }) => {
     useEffect(() => {
         const timer = setInterval(() => {
             const currentTime = new Date();
-            const newMinutes = currentTime.getMinutes() + 3;
+            const newMinutes = currentTime.getMinutes();
             currentTime.setMinutes(newMinutes);
             setNow(currentTime);
-        }, 6000);
+        }, 60000);
         return () => clearInterval(timer);
     }, []);
 
