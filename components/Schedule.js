@@ -102,11 +102,12 @@ const Schedule = ({ navigate }) => {
         let _table = [];
         let _date = new Date(now);
         let _dateEnd = new Date(now);
+        let _lastDate = new Date(now);
 
         for (const event of events_data) {
             _dateEnd = new Date(event.start);
-            if (_dateEnd < _date) continue;
             _table.push(...countBubbles(preset, _date, _dateEnd));
+            if (_dateEnd < _date) continue;
 
             _date = new Date(event.start);
             _dateEnd = new Date(event.end);
@@ -137,7 +138,7 @@ const Schedule = ({ navigate }) => {
         const _endDate = new Date(in_time_end);
         const _hour = _date.getHours();
 
-        for (let i = _hour; i < _endDate.getHours(); i++) {
+        for (let i = _hour; i < _endDate.getHours()+1; i++) {
             const _intervals = Math.floor(60 / preset);
             let _intervalStart = new Date(_date);
             let _intervalEnd = new Date(_intervalStart);
@@ -146,8 +147,10 @@ const Schedule = ({ navigate }) => {
                 const _offset = k > 0 ? time_offset : 0;
                 _intervalStart.setHours(i, _offset + preset * k, 0);
                 _intervalEnd.setHours(i, _offset + preset * (k + 1), 0);
+                console.log(i, _intervalStart,_intervalEnd);
+                console.log(_endDate);
 
-                if (_intervalStart > _date) {
+                if (_intervalStart > _date && _intervalEnd < _endDate) {
                     _bubbleArray.push({
                         text: `${format_hh_mm(_intervalStart)} - ${format_hh_mm(_intervalEnd)}`,
                         start: new Date(_intervalStart),
