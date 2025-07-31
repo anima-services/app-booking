@@ -16,6 +16,14 @@ const Results = ({ navigate, goBack, resetToHome, params }) => {
     resetToHome();
   }
 
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      resetToHome();
+    }, 1000 * 60 * 5);
+
+    return () => clearTimeout(timerId);
+  }, []);
+
   const sizes = useResponsiveSizes();
   const { theme, toggleTheme } = useTheme();
 

@@ -45,6 +45,14 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
       Array.isArray(participants) && participants.length > 0);
   }, [topic, meetinghost, participants]);
 
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      resetToHome();
+    }, 1000 * 60 * 5);
+
+    return () => clearTimeout(timerId);
+  }, []);
+
   async function sendForm() {
     try {
       setFormReady(false);

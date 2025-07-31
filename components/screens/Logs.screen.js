@@ -17,6 +17,14 @@ const Logs = ({ navigate, goBack, resetToHome, params }) => {
     const topOffset = screenHeight * .2;
     const titleSize = screenHeight * .045;
 
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+          resetToHome();
+        }, 1000 * 60 * 5);
+    
+        return () => clearTimeout(timerId);
+      }, []);
+
     return (
         <ColumnScreen
             leftContent={<SpaceInfo navigate={navigate}/>}

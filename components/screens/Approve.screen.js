@@ -48,6 +48,14 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
       Array.isArray(approvePerson) && approvePerson.length > 0);
   }, [pincode, approvePerson]);
 
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      resetToHome();
+    }, 1000 * 60 * 5);
+
+    return () => clearTimeout(timerId);
+  }, []);
+
   async function sendForm() {
     try {
       setFormReady(false);

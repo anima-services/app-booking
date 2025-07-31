@@ -147,8 +147,6 @@ const Schedule = ({ navigate }) => {
                 const _offset = k > 0 ? time_offset : 0;
                 _intervalStart.setHours(i, _offset + preset * k, 0);
                 _intervalEnd.setHours(i, _offset + preset * (k + 1), 0);
-                console.log(i, _intervalStart,_intervalEnd);
-                console.log(_endDate);
 
                 if (_intervalStart > _date && _intervalEnd < _endDate) {
                     _bubbleArray.push({
