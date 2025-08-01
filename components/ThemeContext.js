@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { setState } from "./data/DataSlice";
+import { setState, setLogs } from "./data/DataSlice";
 
 // Базовые темы
 const baseThemes = {
@@ -31,10 +31,20 @@ const ThemeContext = createContext();
 export const ThemeProvider = ({ children }) => {
   const data = useSelector(state => state.data);
   const dispatch = useDispatch();
-  
+
   // Состояния
-  const [themeName, setThemeName] = useState(data.themeName ?? 'dark');
-  const [customColors, setCustomColors] = useState(data.customColors ?? {});
+  const [themeName, setThemeName] = useState('dark');
+  const [customColors, setCustomColors] = useState({});
+
+  const handleLoad = () => {
+    setThemeName(data.themeName ?? 'dark');
+    setCustomColors(data.customColors ?? {});
+    if (dispatch) dispatch(setLogs("ThemeContext: Цвета загружены!"));
+  };
+
+  useEffect(() => {
+    handleLoad();
+  }, []);
 
   // Переключение темы
   const toggleTheme = () => {
@@ -66,11 +76,11 @@ export const ThemeProvider = ({ children }) => {
   // Формирование текущей темы с учетом кастомных цветов
   const theme = useMemo(() => {
     const baseTheme = baseThemes[themeName];
-    
+
     return {
       ...baseTheme,
       ...customColors,
-      
+
       // Методы для удобства
       isLight: themeName === 'light',
       isDark: themeName === 'dark',
@@ -79,9 +89,9 @@ export const ThemeProvider = ({ children }) => {
 
   // Сохранение в Redux
   useEffect(() => {
-    dispatch(setState({ 
+    dispatch(setState({
       themeName,
-      customColors 
+      customColors
     }));
   }, [themeName, customColors]);
 
