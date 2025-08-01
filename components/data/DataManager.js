@@ -25,26 +25,46 @@ const DataManager = (props) => {
     };
 
     const dispatch = useDispatch();
-    useEffect(async () => {
-        // if (SystemNavigationBar)
-        //     SystemNavigationBar.navigationHide();
+    useEffect(() => {
+        const loadAllData = async () => {
+            try {
+                // Загрузка данных в правильной последовательности
+                const [legacyData, newData] = await Promise.all([
+                    getData("app-data"),
+                    getData("data")
+                ]);
 
-        await getData("app-data").then((value) => {
-            console.log('Инициализированы legacy данные приложения:', value);
-            dispatch(setState(
-                updateOldDate(value)
-            ));
-        });
+                let _data = {};
 
-        await getData("data").then((value) => {
-            console.log('Инициализированы данные приложения:', value);
-            dispatch(setState(value));
-        });
+                if (legacyData) {
+                    console.log('Инициализированы legacy данные приложения:', legacyData);
+                    _data = updateOldDate(legacyData);
+                }
+
+                if (newData) {
+                    console.log('Инициализированы данные приложения:', newData);
+                    _data = { ..._data, ...newData };
+                }
+
+                dispatch(setState(_data));
+            } catch (e) {
+                console.error("Ошибка загрузки данных", e);
+            } finally {
+                props.onDataLoaded();
+            }
+        };
+
+        loadAllData();
 
         const unsubscribe = Store.subscribe(() => {
-            let storeState = Store.getState().data;
+            const storeState = Store.getState().data;
             storeData("data", storeState);
         });
+
+        return () => {
+            isMounted = false;
+            unsubscribe();
+        };
     }, []);
 
     return (<></>);

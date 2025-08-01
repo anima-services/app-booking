@@ -27,6 +27,7 @@ import BusyListener from "./components/BusyListener";
 
 export default function App() {
     const [fontsLoaded] = useFonts(fontAssets);
+    const [dataLoaded, setDataLoaded] = useState(false);
     const [currentScreen, setCurrentScreen] = useState(NavigationService.getCurrentScreen());
     const fadeAnim = useRef(new Animated.Value(1)).current;
 
@@ -80,12 +81,16 @@ export default function App() {
     const [isBusy, setBusy] = useState(false);
 
     if (!fontsLoaded) {
-        return <Text>Шрифты загружаются</Text>;
+        return (
+            <SafeAreaProvider style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000' }}>
+                <Text style={{ color: '#FFF' }}>Загрузка данных...</Text>
+            </SafeAreaProvider>
+        );
     }
 
     return (
         <Provider store={Store}>
-            <DataManager />
+            <DataManager onDataLoaded={() => setDataLoaded(true)}/>
                 <SafeAreaProvider style={{ backgroundColor: '#000000', flex: 1 }}>
                     <ThemeProvider>
                         {/* Фоновый компонент */}
