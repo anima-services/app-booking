@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 
 import ColumnScreen from '../ColumnScreen';
