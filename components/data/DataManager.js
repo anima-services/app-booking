@@ -25,18 +25,18 @@ const DataManager = (props) => {
     };
 
     const dispatch = useDispatch();
-    useEffect(() => {
+    useEffect(async () => {
         // if (SystemNavigationBar)
         //     SystemNavigationBar.navigationHide();
 
-        getData("app-data").then((value) => {
+        await getData("app-data").then((value) => {
             console.log('Инициализированы legacy данные приложения:', value);
             dispatch(setState(
                 updateOldDate(value)
             ));
         });
 
-        getData("data").then((value) => {
+        await getData("data").then((value) => {
             console.log('Инициализированы данные приложения:', value);
             dispatch(setState(value));
         });
