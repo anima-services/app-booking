@@ -29,16 +29,16 @@ const DataManager = (props) => {
         // if (SystemNavigationBar)
         //     SystemNavigationBar.navigationHide();
 
-        getData("data").then((value) => {
-            console.log('Инициализированы данные приложения:', value);
-            dispatch(setState(value));
-        });
-
         getData("app-data").then((value) => {
             console.log('Инициализированы legacy данные приложения:', value);
             dispatch(setState(
                 updateOldDate(value)
             ));
+        });
+
+        getData("data").then((value) => {
+            console.log('Инициализированы данные приложения:', value);
+            dispatch(setState(value));
         });
 
         const unsubscribe = Store.subscribe(() => {

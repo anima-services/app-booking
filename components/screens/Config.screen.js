@@ -54,8 +54,10 @@ const Config = ({ navigate, goBack, resetToHome, params }) => {
   };
 
   const handleSave = () => {
-    dispatch(setState(formData));
-    if (dispatch) dispatch(setLogs("Config: Данные сохранены!"));
+    if (dispatch) {
+      dispatch(setState(formData));
+      dispatch(setLogs("Config: Данные сохранены!"));
+    }
   };
 
   useEffect(() => {
