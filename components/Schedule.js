@@ -112,7 +112,7 @@ const Schedule = ({ navigate }) => {
             _date = new Date(event.start);
             _dateEnd = new Date(event.end);
             const _timeUntilStart = Math.ceil((_date - new Date(now)) / 60000);
-            if (_timeUntilStart > 15) {
+            if (_timeUntilStart > time_offset) {
                 _table.push({
                     text: `${format_hh_mm(_date)} - ${format_hh_mm(_dateEnd)}`,
                     start: _date,

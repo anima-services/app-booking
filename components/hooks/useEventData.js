@@ -27,7 +27,7 @@ export const useEventData = (events_data, last_update) => {
       isCurrent = date > startDate && date < endDate;
       timeUntilStart = Math.ceil((startDate - date) / 60000);
       timeUntilEnd = Math.ceil((endDate - date) / 60000);
-      return !canceled && (isCurrent || (timeUntilStart <= 15 && timeUntilStart > -1));
+      return !canceled && (isCurrent || (timeUntilStart <= 5 && timeUntilStart > -1));
     });
 
     if (event) {
