@@ -90,29 +90,29 @@ export default function App() {
 
     return (
         <Provider store={Store}>
-            <DataManager onDataLoaded={() => setDataLoaded(true)}/>
-                <SafeAreaProvider style={{ backgroundColor: '#000000', flex: 1 }}>
-                    <ThemeProvider>
-                        {/* Фоновый компонент */}
-                        <Background isBusy={isBusy} />
+            <DataManager onDataLoaded={() => setDataLoaded(true)} />
+            {dataLoaded && <SafeAreaProvider style={{ backgroundColor: '#000000', flex: 1 }}>
+                <ThemeProvider>
+                    {/* Фоновый компонент */}
+                    <Background isBusy={isBusy} />
 
-                        {/* Навигационный стек поверх фона */}
-                        <Animated.View
-                            style={{
-                                flex: 1,
-                                opacity: fadeAnim,
-                            }}
-                        >
-                            {renderScreen()}
-                        </Animated.View>
+                    {/* Навигационный стек поверх фона */}
+                    <Animated.View
+                        style={{
+                            flex: 1,
+                            opacity: fadeAnim,
+                        }}
+                    >
+                        {renderScreen()}
+                    </Animated.View>
 
-                        {/* Services */}
-                        <MainApp />
-                        <QBicHandler isBusy={isBusy} />
-                        <BusyListener setBusy={setBusy} />
-                        <StatusBar hidden={true} translucent={true} />
-                    </ThemeProvider>
-                </SafeAreaProvider>
+                    {/* Services */}
+                    <MainApp />
+                    <QBicHandler isBusy={isBusy} />
+                    <BusyListener setBusy={setBusy} />
+                    <StatusBar hidden={true} translucent={true} />
+                </ThemeProvider>
+            </SafeAreaProvider>}
         </Provider>
     )
 }
