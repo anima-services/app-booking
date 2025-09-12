@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import CurrentDate from './CurrentDate';
-import { useResponsiveSizes } from './hooks/useResponsiveSizes'; 
+import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 import { useTheme } from './ThemeContext';
 
 const Background = ({ isBusy }) => {
@@ -16,40 +16,45 @@ const Background = ({ isBusy }) => {
   const marginSize = sizes.windowHeight * .01;
 
   // Пересчитываем размеры на основе данных из хука
-  const columnWidth = (sizes.windowWidth / 2) - marginSize * 1.5;
-  const hexHeight = sizes.windowHeight - marginSize * 2;
+  //const columnWidth = sizes.type === 'landscape' ? (sizes.windowWidth / 2) - marginSize * 1.5 : sizes.windowWidth;
+  //const hexHeight = sizes.windowHeight - marginSize * 2;
   const logoHeight = marginSize * 4;
   const logoWidth = logoHeight * 47 / 13;
 
   const hexPath = "M0 20C0 8.9543 8.95431 0 20 0H312.5H462.75C473.796 0 482.75 8.95431 482.75 20V21C482.75 32.0457 491.704 41 502.75 41H605C616.046 41 625 49.9543 625 61V380V760C625 771.046 616.046 780 605 780H20C8.95431 780 0 771.046 0 760V20Z";
+  const verticalTopHexPath = "M0 30C0 13.4315 13.4315 0 30 0H402.25C416.333 0 427.75 11.4167 427.75 25.5C427.75 39.5833 439.167 51 453.25 51H570H687C701.083 51 712.5 39.5833 712.5 25.5C712.5 11.4167 723.917 0 738 0H1110C1126.57 0 1140 13.4315 1140 30L1140 890C1140 906.569 1126.57 920 1110 920H569.541H30C13.4315 920 0 906.569 0 890V30Z";
+  const verticalBottomHexPath = "M0 890C0 906.568 13.4314 920 30 920L570 920L1110 920C1126.57 920 1140 906.568 1140 890V29.9999C1140 13.4314 1126.57 0 1110 0H625.577L29.985 0.297363C13.4223 0.305603 0 13.7347 0 30.2974V890Z";
 
   return (
-    <View style={[styles.container, { backgroundColor: isBusy ? theme.busy : theme.free }]}>
+    <View style={[styles.container, {
+      backgroundColor: isBusy ? theme.busy : theme.free,
+      flexDirection: sizes.type === 'landscape' ? 'row' : 'column',
+    }]}>
       {/* Левая колонка */}
       <View style={[styles.column, { margin: marginSize, marginRight: marginSize * .5 }]}>
         <View style={styles.hexContainer}>
           <Svg
             width="100%"
             height="100%"
-            viewBox="0 0 625 780"
+            viewBox={sizes.type === 'landscape' ?"0 0 625 780" : "0 0 1140 920"}
             preserveAspectRatio="none"
           >
-            <Path d={hexPath} fill={theme.dark} />
+            <Path d={sizes.type === 'landscape' ? hexPath : verticalTopHexPath} fill={theme.dark} />
           </Svg>
         </View>
       </View>
 
       {/* Правая колонка */}
-      <View style={[styles.column, { width: columnWidth, margin: marginSize, marginLeft: marginSize * .5 }]}>
+      <View style={[styles.column, { margin: marginSize, marginLeft: marginSize * .5 }]}>
         <View style={styles.hexContainer}>
           <Svg
             width="100%"
             height="100%"
-            viewBox="0 0 625 780"
+            viewBox={sizes.type === 'landscape' ?"0 0 625 780" : "0 0 1140 920"}
             preserveAspectRatio="none"
             style={{ transform: [{ scaleX: -1 }] }}
           >
-            <Path d={hexPath} fill={theme.dark} />
+            <Path d={sizes.type === 'landscape' ? hexPath : verticalBottomHexPath} fill={theme.dark} />
           </Svg>
         </View>
       </View>

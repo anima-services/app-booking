@@ -11,7 +11,7 @@ const ColumnScreen = ({ leftContent, rightContent }) => {
     }];
 
     const containerStyle = [styles.container, {
-       
+        flexDirection: sizes.type === 'landscape' ? 'row' : 'column',
     }];
 
     return (
@@ -31,18 +31,9 @@ const ColumnScreen = ({ leftContent, rightContent }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'row',
     },
     column: {
         flex: 1,
-        // height: '90%',
-        // width: '45%',
-        // marginHorizontal: '2.5%',
-        // marginTop: '5%',
-
-        // Отладка:
-        // backgroundColor: "yellow",
-        // opacity: .5,
     },
 });
 

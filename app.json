@@ -3,7 +3,7 @@
     "name": "app-booking",
     "slug": "app-booking",
     "version": "1.0.4",
-    "orientation": "landscape",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {

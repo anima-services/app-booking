@@ -32,5 +32,6 @@ const calculateSizes = (width, height) => ({
   subTextSize: height * 0.015,
   hotizontalGapSize: height * .01,
   windowWidth: width,
-  windowHeight: height
+  windowHeight: height,
+  type: width > height ? 'landscape' : 'portrait'
 });
