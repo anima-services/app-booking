@@ -22,7 +22,7 @@ const Schedule = ({ navigate }) => {
     const eventData = useEventData(events_data, last_update);
     const [timePeriod, setTimePeriod] = useState(0);
     const [now, setNow] = useState(new Date());
-    const [selectedIndex, setSelectedIndex] = useState(null);
+    const [selected, setSelected] = useState([]);
 
     const styles = StyleSheet.create({
         rowContainer: {
@@ -73,16 +73,16 @@ const Schedule = ({ navigate }) => {
             const validEvents = events_data.filter(event => {
                 const startDate = safeParseDate(event.start);
                 const endDate = safeParseDate(event.end);
-                return !isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) && 
-                       startDate < endDate && event.status && 
-                       !["canceled", "automatically_canceled"].includes(event.status);
+                return !isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) &&
+                    startDate < endDate && event.status &&
+                    !["canceled", "automatically_canceled"].includes(event.status);
             });
-            
+
             if (validEvents.length > 0) {
                 return time_presets.map(countTable);
             }
         }
-        
+
         // Fallback: показываем свободные слоты если нет валидных событий
         return time_presets.map((preset) => {
             const _date = new Date(now);
@@ -95,21 +95,35 @@ const Schedule = ({ navigate }) => {
     // Оптимизация: мемоизация функций
     const handleTimePeriodChange = useCallback((i) => {
         setTimePeriod(i);
-        setSelectedIndex(null);
+        setSelected([]);
     }, []);
 
     const handleBubblePress = useCallback((i) => {
-        setSelectedIndex(prevIndex => prevIndex === i ? null : i);
+        setSelected(prevSelected => {
+            let newSelected = prevSelected;
+            // Filter by sequence
+            newSelected = i - newSelected[newSelected.length - 1] === 1 ||
+                newSelected[0] - i === 1
+                ? newSelected : [];
+            // Filter by includes
+            newSelected = newSelected.includes(i) ? newSelected.filter(index => index !== i) : [...newSelected, i];
+            // Sort by date
+            newSelected = newSelected.sort((a, b) => {
+                return timeSchedule[timePeriod][a].start - timeSchedule[timePeriod][b].start;
+            });
+
+            return newSelected;
+        });
     }, []);
 
     const handleBookPress = useCallback(() => {
         navigate('Book', {
-            timeStart: timeSchedule[timePeriod][selectedIndex].start,
-            timeEnd: timeSchedule[timePeriod][selectedIndex].end,
-            formatStart: timeSchedule[timePeriod][selectedIndex].format_start,
-            formatEnd: timeSchedule[timePeriod][selectedIndex].format_end,
+            timeStart: timeSchedule[timePeriod][selected[0]].start,
+            timeEnd: timeSchedule[timePeriod][selected[selected.length - 1]].end,
+            formatStart: timeSchedule[timePeriod][selected[0]].format_start,
+            formatEnd: timeSchedule[timePeriod][selected[selected.length - 1]].format_end,
         });
-    }, [selectedIndex, timePeriod, timeSchedule]);
+    }, [selected, timePeriod, timeSchedule]);
 
     function countTable(preset = 10) {
         let _table = [];
@@ -165,7 +179,7 @@ const Schedule = ({ navigate }) => {
         const _endDate = safeParseDate(in_time_end);
         const _hour = _date.getHours();
 
-        for (let i = _hour; i < _endDate.getHours()+1; i++) {
+        for (let i = _hour; i < _endDate.getHours() + 1; i++) {
             const _intervals = Math.floor(60 / preset);
             let _intervalStart = new Date(_date);
             let _intervalEnd = new Date(_intervalStart);
@@ -213,8 +227,8 @@ const Schedule = ({ navigate }) => {
                     title={eventData.topic}
                     dsc={`Организатор: ${eventData.host_fullname}`}
                     status={eventData.status}
-                    selected={selectedIndex === null}
-                    select={() => { setSelectedIndex(null) }}
+                    selected={selected.length === 0}
+                    select={() => { setSelected([]) }}
                     isCurrent={eventData.isCurrent}
                     timeLeft={eventData.timeUntilStart}
                 />
@@ -245,7 +259,7 @@ const Schedule = ({ navigate }) => {
                             title={item.title}
                             dsc={item.dsc}
                             disabled={item.disabled}
-                            selected={i === selectedIndex}
+                            selected={selected.includes(i)}
                             select={() => handleBubblePress(i)}
                         />
                     ))}
@@ -268,7 +282,7 @@ const Schedule = ({ navigate }) => {
             <BookBtn
                 style={{ display: true ? "flex" : "none" }}
                 text={"Забронировать"}
-                disabled={selectedIndex === null}
+                disabled={selected.length === 0}
                 onPress={handleBookPress}
             />
         </View>
@@ -482,13 +496,13 @@ const BookBtn = memo(({ text, onPress, disabled = false, style }) => {
 // Утилита для безопасного парсинга дат на Android
 function safeParseDate(dateString) {
     if (!dateString) return new Date();
-    
+
     // Если это уже Date объект
     if (dateString instanceof Date) return dateString;
-    
+
     // Пробуем разные форматы для Android
     let parsed = new Date(dateString);
-    
+
     // Если парсинг не удался, пробуем добавить таймзону
     if (isNaN(parsed.getTime())) {
         // Пробуем формат YYYY-MM-DD HH:mm:ss без таймзоны
@@ -497,13 +511,13 @@ function safeParseDate(dateString) {
             parsed = new Date(isoMatch[1] + 'T' + isoMatch[2] + 'Z');
         }
     }
-    
+
     // Если все еще не удалось, возвращаем текущую дату
     if (isNaN(parsed.getTime())) {
         console.warn('Не удалось распарсить дату:', dateString);
         return new Date();
     }
-    
+
     return parsed;
 }
 
