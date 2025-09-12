@@ -154,7 +154,7 @@ const fetchEventsData = async (config, token, dispatch, signal) => {
 
 // Интервалы обновления
 const CORE_DATA_REFRESH_INTERVAL = 5 * 60 * 1000; 
-const EVENTS_REFRESH_INTERVAL = 60 * 1000; 
+const EVENTS_REFRESH_INTERVAL = 15 * 1000; 
 
 const MainApp = () => {
     const dispatch = useDispatch();

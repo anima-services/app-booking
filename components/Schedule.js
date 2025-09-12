@@ -68,9 +68,22 @@ const Schedule = ({ navigate }) => {
 
     // Оптимизация: мемоизация расписания
     const timeSchedule = useMemo(() => {
-        if (events_data && Array.isArray(events_data)) {
-            return time_presets.map(countTable);
+        if (events_data && Array.isArray(events_data) && events_data.length > 0) {
+            // Валидация событий перед обработкой
+            const validEvents = events_data.filter(event => {
+                const startDate = safeParseDate(event.start);
+                const endDate = safeParseDate(event.end);
+                return !isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) && 
+                       startDate < endDate && event.status && 
+                       !["canceled", "automatically_canceled"].includes(event.status);
+            });
+            
+            if (validEvents.length > 0) {
+                return time_presets.map(countTable);
+            }
         }
+        
+        // Fallback: показываем свободные слоты если нет валидных событий
         return time_presets.map((preset) => {
             const _date = new Date(now);
             const _endDate = new Date(now);
@@ -104,13 +117,27 @@ const Schedule = ({ navigate }) => {
         let _dateEnd = new Date(now);
         let _lastDate = new Date(now);
 
+        // Отладочная информация для Android
+        if (__DEV__ && events_data && events_data.length > 0) {
+            console.log('Schedule: Обработка событий:', events_data.length);
+            events_data.forEach((event, index) => {
+                const startDate = safeParseDate(event.start);
+                const endDate = safeParseDate(event.end);
+                console.log(`Event ${index}:`, {
+                    original: { start: event.start, end: event.end },
+                    parsed: { start: startDate, end: endDate },
+                    valid: !isNaN(startDate.getTime()) && !isNaN(endDate.getTime())
+                });
+            });
+        }
+
         for (const event of events_data) {
-            _dateEnd = new Date(event.start);
+            _dateEnd = safeParseDate(event.start);
             _table.push(...countBubbles(preset, _date, _dateEnd));
             if (_dateEnd < _date) continue;
 
-            _date = new Date(event.start);
-            _dateEnd = new Date(event.end);
+            _date = safeParseDate(event.start);
+            _dateEnd = safeParseDate(event.end);
             const _timeUntilStart = Math.ceil((_date - new Date(now)) / 60000);
             if (_timeUntilStart > time_offset) {
                 _table.push({
@@ -124,7 +151,7 @@ const Schedule = ({ navigate }) => {
                     disabled: true
                 });
             }
-            _date = new Date(event.end);
+            _date = safeParseDate(event.end);
         }
         _dateEnd.setHours(time_end, 0, 0);
         _table.push(...countBubbles(preset, _date, _dateEnd));
@@ -134,8 +161,8 @@ const Schedule = ({ navigate }) => {
 
     function countBubbles(preset = 10, in_time_start, in_time_end) {
         let _bubbleArray = [];
-        const _date = new Date(in_time_start);
-        const _endDate = new Date(in_time_end);
+        const _date = safeParseDate(in_time_start);
+        const _endDate = safeParseDate(in_time_end);
         const _hour = _date.getHours();
 
         for (let i = _hour; i < _endDate.getHours()+1; i++) {
@@ -452,12 +479,41 @@ const BookBtn = memo(({ text, onPress, disabled = false, style }) => {
     );
 });
 
+// Утилита для безопасного парсинга дат на Android
+function safeParseDate(dateString) {
+    if (!dateString) return new Date();
+    
+    // Если это уже Date объект
+    if (dateString instanceof Date) return dateString;
+    
+    // Пробуем разные форматы для Android
+    let parsed = new Date(dateString);
+    
+    // Если парсинг не удался, пробуем добавить таймзону
+    if (isNaN(parsed.getTime())) {
+        // Пробуем формат YYYY-MM-DD HH:mm:ss без таймзоны
+        const isoMatch = dateString.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2}:\d{2})/);
+        if (isoMatch) {
+            parsed = new Date(isoMatch[1] + 'T' + isoMatch[2] + 'Z');
+        }
+    }
+    
+    // Если все еще не удалось, возвращаем текущую дату
+    if (isNaN(parsed.getTime())) {
+        console.warn('Не удалось распарсить дату:', dateString);
+        return new Date();
+    }
+    
+    return parsed;
+}
+
 export function format_hh_mm(in_date) {
+    const safeDate = safeParseDate(in_date);
     const formattedTime = new Intl.DateTimeFormat('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
-    }).format(new Date(in_date));
+    }).format(safeDate);
     return formattedTime;
 }
 

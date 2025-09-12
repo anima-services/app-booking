@@ -42,15 +42,20 @@ export async function getReservations(dispatch, signal) {
     const data = Store.getState().data;
     const api = axios.create(apiConfiguration(data.hostname, data.token));
 
+    // Используем локальное время для фильтрации, но отправляем в UTC
     const now = new Date();
     now.setHours(0, 0, 0, 0);
     const tomorrow = new Date(now);
     tomorrow.setDate(now.getDate() + 1);
 
+    // Создаем UTC даты для API, но с учетом локальной таймзоны
+    const nowUTC = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
+    const tomorrowUTC = new Date(tomorrow.getTime() - (tomorrow.getTimezoneOffset() * 60000));
+
     const eventsParams = new URLSearchParams({
         space: data.id,
-        start_after: now.toISOString(),
-        end_before: tomorrow.toISOString()
+        start_after: nowUTC.toISOString(),
+        end_before: tomorrowUTC.toISOString()
     });
 
     const eventsResponse = await api.get(
@@ -62,10 +67,18 @@ export async function getReservations(dispatch, signal) {
         const filteredEvents = eventsResponse.data.results
             .filter(item => item.status &&
                 !["canceled", "automatically_canceled"].includes(item.status))
-            .sort((a, b) => new Date(a.start) - new Date(b.start));
+            .sort((a, b) => {
+                // Безопасная сортировка с fallback
+                const dateA = new Date(a.start);
+                const dateB = new Date(b.start);
+                if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
+                    return 0;
+                }
+                return dateA - dateB;
+            });
 
         dispatch(setState({ events_data: filteredEvents }));
-        dispatch(setLogs(`События получены!`));
+        dispatch(setLogs(`События получены! (${filteredEvents.length} событий)`));
     }
 
     // Обновление времени последнего обновления

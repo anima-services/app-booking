@@ -1,5 +1,33 @@
 import { useEffect, useState } from 'react';
 
+// Утилита для безопасного парсинга дат на Android
+function safeParseDate(dateString) {
+    if (!dateString) return new Date();
+    
+    // Если это уже Date объект
+    if (dateString instanceof Date) return dateString;
+    
+    // Пробуем разные форматы для Android
+    let parsed = new Date(dateString);
+    
+    // Если парсинг не удался, пробуем добавить таймзону
+    if (isNaN(parsed.getTime())) {
+        // Пробуем формат YYYY-MM-DD HH:mm:ss без таймзоны
+        const isoMatch = dateString.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2}:\d{2})/);
+        if (isoMatch) {
+            parsed = new Date(isoMatch[1] + 'T' + isoMatch[2] + 'Z');
+        }
+    }
+    
+    // Если все еще не удалось, возвращаем текущую дату
+    if (isNaN(parsed.getTime())) {
+        console.warn('Не удалось распарсить дату:', dateString);
+        return new Date();
+    }
+    
+    return parsed;
+}
+
 export const useEventData = (events_data, last_update) => {
   const defaultEvent = {
     isCurrent: false, show: false,
@@ -21,8 +49,8 @@ export const useEventData = (events_data, last_update) => {
     let isCurrent, timeUntilStart, timeUntilEnd;
 
     const event = events_data.find((item) => {
-      const startDate = new Date(item.start);
-      const endDate = new Date(item.end);
+      const startDate = safeParseDate(item.start);
+      const endDate = safeParseDate(item.end);
       const canceled = item.status === "automatically_canceled" || item.status === "canceled";
       isCurrent = date > startDate && date < endDate;
       timeUntilStart = Math.ceil((startDate - date) / 60000);
@@ -39,7 +67,8 @@ export const useEventData = (events_data, last_update) => {
         user_info: event.user_info,
         status: event.status, host_fullname: event.user_info.full_name,
         id: event.id,
-        start: event.start, end: event.end,
+        start: safeParseDate(event.start), 
+        end: safeParseDate(event.end),
       });
     } else {
       setEventData(defaultEvent);
