@@ -16,8 +16,6 @@ const Background = ({ isBusy }) => {
   const marginSize = sizes.windowHeight * .01;
 
   // Пересчитываем размеры на основе данных из хука
-  //const columnWidth = sizes.type === 'landscape' ? (sizes.windowWidth / 2) - marginSize * 1.5 : sizes.windowWidth;
-  //const hexHeight = sizes.windowHeight - marginSize * 2;
   const logoHeight = marginSize * 4;
   const logoWidth = logoHeight * 47 / 13;
 
