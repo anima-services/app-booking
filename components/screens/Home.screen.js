@@ -15,15 +15,4 @@ const Home = ({ navigate, goBack, resetToHome, params }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-  },
-  buttonContainer: {
-    width: '70%',
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-});
-
 export default Home;
