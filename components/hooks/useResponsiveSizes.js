@@ -23,11 +23,11 @@ export const useResponsiveSizes = () => {
 // Вынесем расчеты в отдельную функцию
 const calculateSizes = (width, height) => {
   let type = width > height ? 'landscape' : 'portrait';
-  let newHeight = height *= type === 'landscape' ? 1 : 0.7;
-  let newWidth = width *= type === 'landscape' ? 1 : 0.7; 
+  let newHeight = height *= type === 'landscape' ? 1 : 0.6;
+  let newWidth = width *= type === 'landscape' ? 1 : 0.6; 
 
   return ({
-    topOffset: newHeight * 0.2,
+    topOffset: newHeight * (type === 'landscape' ? 0.2 : 0.1),
     bottomOffset: newHeight * 0.05,
     propertyOffset: newHeight * 0.0175,
     titleSize: newHeight * 0.045,

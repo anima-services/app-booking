@@ -58,7 +58,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
 
     const SpaceTitle = ({show}) => {
         return (
-            <Pressable style={[styles.content, { display: show ? "flex" : "none" }]} onLongPress={handlePress} delayLongPress={5000}>
+            <Pressable style={{ display: show ? "flex" : "none" }} onLongPress={handlePress} delayLongPress={5000}>
                 <Text style={[styles.title, textAlignStyle, { color: theme.light, fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>{spaceData.title}</Text>
             </Pressable>
         )
@@ -146,7 +146,6 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
 const styles = StyleSheet.create({
     title: {
         fontFamily: "Onest_600SemiBold",
-        marginBottom: 16
     },
     rowContainer: {
         flexDirection: 'row',
