@@ -63,14 +63,14 @@ const Background = ({ isBusy }) => {
         height: marginSize * (sizes.type === 'landscape' ? 6.25 : 4),
       }]}>
         <View style={{
-          width: marginSize * 2,
-          height: marginSize * 2,
+          width: marginSize * (sizes.type === 'landscape' ? 2 : 1.5),
+          height: marginSize * (sizes.type === 'landscape' ? 2 : 1.5),
           borderRadius: marginSize * 1,
           backgroundColor: isBusy ? theme.light : theme.dark,
-          marginRight: 8,
+          marginRight: (sizes.type === 'landscape' ? 8 : 6),
         }} />
         <Text style={[styles.statusText, {
-          fontSize: marginSize * 3,
+          fontSize: marginSize * (sizes.type === 'landscape' ? 3 : 2),
           color: isBusy ? theme.light : theme.dark
         }]}>{isBusy ? "Занято" : "Свободно"}</Text>
       </View>
