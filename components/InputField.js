@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Dimensions } from 'react-native';
 import { useTheme } from './ThemeContext';
-
+import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 
 const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, setText, value, disabled = false }) => {
-    const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-    const textSize = screenHeight * .02;
+    const sizes = useResponsiveSizes();
     const { theme, toggleTheme } = useTheme();
 
-    const propertyStyle = [styles.property, { color: theme.light, fontSize: screenHeight * 0.0125 }];
+    const propertyStyle = [styles.property, { color: theme.light, fontSize: sizes.windowHeight * 0.0125 }];
     const inputStyle = [styles.text, {
-        color: theme.light, fontSize: textSize,
+        color: theme.light, fontSize: sizes.text_2,
         includeFontPadding: false, padding: 0, margin: 0,
         flex: 1,
         opacity: disabled ? .3 : 1,
@@ -21,11 +20,11 @@ const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, set
     return (
         <View style={{
             backgroundColor: theme.container,
-            paddingHorizontal: textSize,
-            paddingVertical: textSize * .5,
-            borderRadius: textSize,
-            marginBottom: textSize * .5,
-            height: textSize * 4,
+            paddingHorizontal: sizes.text_2,
+            paddingVertical: sizes.text_2 * .5,
+            borderRadius: sizes.text_2,
+            marginBottom: sizes.text_2 * .5,
+            height: sizes.text_2 * 4,
             flex: 1
         }}>
             <Text style={[propertyStyle, { display: value ? 'flex' : 'none' }]}>{name}</Text>
