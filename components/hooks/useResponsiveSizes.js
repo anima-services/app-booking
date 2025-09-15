@@ -21,17 +21,23 @@ export const useResponsiveSizes = () => {
 };
 
 // Вынесем расчеты в отдельную функцию
-const calculateSizes = (width, height) => ({
-  topOffset: height * 0.2,
-  bottomOffset: height * 0.05,
-  propertyOffset: height * 0.0175,
-  titleSize: height * 0.045,
-  subtitleSize: height * 0.0325,
-  textSize: height * 0.0225,
-  text_2: height * 0.02,
-  subTextSize: height * 0.015,
-  hotizontalGapSize: height * .01,
-  windowWidth: width,
-  windowHeight: height,
-  type: width > height ? 'landscape' : 'portrait'
-});
+const calculateSizes = (width, height) => {
+  let type = width > height ? 'landscape' : 'portrait';
+  let newHeight = height *= type === 'landscape' ? 1 : 0.7;
+  let newWidth = width *= type === 'landscape' ? 1 : 0.7; 
+
+  return ({
+    topOffset: newHeight * 0.2,
+    bottomOffset: newHeight * 0.05,
+    propertyOffset: newHeight * 0.0175,
+    titleSize: newHeight * 0.045,
+    subtitleSize: newHeight * 0.0325,
+    textSize: newHeight * 0.0225,
+    text_2: newHeight * 0.02,
+    subTextSize: newHeight * 0.015,
+    hotizontalGapSize: newHeight * .01,
+    windowWidth: newWidth,
+    windowHeight: newHeight,
+    type: type
+  })
+};
