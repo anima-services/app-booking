@@ -13,6 +13,8 @@ import { useTheme } from "../ThemeContext";
 import { useSelector, useDispatch } from "react-redux";
 import { setState, setLogs } from "../data/DataSlice";
 
+import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
+
 const Config = ({ navigate, goBack, resetToHome, params }) => {
   const data = useSelector(state => state.data);
   const dispatch = useDispatch();
@@ -28,10 +30,10 @@ const Config = ({ navigate, goBack, resetToHome, params }) => {
   } = useTheme();
 
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-  const topOffset = screenHeight * .2;
-  const titleSize = screenHeight * .045;
-  const gapSize = screenHeight * .01;
-
+  const sizes = useResponsiveSizes();
+  const topOffset = sizes.windowHeight * (sizes.type === 'landscape' ? .2 : .1);
+  const titleSize = sizes.windowHeight * .045;
+  const gapSize = sizes.windowHeight * .01;
   const [formData, setFormData] = useState({
     hostname: "",
     hostname_main: "",
@@ -164,7 +166,6 @@ const Config = ({ navigate, goBack, resetToHome, params }) => {
 const styles = StyleSheet.create({
   title: {
     fontFamily: "Onest_600SemiBold",
-    marginBottom: 16
   },
   rowContainer: {
     flexDirection: 'row',
