@@ -2,12 +2,13 @@ import { StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import Svg, { Path } from "react-native-svg"
 
 import { useTheme } from './ThemeContext';
+import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 
 const BackButton = ({ goBack }) => {
-
-    const { height: screenHeight } = Dimensions.get('window');
-    const buttonSize = screenHeight * .05;
     const { theme, toggleTheme } = useTheme();
+    const sizes = useResponsiveSizes();
+
+    const buttonSize = sizes.windowHeight * .05;
 
     return (
         <TouchableOpacity
