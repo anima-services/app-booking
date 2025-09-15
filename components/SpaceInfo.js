@@ -52,13 +52,23 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
         }
     };
 
+    const textAlignStyle = {
+        textAlign: sizes.type === 'landscape' ? 'left' : 'center', justifyContent: sizes.type === 'landscape' ? 'flex-start' : 'center'
+    }
+
+    const SpaceTitle = ({show}) => {
+        return (
+            <Pressable style={[styles.content, { display: show ? "flex" : "none" }]} onLongPress={handlePress} delayLongPress={5000}>
+                <Text style={[styles.title, textAlignStyle, { color: theme.light, fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>{spaceData.title}</Text>
+            </Pressable>
+        )
+    }
+
     return (
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
-            <Pressable style={styles.content} onLongPress={handlePress} delayLongPress={5000}>
-                <Text style={[styles.title, { color: theme.light, fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>{spaceData.title}</Text>
-            </Pressable>
+            <SpaceTitle show={sizes.type === 'landscape'}/>
             {/* Вместимость */}
-            <View style={[styles.rowContainer, { display: spaceData.quantity ? "flex" : "none" }]}>
+            <View style={[styles.rowContainer, textAlignStyle, { display: spaceData.quantity ? "flex" : "none" }]}>
                 <Text style={propertyStyle}>Вместимость:</Text>
                 <Text style={textStyle}>{spaceData.quantity}</Text>
                 <Svg width={sizes.textSize} height={sizes.textSize} viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg" >
@@ -69,9 +79,10 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
                     />
                 </Svg>
             </View>
+            <SpaceTitle show={sizes.type !== 'landscape'}/>
             {/* Характеристики */}
             <View style={{ display: spaceData.properties.length > 0 ? "flex" : "none" }}>
-                <Text style={[propertyStyle, { paddingVertical: sizes.propertyOffset }]}>Характеристики:</Text>
+                <Text style={[propertyStyle, textAlignStyle, { paddingVertical: sizes.propertyOffset }]}>Характеристики:</Text>
                 <View style={styles.propertiesContainer}>
                     {spaceData.properties.map((item, i) => (
                         <View key={i} style={{
