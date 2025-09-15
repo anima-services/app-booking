@@ -86,23 +86,6 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
         <BackButton goBack={resetToHome} />
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
           <Text style={[styles.title, { fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>Вы бронируете:</Text>
-          {/* Начало и окончание */}
-          <View style={styles.rowContainer}>
-            <InputField name="Начало" placeholder="00:00" inputMode="text"
-              value={formatStart} disabled={true}
-            />
-            <View style={{ width: sizes.hotizontalGapSize }} />
-            <InputField name="Окончание" placeholder="00:00" inputMode="text"
-              value={formatEnd} disabled={true}
-            />
-          </View>
-          {/* Тема */}
-          <View style={styles.rowContainer}>
-            <InputField name="Название встречи" placeholder="Название встречи*" inputMode="text"
-              value={topic}
-              setText={setTopic}
-            />
-          </View>
           <Dropdown
             name="Организатор"
             data={users_data}
@@ -122,6 +105,23 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
             maxItems={1000}
             onSelect={setParticipants}
           />
+          {/* Тема */}
+          <View style={styles.rowContainer}>
+            <InputField name="Название встречи" placeholder="Название встречи*" inputMode="text"
+              value={topic}
+              setText={setTopic}
+            />
+          </View>
+          {/* Начало и окончание */}
+          <View style={styles.rowContainer}>
+            <InputField name="Начало" placeholder="00:00" inputMode="text"
+              value={formatStart} disabled={true}
+            />
+            <View style={{ width: sizes.hotizontalGapSize }} />
+            <InputField name="Окончание" placeholder="00:00" inputMode="text"
+              value={formatEnd} disabled={true}
+            />
+          </View>
           {/* Пинкод */}
           {/* <View style={styles.rowContainer}>
             <InputField name="Пинкод" placeholder="Введите ваш пинкод для подтверждения личности*" inputMode="text" secureTextEntry
