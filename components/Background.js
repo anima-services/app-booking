@@ -29,12 +29,12 @@ const Background = ({ isBusy }) => {
       flexDirection: sizes.type === 'landscape' ? 'row' : 'column',
     }]}>
       {/* Левая колонка */}
-      <View style={[styles.column, { margin: marginSize, marginRight: marginSize * .5 }]}>
+      <View style={[styles.column, { margin: marginSize, marginRight: marginSize * (sizes.type === 'landscape' ? .5 : 1) }]}>
         <View style={styles.hexContainer}>
           <Svg
             width="100%"
             height="100%"
-            viewBox={sizes.type === 'landscape' ?"0 0 625 780" : "0 0 1140 920"}
+            viewBox={sizes.type === 'landscape' ? "0 0 625 780" : "0 0 1140 920"}
             preserveAspectRatio="none"
           >
             <Path d={sizes.type === 'landscape' ? hexPath : verticalTopHexPath} fill={theme.dark} />
@@ -43,12 +43,12 @@ const Background = ({ isBusy }) => {
       </View>
 
       {/* Правая колонка */}
-      <View style={[styles.column, { margin: marginSize, marginLeft: marginSize * .5 }]}>
+      <View style={[styles.column, { margin: marginSize, marginLeft: marginSize * (sizes.type === 'landscape' ? .5 : 1) }]}>
         <View style={styles.hexContainer}>
           <Svg
             width="100%"
             height="100%"
-            viewBox={sizes.type === 'landscape' ?"0 0 625 780" : "0 0 1140 920"}
+            viewBox={sizes.type === 'landscape' ? "0 0 625 780" : "0 0 1140 920"}
             preserveAspectRatio="none"
             style={{ transform: [{ scaleX: -1 }] }}
           >
@@ -58,16 +58,19 @@ const Background = ({ isBusy }) => {
       </View>
 
       {/* Статус по центру */}
-      <View style={[styles.statusbar, { height: marginSize * 6.25 }]}>
+      <View style={[styles.statusbar, {
+        paddingTop: marginSize,
+        height: marginSize * (sizes.type === 'landscape' ? 6.25 : 3.25),
+      }]}>
         <View style={{
-          width: marginSize * 2,
-          height: marginSize * 2,
+          width: marginSize * (sizes.type === 'landscape' ? 2 : 1),
+          height: marginSize * (sizes.type === 'landscape' ? 2 : 1),
           borderRadius: marginSize * 1,
           backgroundColor: isBusy ? theme.light : theme.dark,
           marginRight: 8,
         }} />
         <Text style={[styles.statusText, {
-          fontSize: marginSize * 3,
+          fontSize: marginSize * (sizes.type === 'landscape' ? 3 : 1.5),
           color: isBusy ? theme.light : theme.dark
         }]}>{isBusy ? "Занято" : "Свободно"}</Text>
       </View>
@@ -77,8 +80,8 @@ const Background = ({ isBusy }) => {
         position: "absolute",
         top: marginSize * 3,
         left: marginSize * 4,
-        width: logoWidth,
-        height: logoHeight
+        width: logoWidth * (sizes.type === 'landscape' ? 1 : 0.8),
+        height: logoHeight * (sizes.type === 'landscape' ? 1 : 0.8)
       }}>
         <Svg width="100%" height="100%" viewBox="0 0 47 13" fill="none" xmlns="http://www.w3.org/2000/svg">
           <Path d="M34.1471 4.25391C32.7895 4.25391 31.8049 4.84418 31.1438 5.71305C30.5831 4.83119 29.5985 4.25391 28.2409 4.25391C27.0698 4.25391 26.221 4.72612 25.7299 5.31639V4.47467H24.2695V12.2816H25.7299V8.14024V7.72823C25.7311 7.14168 25.965 6.57958 26.3802 6.16526C26.7954 5.75095 27.358 5.51826 27.9445 5.51826C28.0207 5.51801 28.0967 5.52195 28.1724 5.53007H28.1995C28.2657 5.53833 28.3318 5.54778 28.3955 5.56076H28.4038C28.5456 5.59047 28.684 5.63437 28.817 5.6918C29.2155 5.86259 29.5551 6.1466 29.7937 6.5086C30.0323 6.8706 30.1594 7.29467 30.1592 7.72823V12.2769H31.6184V9.05044V7.74122C31.6184 7.15166 31.8526 6.58624 32.2695 6.16935C32.6864 5.75247 33.2518 5.51826 33.8413 5.51826C34.4309 5.51826 34.9963 5.75247 35.4132 6.16935C35.8301 6.58624 36.0643 7.15166 36.0643 7.74122V12.2816H37.5234V7.63143C37.5246 5.66229 36.2685 4.25391 34.1471 4.25391Z" fill={theme.light} />
