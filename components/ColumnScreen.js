@@ -6,8 +6,8 @@ const ColumnScreen = ({ leftContent, rightContent }) => {
     const sizes = useResponsiveSizes();
 
     const columnStyle = [styles.column, {
-        marginHorizontal: sizes.windowWidth*.025,
-        marginVertical: sizes.windowHeight*.05,
+        marginHorizontal: sizes.windowWidth * (sizes.type === 'landscape' ? .025 : .242),
+        marginVertical: sizes.windowHeight * .025,
     }];
 
     const containerStyle = [styles.container, {
