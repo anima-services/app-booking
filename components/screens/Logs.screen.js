@@ -9,13 +9,15 @@ import Button from "../Button";
 import { useSelector } from "react-redux";
 import { useTheme } from "../ThemeContext";
 
+import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
+
 const Logs = ({ navigate, goBack, resetToHome, params }) => {
     const logs = useSelector(state => state.data.logs);
 
-    const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+    const sizes = useResponsiveSizes();
     const { theme, toggleTheme } = useTheme();
-    const topOffset = screenHeight * .2;
-    const titleSize = screenHeight * .045;
+    const topOffset = sizes.windowHeight * (sizes.type === 'landscape' ? .2 : .1);
+    const titleSize = sizes.windowHeight * .045;
 
     useEffect(() => {
         const timerId = setTimeout(() => {
