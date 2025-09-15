@@ -2,12 +2,13 @@ import { StyleSheet, Dimensions, TouchableOpacity, Text, View } from 'react-nati
 import Svg, { Circle, Path, G } from 'react-native-svg';
 
 import { useTheme } from './ThemeContext';
+import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 
 const EventStatus = ({ text, icon, onPress, style, busyColored = false, isBusy }) => {
-    const { height: screenHeight } = Dimensions.get('window');
+    const sizes = useResponsiveSizes();
     const { theme, toggleTheme } = useTheme();
-    const textSize = screenHeight * .0175;
-    const borderRadius = screenHeight * .02;
+    const textSize = sizes.windowHeight * .0175;
+    const borderRadius = sizes.windowHeight * .02;
 
     return (
         <TouchableOpacity
