@@ -7,6 +7,7 @@ export const DataSlice = createSlice({
         space_size: 15,
         events_data: [],
         space_data: {},
+        system_password: "4656",
     },
     reducers: {
         updateData: (state, action) => {
