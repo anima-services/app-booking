@@ -16,13 +16,6 @@ const validateConfiguration = (data) => {
         return { valid: false, error: "id не установлен!" };
     }
     
-    // Проверка формата URL
-    // try {
-    //     new URL(data.hostname);
-    // } catch (error) {
-    //     return { valid: false, error: "Некорректный формат hostname! Должен содержать протокол (http/https)" };
-    // }
-    
     return { valid: true };
 };
 

@@ -15,7 +15,7 @@ const Schedule = ({ navigate }) => {
     const time_end = 23;
 
     const events_data = useSelector(state => state.data.events_data);
-    const { theme, toggleTheme } = useTheme();
+    const { theme } = useTheme();
     const last_update = useSelector(state => state.data.last_update);
     const sizes = useResponsiveSizes();
 
@@ -55,7 +55,6 @@ const Schedule = ({ navigate }) => {
         },
     });
 
-    // Оптимизация: уменьшена частота обновления времени
     useEffect(() => {
         const timer = setInterval(() => {
             const currentTime = new Date();
@@ -101,16 +100,21 @@ const Schedule = ({ navigate }) => {
     const handleBubblePress = useCallback((i) => {
         setSelected(prevSelected => {
             let newSelected = prevSelected;
-            // Filter by sequence
-            newSelected = i - newSelected[newSelected.length - 1] === 1 ||
-                newSelected[0] - i === 1
-                ? newSelected : [];
+            console.log(newSelected, i, newSelected.includes(i));
             // Filter by includes
             newSelected = newSelected.includes(i) ? newSelected.filter(index => index !== i) : [...newSelected, i];
+            // Filter by sequence
+            newSelected = newSelected.length <= 1 || i - newSelected[newSelected.length - 2] === 1 ||
+                newSelected[0] - i === 1
+                ? newSelected : [i];
             // Sort by date
             newSelected = newSelected.sort((a, b) => {
                 return timeSchedule[timePeriod][a].start - timeSchedule[timePeriod][b].start;
             });
+            // Sort by count
+            if (newSelected.length > 4) {
+                newSelected = newSelected.indexOf(i) === 0 ? newSelected.slice(0, -1) : newSelected.slice(1);
+            }
 
             return newSelected;
         });
@@ -129,7 +133,6 @@ const Schedule = ({ navigate }) => {
         let _table = [];
         let _date = new Date(now);
         let _dateEnd = new Date(now);
-        let _lastDate = new Date(now);
 
         // Отладочная информация для Android
         if (__DEV__ && events_data && events_data.length > 0) {
@@ -167,6 +170,7 @@ const Schedule = ({ navigate }) => {
             }
             _date = safeParseDate(event.end);
         }
+        _dateEnd = new Date(_date);
         _dateEnd.setHours(time_end, 0, 0);
         _table.push(...countBubbles(preset, _date, _dateEnd));
 
