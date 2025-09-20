@@ -39,6 +39,7 @@ const Configuration = ({ navigate }) => {
         qbic_password: "",
         system_password: ""
     });
+    const [changes, updateChanges] = useState(false);
 
     const handleLoad = () => {
         let newFormData = {};
@@ -53,12 +54,23 @@ const Configuration = ({ navigate }) => {
         if (dispatch) {
             dispatch(setState(formData));
             dispatch(setLogs("Config: Данные сохранены!"));
+            updateChanges(false);
         }
     };
 
     useEffect(() => {
         handleLoad();
     }, []);
+
+    useEffect(() => {
+        updateChanges(false);
+        for (var key in formData) {
+            if (formData[key] !== data[key]) {
+                updateChanges(true);
+                break;
+            }
+        }
+    }, [formData]);
 
     return (
         <View style={{ marginTop: topOffset, flex: 1 }}>
@@ -128,6 +140,7 @@ const Configuration = ({ navigate }) => {
                         setText={value => setFormData({ ...formData, system_password: value })}
                     />
                 </View>
+                <Text style={[styles.title, { display: changes ? 'flex' : 'none', color: theme.busy, fontSize: titleSize * .3, marginBottom: 0 }]}>Есть несохраненные изменения!</Text>
                 <View style={[styles.rowContainer, { gap: gapSize }]}>
                     <Button title="Применить настройки" onPress={handleSave} style={{ flex: 1 }} />
                     <Button title="Логи приложения" onPress={() => navigate('Logs')} style={{ flex: 1 }} />
