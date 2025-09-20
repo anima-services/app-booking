@@ -65,7 +65,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
     }
 
     return (
-        <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
+        <View style={{ marginTop: sizes.topOffset }}>
             <SpaceTitle show={sizes.type === 'landscape'}/>
             {/* Вместимость */}
             <View style={[styles.rowContainer, textAlignStyle, { display: spaceData.quantity ? "flex" : "none" }]}>

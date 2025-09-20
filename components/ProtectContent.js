@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         top: 0, bottom: 0, left: 0, right: 0,
         backgroundColor: 'black',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     childContainer: {
         width: '50%',
