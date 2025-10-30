@@ -79,10 +79,10 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
     }
   }
 
-  return (
-    <ColumnScreen
-      leftContent={<SpaceInfo navigate={navigate} />}
-      rightContent={<>
+  const BookView = () => {
+
+    return (
+      <>
         <BackButton goBack={resetToHome} />
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
           <Text style={[styles.title, { fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>Вы бронируете:</Text>
@@ -131,7 +131,15 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
           </View> */}
           <Button title="Забронировать" disabled={!formReady} onPress={sendForm} />
         </View>
-      </>}
+      </>
+    );
+  };
+
+  return (
+    <ColumnScreen
+      leftContent={<SpaceInfo navigate={navigate} />}
+      rightContent={<BookView />}
+      pages={[<BookView />]}
     />
   );
 };

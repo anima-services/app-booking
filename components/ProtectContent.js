@@ -31,9 +31,10 @@ const ProtectContent = ({ goBack, setAccess }) => {
             <View style={styles.childContainer}>
                 <Text style={[styles.title, { color: theme.light, fontSize: sizes.titleSize}]}>Введите системный пароль:</Text>
                 <View style={{ flexDirection: 'row' }}>
-                    <InputField name="Пароль" placeholder="Пароль" inputMode="text" secureTextEntry
+                    <InputField name="Пароль" placeholder="Пароль" secureTextEntry
                         value={password}
                         setText={setPassword}
+                        inputMode="numeric"
                     />
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

@@ -135,7 +135,7 @@ const Configuration = ({ navigate }) => {
                 </View>
                 <Text style={[styles.title, { color: theme.light, fontSize: titleSize * .5, marginBottom: 0 }]}>Настройки приложения:</Text>
                 <View style={[styles.rowContainer, { gap: gapSize }]}>
-                    <InputField name="Защитный пароль" placeholder="Защитный пароль" inputMode="text"
+                    <InputField name="Защитный пароль" placeholder="Защитный пароль" inputMode="numeric"
                         value={formData.system_password}
                         setText={value => setFormData({ ...formData, system_password: value })}
                     />

@@ -208,11 +208,11 @@ const Schedule = ({ navigate }) => {
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ width: '100%', flex: 1, padding: sizes.textSize, paddingTop: sizes.textSize*3.5 }}>
             {/* Tabs */}
             <View style={[styles.rowContainer, {
                 gap: sizes.textSize * .5,
-                marginVertical: sizes.textSize * 2
+                marginVertical: sizes.textSize
             }]}>
                 {time_presets.map((item, i) => (
                     <Tab key={i} text={`На ${item} мин`}
@@ -484,7 +484,7 @@ const BookBtn = memo(({ text, onPress, disabled = false, style }) => {
                     borderRadius: sizes.textSize,
                     backgroundColor: disabled ? theme.container : theme.free,
                     position: "absolute",
-                    bottom: sizes.textSize * 2,
+                    bottom: sizes.textSize,
                     left: 0, right: 0,
                 }, style]}
             onPress={!disabled ? onPress : null}

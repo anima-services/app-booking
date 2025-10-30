@@ -22,7 +22,8 @@ export const useResponsiveSizes = () => {
 
 const calculateSizes = (width, height) => {
   let type = width > height ? 'landscape' : 'portrait';
-  type = width / height > .85 ? 'square' : type;
+  let ratio = Math.abs(width / height);
+  type = ratio > .85 && ratio < 1.1 ? 'square' : type;
 
   let newHeight = height;
   let newWidth = width;
@@ -42,7 +43,7 @@ const calculateSizes = (width, height) => {
   }
 
   return ({
-    topOffset: newHeight * (type === 'landscape' ? 0.2 : type === 'square' ? 0 : 0.1),
+    topOffset: newHeight * (type === 'landscape' ? 0.2 : type === 'square' ? 0.05 : 0.1),
     bottomOffset: newHeight * 0.05,
     propertyOffset: newHeight * 0.0175,
     titleSize: newHeight * 0.045,

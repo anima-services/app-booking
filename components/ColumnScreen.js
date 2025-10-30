@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 import { useTheme } from './ThemeContext';
 
-const ColumnScreen = ({ leftContent, rightContent }) => {
+const ColumnScreen = ({ leftContent, rightContent, pages = [leftContent, rightContent] }) => {
     const sizes = useResponsiveSizes();
     const { theme, toggleTheme } = useTheme();
     const [columnSelected, selectColumn] = useState(0);
@@ -26,17 +26,15 @@ const ColumnScreen = ({ leftContent, rightContent }) => {
     }];
 
     if (sizes.type === 'square') {
-        const pages = [leftContent, rightContent];
-
         return (
             <View style={{ flex: 1 }}>
                 <View style={squareStyle}>{pages[columnSelected]}</View>
-                <View style={{ flex: 1.5, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: sizes.subtitleSize }}>
-                    {pages.map((item, i) => (
+                <View style={{ flex: 1.5, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: sizes.subtitleSize, opacity: .5 }}>
+                    {pages.length > 1 && pages.map((item, i) => (
                         <TouchableOpacity key={i} onPress={() => selectColumn(i)} style={{
                             width: columnSelected !== i ? sizes.subtitleSize : sizes.subtitleSize * .8,
                             height: columnSelected !== i ? sizes.subtitleSize : sizes.subtitleSize * .8,
-                            borderRadius: columnSelected !== i ? sizes.subtitleSize* .5: sizes.subtitleSize * .4,
+                            borderRadius: columnSelected !== i ? sizes.subtitleSize * .5 : sizes.subtitleSize * .4,
                             backgroundColor: columnSelected === i ? theme.light : theme.lightGray,
                         }} />
                     ))}

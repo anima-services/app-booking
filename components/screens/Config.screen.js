@@ -12,7 +12,7 @@ const Config = ({ navigate, goBack, resetToHome, params }) => {
   useEffect(() => {
     const timerId = setTimeout(() => {
       resetToHome();
-    }, 1000 * 60 * 5);
+    }, 1000 * 60 * 15);
 
     return () => clearTimeout(timerId);
   }, []);
