@@ -210,7 +210,7 @@ const Schedule = ({ navigate }) => {
         }
 
         if (_firstNormalEnd) {
-            const _firstStartShifted = new Date(_date.getTime() + 60 * 1000);
+            const _firstStartShifted = new Date(_date.getTime() + 2 * 60 * 1000);
             if (_firstStartShifted < _firstNormalEnd) {
                 _bubbleArray.push({
                     text: `${format_hh_mm(_firstStartShifted)} - ${format_hh_mm(_firstNormalEnd)}`,
