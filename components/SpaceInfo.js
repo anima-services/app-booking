@@ -12,6 +12,7 @@ import { format_hh_mm } from './Schedule';
 import Button from './Button';
 import EventStatus from './EventStatus';
 import { UserImage } from './UserCard';
+import QRCodeBlock from './QRCodeBlock';
 
 const SpaceInfo = ({ navigate, currentScreen }) => {
     const events_data = useSelector(state => state.data.events_data);
@@ -56,7 +57,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
         textAlign: sizes.type === 'landscape' ? 'left' : 'center', justifyContent: sizes.type === 'landscape' ? 'flex-start' : 'center'
     }
 
-    const SpaceTitle = ({show}) => {
+    const SpaceTitle = ({ show }) => {
         return (
             <Pressable style={{ display: show ? "flex" : "none" }} onLongPress={handlePress} delayLongPress={5000}>
                 <Text style={[styles.title, textAlignStyle, { color: theme.light, fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>{spaceData.title}</Text>
@@ -65,8 +66,8 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
     }
 
     return (
-        <View style={{ marginTop: sizes.topOffset }}>
-            <SpaceTitle show={sizes.type === 'landscape'}/>
+        <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
+            <SpaceTitle show={sizes.type === 'landscape'} />
             {/* Вместимость */}
             <View style={[styles.rowContainer, textAlignStyle, { display: spaceData.quantity ? "flex" : "none" }]}>
                 <Text style={propertyStyle}>Вместимость:</Text>
@@ -79,7 +80,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
                     />
                 </Svg>
             </View>
-            <SpaceTitle show={sizes.type !== 'landscape'}/>
+            <SpaceTitle show={sizes.type !== 'landscape'} />
             {/* Характеристики */}
             <View style={{ display: spaceData.properties.length > 0 ? "flex" : "none" }}>
                 <Text style={[propertyStyle, textAlignStyle, { paddingVertical: sizes.propertyOffset }]}>Характеристики:</Text>
@@ -137,7 +138,18 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
                     :
                     <EventStatus text={statusName[eventData.status]} icon={eventData.status} />
                 }
+                {/* QR code */}
+                <QRCodeBlock
+                    spaceId={space_data && (space_data.id || spaceData.id)}
+                    reservationId={eventData && eventData.id}
+                    style={{ position: 'absolute', bottom: sizes.textSize, right: sizes.textSize }}
+                />
             </View>
+            {/* QR code */}
+            <QRCodeBlock
+                spaceId={space_data && (space_data.id || spaceData.id)}
+                style={{ display: eventData.show ? 'none' : 'flex', position: 'absolute', bottom: sizes.textSize, left: sizes.textSize }}
+            />
         </View>
     );
 };

@@ -1,3 +1,4 @@
+import './polyfills';
 import React, { useState, useEffect, useRef } from "react";
 import { Text, StatusBar, Animated, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context'
