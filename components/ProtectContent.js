@@ -15,10 +15,6 @@ const ProtectContent = ({ goBack, setAccess }) => {
 
     const [password, setPassword] = useState('');
 
-    const buttonStyle = {
-        width: sizes.windowWidth * .15
-    };
-
     const checkPassword = () => {
         if (data.system_password === password) {
             setAccess(true);
@@ -29,7 +25,7 @@ const ProtectContent = ({ goBack, setAccess }) => {
     return (
         <View style={styles.container}>
             <View style={styles.childContainer}>
-                <Text style={[styles.title, { color: theme.light, fontSize: sizes.titleSize}]}>Введите системный пароль:</Text>
+                <Text style={[styles.title, { color: theme.light, fontSize: sizes.titleSize }]}>Введите пароль:</Text>
                 <View style={{ flexDirection: 'row' }}>
                     <InputField name="Пароль" placeholder="Пароль" secureTextEntry
                         value={password}
@@ -38,8 +34,8 @@ const ProtectContent = ({ goBack, setAccess }) => {
                     />
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Button style={buttonStyle} title='Отменить' onPress={goBack} />
-                    <Button style={buttonStyle} title='Принять' disabled={password === ''} onPress={checkPassword} />
+                    <Button title='Отменить' onPress={goBack} />
+                    <Button title='Принять' disabled={password === ''} onPress={checkPassword} />
                 </View>
             </View>
         </View>

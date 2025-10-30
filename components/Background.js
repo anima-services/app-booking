@@ -121,7 +121,7 @@ const Background = ({ isBusy }) => {
 
       {/* Статус по центру */}
       <View style={[styles.statusbar, {
-        height: marginSize * (sizes.type === 'landscape' ? 6.25 : 4),
+        height: marginSize * 6.25,
         justifyContent: 'center',
         alignItems: 'center',
       }]}>
