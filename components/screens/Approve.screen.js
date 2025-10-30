@@ -80,7 +80,7 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
 
   return (
     <ColumnScreen
-      leftContent={<SpaceInfo navigate={navigate} />}
+      leftContent={<SpaceInfo navigate={navigate} currentScreen="Approve" />}
       rightContent={<>
         <BackButton goBack={resetToHome} />
         <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
@@ -109,7 +109,7 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
             />
           </View>
           <Dropdown
-            name="Участники"
+            name="Кто подтверждает?"
             data={approvePeople}
             placeholder="Введите ФИО или почту"
             pictureTag="photo"

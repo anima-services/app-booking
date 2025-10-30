@@ -104,7 +104,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
                 borderRadius: sizes.textSize,
                 position: "absolute",
                 bottom: sizes.bottomOffset,
-                width: "80%",
+                width: "100%",
                 display: eventData.show ? "flex" : "none"
             }}>
                 <Text style={[styles.text, { color: theme.light, fontSize: sizes.subtitleSize }]}>{{
@@ -133,7 +133,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
                 </View>
                 {currentScreen != "Approve" && eventData.status === "reserved" ?
                     <Button
-                        title="Подтвердить" onPress={approveEvent}
+                        title="Подтвердить" onPress={approveEvent} style={{ alignSelf: 'flex-start', paddingHorizontal: sizes.textSize * 3 }}
                     />
                     :
                     <EventStatus text={statusName[eventData.status]} icon={eventData.status} />
@@ -148,7 +148,7 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
             {/* QR code */}
             <QRCodeBlock
                 spaceId={space_data && (space_data.id || spaceData.id)}
-                style={{ display: eventData.show ? 'none' : 'flex', position: 'absolute', bottom: sizes.textSize, left: sizes.textSize }}
+                style={{ display: eventData.show ? 'none' : 'flex', position: 'absolute', bottom: sizes.textSize }}
             />
         </View>
     );

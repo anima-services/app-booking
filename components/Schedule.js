@@ -8,6 +8,7 @@ import { useTheme } from './ThemeContext';
 import { useEventData } from './hooks/useEventData';
 
 import EventStatus from './EventStatus';
+import { Onest_100Thin } from '@expo-google-fonts/onest';
 
 const Schedule = ({ navigate }) => {
     const time_presets = [25, 55];
@@ -100,7 +101,6 @@ const Schedule = ({ navigate }) => {
     const handleBubblePress = useCallback((i) => {
         setSelected(prevSelected => {
             let newSelected = prevSelected;
-            console.log(newSelected, i, newSelected.includes(i));
             // Filter by includes
             newSelected = newSelected.includes(i) ? newSelected.filter(index => index !== i) : [...newSelected, i];
             // Filter by sequence
@@ -150,23 +150,23 @@ const Schedule = ({ navigate }) => {
 
         for (const event of events_data) {
             _dateEnd = safeParseDate(event.start);
-            _table.push(...countBubbles(preset, _date, _dateEnd));
-            if (_dateEnd < _date) continue;
-
-            _date = safeParseDate(event.start);
-            _dateEnd = safeParseDate(event.end);
-            const _timeUntilStart = Math.ceil((_date - new Date(now)) / 60000);
-            if (_timeUntilStart > time_offset) {
-                _table.push({
-                    text: `${format_hh_mm(_date)} - ${format_hh_mm(_dateEnd)}`,
-                    start: _date,
-                    end: _dateEnd,
-                    format_start: format_hh_mm(_date),
-                    format_end: format_hh_mm(_dateEnd),
-                    title: event.topic,
-                    dsc: `Организатор: ${event.user_info.full_name}`,
-                    disabled: true
-                });
+            if (now < _dateEnd && now > _date) _table.push(...countBubbles(preset, _date, _dateEnd));
+            if (_dateEnd >= _date) {
+                _date = safeParseDate(event.start);
+                _dateEnd = safeParseDate(event.end);
+                const _timeUntilStart = Math.ceil((_date - new Date(now)) / 60000);
+                if (_timeUntilStart > time_offset) {
+                    _table.push({
+                        text: `${format_hh_mm(_date)} - ${format_hh_mm(_dateEnd)}`,
+                        start: _date,
+                        end: _dateEnd,
+                        format_start: format_hh_mm(_date),
+                        format_end: format_hh_mm(_dateEnd),
+                        title: event.topic,
+                        dsc: `Организатор: ${event.user_info.full_name}`,
+                        disabled: true
+                    });
+                }
             }
             _date = safeParseDate(event.end);
         }
@@ -181,23 +181,66 @@ const Schedule = ({ navigate }) => {
         let _bubbleArray = [];
         const _date = safeParseDate(in_time_start);
         const _endDate = safeParseDate(in_time_end);
-        const _hour = _date.getHours();
+        const _startHour = _date.getHours();
+        const _endHour = _endDate.getHours();
+        const _intervalsPerHour = Math.floor(60 / preset);
 
-        for (let i = _hour; i < _endDate.getHours() + 1; i++) {
-            const _intervals = Math.floor(60 / preset);
-            let _intervalStart = new Date(_date);
-            let _intervalEnd = new Date(_intervalStart);
+        let _firstNormalStart = null;
+        let _firstNormalEnd = null;
+        searchContaining:
+        for (let i = _startHour; i <= _endHour; i++) {
+            const _hourBase = new Date(_date);
+            _hourBase.setHours(i, 0, 0, 0);
 
-            for (let k = 0; k < _intervals; k++) {
+            for (let k = 0; k < _intervalsPerHour; k++) {
                 const _offset = k > 0 ? time_offset : 0;
-                _intervalStart.setHours(i, _offset + preset * k, 0);
-                _intervalEnd.setHours(i, _offset + preset * (k + 1), 0);
+                const _minutes = _offset + preset * k;
 
+                const _s = new Date(_hourBase);
+                _s.setMinutes(_minutes, 0, 0);
+                const _e = new Date(_hourBase);
+                _e.setMinutes(_minutes + preset, 0, 0);
+
+                if (_s <= _date && _date < _e && _e < _endDate) {
+                    _firstNormalStart = _s;
+                    _firstNormalEnd = _e;
+                    break searchContaining;
+                }
+            }
+        }
+
+        if (_firstNormalEnd) {
+            const _firstStartShifted = new Date(_date.getTime() + 60 * 1000);
+            if (_firstStartShifted < _firstNormalEnd) {
+                _bubbleArray.push({
+                    text: `${format_hh_mm(_firstStartShifted)} - ${format_hh_mm(_firstNormalEnd)}`,
+                    start: _firstStartShifted,
+                    end: _firstNormalEnd,
+                    format_start: format_hh_mm(_firstStartShifted),
+                    format_end: format_hh_mm(_firstNormalEnd),
+                });
+            }
+        }
+
+        for (let i = _startHour; i <= _endHour; i++) {
+            const _hourBase = new Date(_date);
+            _hourBase.setHours(i, 0, 0, 0);
+
+            for (let k = 0; k < _intervalsPerHour; k++) {
+                const _offset = k > 0 ? time_offset : 0;
+                const _minutes = _offset + preset * k;
+
+                const _intervalStart = new Date(_hourBase);
+                _intervalStart.setMinutes(_minutes, 0, 0);
+                const _intervalEnd = new Date(_hourBase);
+                _intervalEnd.setMinutes(_minutes + preset, 0, 0);
+
+                if (_firstNormalEnd && _intervalStart < _firstNormalEnd) continue;
                 if (_intervalStart > _date && _intervalEnd < _endDate) {
                     _bubbleArray.push({
                         text: `${format_hh_mm(_intervalStart)} - ${format_hh_mm(_intervalEnd)}`,
-                        start: new Date(_intervalStart),
-                        end: new Date(_intervalEnd),
+                        start: _intervalStart,
+                        end: _intervalEnd,
                         format_start: format_hh_mm(_intervalStart),
                         format_end: format_hh_mm(_intervalEnd),
                     });
@@ -208,7 +251,7 @@ const Schedule = ({ navigate }) => {
     }
 
     return (
-        <View style={{ width: '100%', flex: 1, padding: sizes.textSize, paddingTop: sizes.textSize*3.5 }}>
+        <View style={{ width: '100%', flex: 1, padding: sizes.textSize, paddingTop: sizes.textSize * 3.5 }}>
             {/* Tabs */}
             <View style={[styles.rowContainer, {
                 gap: sizes.textSize * .5,

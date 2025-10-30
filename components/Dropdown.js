@@ -172,6 +172,8 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                     paddingHorizontal: sizes.text_2,
                     paddingVertical: sizes.text_2 * .5,
                     borderRadius: sizes.text_2,
+                    borderWidth: StyleSheet.hairlineWidth,
+                    borderColor: theme.free,
                     marginBottom: sizes.text_2 * .5,
                     height: sizes.text_2 * 4,
                     gap: sizes.text_2,

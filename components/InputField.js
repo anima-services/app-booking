@@ -25,7 +25,9 @@ const InputField = ({ name, placeholder, inputMode, secureTextEntry = false, set
             borderRadius: sizes.text_2,
             marginBottom: sizes.text_2 * .5,
             height: sizes.text_2 * 4,
-            flex: 1
+            flex: 1,
+            borderWidth: disabled ? 0 : StyleSheet.hairlineWidth,
+            borderColor: theme.free,
         }}>
             <Text style={[propertyStyle, { display: value ? 'flex' : 'none' }]}>{name}</Text>
             <TextInput

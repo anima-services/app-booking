@@ -121,8 +121,9 @@ const Background = ({ isBusy }) => {
 
       {/* Статус по центру */}
       <View style={[styles.statusbar, {
-        top: marginSize * .5,
         height: marginSize * (sizes.type === 'landscape' ? 6.25 : 4),
+        justifyContent: 'center',
+        alignItems: 'center',
       }]}>
         <View style={{
           width: marginSize * (sizes.type === 'landscape' ? 2 : 1.5),
@@ -132,7 +133,7 @@ const Background = ({ isBusy }) => {
           marginRight: (sizes.type === 'landscape' ? 8 : 6),
         }} />
         <Text style={[styles.statusText, {
-          fontSize: marginSize * (sizes.type === 'landscape' ? 3 : 2),
+          fontSize: marginSize * (sizes.type === 'landscape' ? 2.5 : 2),
           color: isBusy ? theme.light : theme.dark
         }]}>{isBusy ? "Занято" : "Свободно"}</Text>
       </View>
