@@ -15,6 +15,86 @@ import { createReservation, getReservations } from '../services/api';
 import { useSelector, useDispatch } from "react-redux";
 import { setLogs } from "../data/DataSlice";
 
+function BookView({
+  resetToHome,
+  users_data,
+  formatStart,
+  formatEnd,
+  topic,
+  setTopic,
+  setMeetinghost,
+  setParticipants,
+  formReady,
+  sendForm,
+}) {
+  const sizes = useResponsiveSizes();
+  const { theme } = useTheme();
+
+  const styles = StyleSheet.create({
+    title: {
+      fontFamily: "Onest_600SemiBold",
+      color: theme.light,
+    },
+    rowContainer: {
+      flexDirection: 'row',
+      width: '100%',
+    },
+  });
+
+  return (
+    <>
+      <BackButton goBack={resetToHome} />
+      <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
+        <Text style={[styles.title, { fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>Вы бронируете:</Text>
+        <Dropdown
+          name="Организатор"
+          data={users_data}
+          placeholder="Введите ФИО или почту"
+          pictureTag="photo"
+          textTag="full_name"
+          attributeTag="email"
+          onSelect={setMeetinghost}
+        />
+        <Dropdown
+          name="Участники"
+          data={users_data}
+          placeholder="Введите ФИО или почту"
+          pictureTag="photo"
+          textTag="full_name"
+          attributeTag="email"
+          maxItems={1000}
+          onSelect={setParticipants}
+        />
+        {/* Тема */}
+        <View style={styles.rowContainer}>
+          <InputField name="Название встречи" placeholder="Название встречи*" inputMode="text"
+            value={topic}
+            setText={setTopic}
+          />
+        </View>
+        {/* Начало и окончание */}
+        <View style={styles.rowContainer}>
+          <InputField name="Начало" placeholder="00:00" inputMode="text"
+            value={formatStart} disabled={true}
+          />
+          <View style={{ width: sizes.hotizontalGapSize }} />
+          <InputField name="Окончание" placeholder="00:00" inputMode="text"
+            value={formatEnd} disabled={true}
+          />
+        </View>
+        {/* Пинкод */}
+        {/* <View style={styles.rowContainer}>
+          <InputField name="Пинкод" placeholder="Введите ваш пинкод для подтверждения личности*" inputMode="text" secureTextEntry
+            value={null}
+            setText={null}
+          />
+        </View> */}
+        <Button title="Забронировать" disabled={!formReady} onPress={sendForm} />
+      </View>
+    </>
+  );
+}
+
 const Book = ({ navigate, goBack, resetToHome, params }) => {
   const dispatch = useDispatch();
 
@@ -27,6 +107,8 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
   const [meetinghost, setMeetinghost] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [formReady, setFormReady] = useState(false);
+
+  console.log("draw");
 
   const styles = StyleSheet.create({
     title: {
@@ -79,67 +161,37 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
     }
   }
 
-  const BookView = () => {
-
-    return (
-      <>
-        <BackButton goBack={resetToHome} />
-        <View style={{ marginTop: sizes.topOffset, flex: 1 }}>
-          <Text style={[styles.title, { fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>Вы бронируете:</Text>
-          <Dropdown
-            name="Организатор"
-            data={users_data}
-            placeholder="Введите ФИО или почту"
-            pictureTag="photo"
-            textTag="full_name"
-            attributeTag="email"
-            onSelect={setMeetinghost}
-          />
-          <Dropdown
-            name="Участники"
-            data={users_data}
-            placeholder="Введите ФИО или почту"
-            pictureTag="photo"
-            textTag="full_name"
-            attributeTag="email"
-            maxItems={1000}
-            onSelect={setParticipants}
-          />
-          {/* Тема */}
-          <View style={styles.rowContainer}>
-            <InputField name="Название встречи" placeholder="Название встречи*" inputMode="text"
-              value={topic}
-              setText={setTopic}
-            />
-          </View>
-          {/* Начало и окончание */}
-          <View style={styles.rowContainer}>
-            <InputField name="Начало" placeholder="00:00" inputMode="text"
-              value={formatStart} disabled={true}
-            />
-            <View style={{ width: sizes.hotizontalGapSize }} />
-            <InputField name="Окончание" placeholder="00:00" inputMode="text"
-              value={formatEnd} disabled={true}
-            />
-          </View>
-          {/* Пинкод */}
-          {/* <View style={styles.rowContainer}>
-            <InputField name="Пинкод" placeholder="Введите ваш пинкод для подтверждения личности*" inputMode="text" secureTextEntry
-              value={null}
-              setText={null}
-            />
-          </View> */}
-          <Button title="Забронировать" disabled={!formReady} onPress={sendForm} />
-        </View>
-      </>
-    );
-  };
-
   return (
     <ColumnScreen
       leftContent={<SpaceInfo navigate={navigate} />}
-      rightContent={<BookView />}
-      pages={[<BookView />]}
+      rightContent={
+        <BookView
+          resetToHome={resetToHome}
+          users_data={users_data}
+          formatStart={formatStart}
+          formatEnd={formatEnd}
+          topic={topic}
+          setTopic={setTopic}
+          setMeetinghost={setMeetinghost}
+          setParticipants={setParticipants}
+          formReady={formReady}
+          sendForm={sendForm}
+        />
+      }
+      pages={[
+        <BookView
+          resetToHome={resetToHome}
+          users_data={users_data}
+          formatStart={formatStart}
+          formatEnd={formatEnd}
+          topic={topic}
+          setTopic={setTopic}
+          setMeetinghost={setMeetinghost}
+          setParticipants={setParticipants}
+          formReady={formReady}
+          sendForm={sendForm}
+        />
+      ]}
     />
   );
 };
