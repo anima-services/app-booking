@@ -108,8 +108,6 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
   const [participants, setParticipants] = useState([]);
   const [formReady, setFormReady] = useState(false);
 
-  console.log("draw");
-
   const styles = StyleSheet.create({
     title: {
       fontFamily: "Onest_600SemiBold",

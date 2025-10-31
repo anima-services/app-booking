@@ -62,7 +62,6 @@ const Approve = ({ navigate, goBack, resetToHome, params }) => {
       const response = await approveReservation(
         eventId, approvePerson[0].email, pincode
       );
-      console.log(response);
       await getReservations(dispatch);
       navigate('Results', {
         success: true,
