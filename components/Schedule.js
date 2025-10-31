@@ -150,7 +150,7 @@ const Schedule = ({ navigate }) => {
 
         for (const event of events_data) {
             _dateEnd = safeParseDate(event.start);
-            if (now < _dateEnd && now > _date) _table.push(...countBubbles(preset, _date, _dateEnd));
+            _table.push(...countBubbles(preset, _date, _dateEnd));
             if (_dateEnd >= _date) {
                 _date = safeParseDate(event.start);
                 _dateEnd = safeParseDate(event.end);
