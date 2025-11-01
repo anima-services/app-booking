@@ -38,6 +38,27 @@ export async function approveReservation(event_id, user_email, user_pincode) {
     return response;
 }
 
+export async function getUsers(limit, offset, positions, search, signal) {
+    const data = Store.getState().data;
+    const api = axios.create(apiConfiguration(data.hostname, data.token));
+
+    const params = new URLSearchParams();
+    if (limit != null) params.append('limit', limit);
+    if (offset != null) params.append('offset', offset);
+    if (positions != null && Array.isArray(positions) && positions.length > 0) {
+        positions.forEach(pos => params.append('positions', pos));
+    }
+    if (search != null && search.length > 0) {
+        params.append('search', search);
+    }
+
+    const queryString = params.toString();
+    const url = `/api/user/${queryString ? '?' + queryString : ''}`;
+
+    const response = await api.get(url, signal ? { signal } : {});
+    return response;
+}
+
 export async function getReservations(dispatch, signal) {
     const data = Store.getState().data;
     const api = axios.create(apiConfiguration(data.hostname, data.token));

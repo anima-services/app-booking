@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Pressable, Text, View } from 'react-native';
 
 import ColumnScreen from '../ColumnScreen';
@@ -10,14 +10,15 @@ import Button from '../Button';
 
 import { useResponsiveSizes } from '../hooks/useResponsiveSizes';
 import { useTheme } from '../ThemeContext';
-import { createReservation, getReservations } from '../services/api';
+import { createReservation, getReservations, getUsers } from '../services/api';
 
 import { useSelector, useDispatch } from "react-redux";
 import { setLogs } from "../data/DataSlice";
 
 function BookView({
   resetToHome,
-  users_data,
+  hostUsers,
+  participantsUsers,
   formatStart,
   formatEnd,
   topic,
@@ -26,6 +27,8 @@ function BookView({
   setParticipants,
   formReady,
   sendForm,
+  onHostSearchChange,
+  onParticipantsSearchChange,
 }) {
   const sizes = useResponsiveSizes();
   const { theme } = useTheme();
@@ -48,22 +51,24 @@ function BookView({
         <Text style={[styles.title, { fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>Вы бронируете:</Text>
         <Dropdown
           name="Организатор"
-          data={users_data}
+          data={hostUsers}
           placeholder="Введите ФИО или почту"
           pictureTag="photo"
           textTag="full_name"
           attributeTag="email"
           onSelect={setMeetinghost}
+          onTextChange={onHostSearchChange}
         />
         <Dropdown
           name="Участники"
-          data={users_data}
+          data={participantsUsers}
           placeholder="Введите ФИО или почту"
           pictureTag="photo"
           textTag="full_name"
           attributeTag="email"
           maxItems={1000}
           onSelect={setParticipants}
+          onTextChange={onParticipantsSearchChange}
         />
         {/* Тема */}
         <View style={styles.rowContainer}>
@@ -82,13 +87,6 @@ function BookView({
             value={formatEnd} disabled={true}
           />
         </View>
-        {/* Пинкод */}
-        {/* <View style={styles.rowContainer}>
-          <InputField name="Пинкод" placeholder="Введите ваш пинкод для подтверждения личности*" inputMode="text" secureTextEntry
-            value={null}
-            setText={null}
-          />
-        </View> */}
         <Button title="Забронировать" disabled={!formReady} onPress={sendForm} />
       </View>
     </>
@@ -99,7 +97,6 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
   const dispatch = useDispatch();
 
   const { timeStart, timeEnd, formatStart, formatEnd } = params;
-  const users_data = useSelector(state => state.data.users_data);
   const sizes = useResponsiveSizes();
   const { theme, toggleTheme } = useTheme();
 
@@ -107,17 +104,80 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
   const [meetinghost, setMeetinghost] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [formReady, setFormReady] = useState(false);
-
-  const styles = StyleSheet.create({
-    title: {
-      fontFamily: "Onest_600SemiBold",
-      color: theme.light,
-    },
-    rowContainer: {
-      flexDirection: 'row',
-      width: '100%',
-    },
+  
+  const [usersData, setUsersData] = useState({
+    host: { users: [], search: "" },
+    participants: { users: [], search: "" }
   });
+  
+  const searchControllersRef = useRef({});
+  const searchTimeoutsRef = useRef({});
+
+  const fetchUsers = async (key, searchText) => {
+    if (searchControllersRef.current[key]) {
+      searchControllersRef.current[key].abort();
+    }
+    
+    const controller = new AbortController();
+    searchControllersRef.current[key] = controller;
+    
+    try {
+      const response = await getUsers(
+        20,
+        0,
+        null,
+        searchText || null,
+        controller.signal
+      );
+      
+      if (response?.data?.results) {
+        setUsersData(prev => ({
+          ...prev,
+          [key]: {
+            ...prev[key],
+            users: response.data.results
+          }
+        }));
+      }
+    } catch (error) {
+      if (error.name !== 'AbortError' && error.name !== 'CanceledError') {
+        console.error(`Ошибка загрузки пользователей для ${key}:`, error);
+        if (dispatch) dispatch(setLogs('Ошибка загрузки пользователей: ' + error.toString()));
+      }
+    }
+  };
+
+  const handleSearchChange = (key, text) => {
+    setUsersData(prev => ({
+      ...prev,
+      [key]: {
+        ...prev[key],
+        search: text
+      }
+    }));
+    
+    if (searchTimeoutsRef.current[key]) {
+      clearTimeout(searchTimeoutsRef.current[key]);
+    }
+    
+    searchTimeoutsRef.current[key] = setTimeout(() => {
+      fetchUsers(key, text);
+    }, 300);
+  };
+
+  useEffect(() => {
+    fetchUsers("host", "");
+    fetchUsers("participants", "");
+    
+    return () => {
+      Object.values(searchControllersRef.current).forEach(controller => {
+        if (controller) controller.abort();
+      });
+      Object.values(searchTimeoutsRef.current).forEach(timeout => {
+        if (timeout) clearTimeout(timeout);
+      });
+    };
+  }, []);
 
   useEffect(() => {
     setFormReady(topic &&
@@ -165,7 +225,8 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
       rightContent={
         <BookView
           resetToHome={resetToHome}
-          users_data={users_data}
+          hostUsers={usersData.host.users}
+          participantsUsers={usersData.participants.users}
           formatStart={formatStart}
           formatEnd={formatEnd}
           topic={topic}
@@ -174,12 +235,15 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
           setParticipants={setParticipants}
           formReady={formReady}
           sendForm={sendForm}
+          onHostSearchChange={(text) => handleSearchChange("host", text)}
+          onParticipantsSearchChange={(text) => handleSearchChange("participants", text)}
         />
       }
       pages={[
         <BookView
           resetToHome={resetToHome}
-          users_data={users_data}
+          hostUsers={usersData.host.users}
+          participantsUsers={usersData.participants.users}
           formatStart={formatStart}
           formatEnd={formatEnd}
           topic={topic}
@@ -188,6 +252,8 @@ const Book = ({ navigate, goBack, resetToHome, params }) => {
           setParticipants={setParticipants}
           formReady={formReady}
           sendForm={sendForm}
+          onHostSearchChange={(text) => handleSearchChange("host", text)}
+          onParticipantsSearchChange={(text) => handleSearchChange("participants", text)}
         />
       ]}
     />

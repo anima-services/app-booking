@@ -116,17 +116,6 @@ const fetchCoreData = async (config, token, dispatch, signal) => {
                 dispatch(setLogs(`Размеры пространства получены!`));
             }
         }
-
-        // Запрос пользователей
-        const usersResponse = await apiClient.get(
-            '/api/user/?limit=255',
-            { signal }
-        );
-        
-        if (usersResponse.data.results != null) {
-            dispatch(setState({ users_data: usersResponse.data.results }));
-            dispatch(setLogs(`Пользователи получены!`));
-        }
     } catch (error) {
         handleRequestError(error, 'получения основных данных', dispatch);
         dispatch(setState({ token: "" }));

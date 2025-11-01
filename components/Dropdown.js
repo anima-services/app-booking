@@ -13,7 +13,7 @@ import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 import { useTheme } from "./ThemeContext";
 import { UserImage } from "./UserCard";
 
-const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attributeTag, maxItems = 1, onSelect }) => {
+const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attributeTag, maxItems = 1, onSelect, onTextChange }) => {
     const sizes = useResponsiveSizes();
     const { theme, toggleTheme } = useTheme();
     const [text, setText] = useState("");
@@ -29,91 +29,81 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
     const buttonRef = useRef(null);
 
     const handleShowList = () => {
-        if (!Array.isArray(data) || data.length === 0) return;
         setShowList(true);
         setText("");
+        onTextChange("");
     };
 
-    // Первичная отрисовка
-    useEffect(() => {
-        if (!Array.isArray(data)) return;
-        setFormatted(data.map((item, i) => {
-            let _text = item[textTag];
-            let _picture = item[pictureTag];
-            let _attribute = item[attributeTag];
+    const handleTextChange = (newText) => {
+        setText(newText);
+        if (onTextChange) {
+            onTextChange(newText);
+        }
+    };
 
+    const formatItem = (item) => {
+        return {
+            [textTag]: item[textTag],
+            [pictureTag]: item[pictureTag],
+            [attributeTag]: item[attributeTag],
+            "origin": item,
+            "selected": false
+        };
+    };
 
-            return {
-                [textTag]: _text,
-                [pictureTag]: _picture,
-                [attributeTag]: _attribute,
-                "origin": item,
-                "selected": false
-            };
-        }));
-    }, [])
     useEffect(() => {
-        setList([...formattedData]);
+        const selectedIds = new Set(selected.map(item => item.id));
+        
+        const formattedSelected = selected
+            .filter(item => item.id != null)
+            .map(formatItem)
+            .map(item => ({ ...item, selected: true }));
+        
+        const dataArray = Array.isArray(data) ? data : [];
+        const formattedDataItems = dataArray
+            .filter(item => !selectedIds.has(item.id))
+            .map(formatItem);
+        
+        const combined = [...formattedSelected, ...formattedDataItems];
+        
+        setFormatted(combined);
+    }, [data, textTag, pictureTag, attributeTag, selected])
+    
+    useEffect(() => {
+        const sorted = [...formattedData].sort((a, b) => {
+            if (a.selected === b.selected) return 0;
+            return a.selected ? -1 : 1;
+        });
+        setList(sorted);
     }, [formattedData])
 
-    // Фильтрация данных
-    const filterData = (array) => {
-        return array.filter((item, i) => {
-            let _text = item[textTag];
-            let _picture = item[pictureTag];
-            let _attribute = item[attributeTag];
-
-            if (_text == null || _text == "-") return false;
-
-            const _byText = _text.toLowerCase().includes(text.toLowerCase());
-            const _byAttribute = _attribute?.toLowerCase().includes(text.toLowerCase());
-            if (!_byText && !_byAttribute) return false;
-
-            return true;
-        });
-    };
-
-    // Сортировка данных
-    const sortData = (array) => {
-        array.sort((a, b) => {
-            if (a.selected == b.selected) return 0;
-            else if (a.selected) return -1;
-            else return 1;
-        });
-        return array;
-    };
-
     const selectItem = (in_item) => {
-        /* Проверка maxItems-1 */
-        let _items = 0;
-        let _newArray = list.filter(item => {
-            if (item.selected && _items < maxItems - 1) {
-                _items++;
-                return true;
+        const currentSelectedIds = new Set(selected.map(item => item.id));
+        const itemId = in_item.origin.id;
+        const isCurrentlySelected = currentSelectedIds.has(itemId);
+        
+        let newSelected;
+        if (isCurrentlySelected) {
+            newSelected = selected.filter(item => item.id !== itemId);
+        } else {
+            if (selected.length >= maxItems) {
+                newSelected = selected.slice(1);
             } else {
-                item.selected = false;
-                return false;
+                newSelected = [...selected];
             }
-        });
-
-        /* Обновление списка */
-        in_item.selected = !in_item.selected;
+            newSelected.push(in_item.origin);
+        }
+        
+        setSelected(newSelected);
         setText("");
-        updateArray();
-
-        /* Обновление onSelect */
-        let _originArray = list.filter(item => item.selected).map(item => item.origin);
-        setSelected(_originArray);
-        onSelect(_originArray);
-
-        /* Скрытие DropDown */
-        if (_originArray.length >= maxItems) setShowList(false);
-    }
-
-    const updateArray = () => {
-        let _newArray = [...formattedData];
-        _newArray = sortData(_newArray);
-        setList([..._newArray]);
+        
+        if (onSelect) {
+            onSelect(newSelected);
+        }
+        
+        if (newSelected.length >= maxItems) {
+            setShowList(false);
+        }
     }
 
 
@@ -218,11 +208,11 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                         }
                     ]}>
                     <ScrollView style={{ flex: 1 }}>
-                        {filterData(list).map((item, i) => {
+                        {list.map((item, i) => {
                             const isSelected = item.selected;
                             return (
                                 <TouchableOpacity
-                                    key={i}
+                                    key={`${item.origin.id || i}-${isSelected}`}
                                     style={[styles.rowContainer, {
                                         marginTop: sizes.text_2 * .5,
                                         gap: sizes.text_2 * .5,
@@ -284,7 +274,7 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
                             cursorColor={theme.light}
                             placeholder={placeholder}
                             value={text}
-                            onChangeText={setText}
+                            onChangeText={handleTextChange}
                             underlineColorAndroid="transparent"
                             inputMode="text"
                             autoFocus={false}
