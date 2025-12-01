@@ -31,6 +31,7 @@ const Configuration = ({ navigate }) => {
         hostname: "",
         hostname_main: "",
         hostname_prefix: "",
+        qr_custom_link: "",
         id: "",
         login: "",
         password: "",
@@ -138,6 +139,15 @@ const Configuration = ({ navigate }) => {
                     <InputField name="Защитный пароль" placeholder="Защитный пароль" inputMode="numeric"
                         value={formData.system_password}
                         setText={value => setFormData({ ...formData, system_password: value })}
+                    />
+                </View>
+                <View style={[styles.rowContainer, { gap: gapSize }]}>
+                    <InputField
+                        name="Кастомная ссылка для QR"
+                        placeholder="Кастомная ссылка для QR (https://example.com/...)"
+                        inputMode="url"
+                        value={formData.qr_custom_link}
+                        setText={value => setFormData({ ...formData, qr_custom_link: value })}
                     />
                 </View>
                 <Text style={[styles.title, { display: changes ? 'flex' : 'none', color: theme.busy, fontSize: titleSize * .3, marginBottom: 0 }]}>Есть несохраненные изменения!</Text>

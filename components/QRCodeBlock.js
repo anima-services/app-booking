@@ -24,8 +24,10 @@ const QRCodeBlock = ({ spaceId, reservationId, style }) => {
     const sizes = useResponsiveSizes();
     const window = useWindowDimensions();
     const domain = useSelector(state => state?.data?.hostname_main);
+    const customLink = useSelector(state => state?.data?.qr_custom_link);
 
-    const value = buildDeepLink(spaceId, reservationId, domain);
+    const trimmedCustomLink = typeof customLink === 'string' ? customLink.trim() : '';
+    const value = trimmedCustomLink !== '' ? trimmedCustomLink : buildDeepLink(spaceId, reservationId, domain);
     if (!value) return null;
 
     const baseSide = Math.min(Number(window?.width) || 0, Number(window?.height) || 0);
@@ -35,7 +37,7 @@ const QRCodeBlock = ({ spaceId, reservationId, style }) => {
     }
 
     return (
-        <View style={[{ alignItems: 'center' }, style]}>
+        <View style={[{ alignItems: 'center', backgroundColor: theme.container, padding: sizes.textSize * .8, borderRadius: sizes.textSize * .5 }, style]}>
             <QRCode
                 value={value}
                 size={qrSize}

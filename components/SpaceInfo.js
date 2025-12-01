@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useSelector } from "react-redux";
 
@@ -59,9 +59,9 @@ const SpaceInfo = ({ navigate, currentScreen }) => {
 
     const SpaceTitle = ({ show }) => {
         return (
-            <Pressable style={{ display: show ? "flex" : "none" }} onLongPress={handlePress} delayLongPress={5000}>
+            <TouchableOpacity style={{ display: show ? "flex" : "none" }} onLongPress={handlePress} delayLongPress={5000}>
                 <Text style={[styles.title, textAlignStyle, { color: theme.light, fontSize: sizes.titleSize, marginBottom: sizes.titleSize }]}>{spaceData.title}</Text>
-            </Pressable>
+            </TouchableOpacity>
         )
     }
 

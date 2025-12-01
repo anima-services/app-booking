@@ -8,6 +8,7 @@ export const DataSlice = createSlice({
         events_data: [],
         space_data: {},
         system_password: "4656",
+        qr_custom_link: "",
     },
     reducers: {
         updateData: (state, action) => {
