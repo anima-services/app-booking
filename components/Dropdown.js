@@ -13,7 +13,7 @@ import { useResponsiveSizes } from './hooks/useResponsiveSizes';
 import { useTheme } from "./ThemeContext";
 import { UserImage } from "./UserCard";
 
-const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attributeTag, maxItems = 1, onSelect, onTextChange }) => {
+const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attributeTag, maxItems = 1, onSelect = () => {}, onTextChange = () => {} }) => {
     const sizes = useResponsiveSizes();
     const { theme, toggleTheme } = useTheme();
     const [text, setText] = useState("");
@@ -36,9 +36,7 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
 
     const handleTextChange = (newText) => {
         setText(newText);
-        if (onTextChange) {
-            onTextChange(newText);
-        }
+        onTextChange("");
     };
 
     const formatItem = (item) => {
@@ -53,22 +51,22 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
 
     useEffect(() => {
         const selectedIds = new Set(selected.map(item => item.id));
-        
+
         const formattedSelected = selected
             .filter(item => item.id != null)
             .map(formatItem)
             .map(item => ({ ...item, selected: true }));
-        
+
         const dataArray = Array.isArray(data) ? data : [];
         const formattedDataItems = dataArray
             .filter(item => !selectedIds.has(item.id))
             .map(formatItem);
-        
+
         const combined = [...formattedSelected, ...formattedDataItems];
-        
+
         setFormatted(combined);
     }, [data, textTag, pictureTag, attributeTag, selected])
-    
+
     useEffect(() => {
         const sorted = [...formattedData].sort((a, b) => {
             if (a.selected === b.selected) return 0;
@@ -81,7 +79,7 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
         const currentSelectedIds = new Set(selected.map(item => item.id));
         const itemId = in_item.origin.id;
         const isCurrentlySelected = currentSelectedIds.has(itemId);
-        
+
         let newSelected;
         if (isCurrentlySelected) {
             newSelected = selected.filter(item => item.id !== itemId);
@@ -93,14 +91,14 @@ const Dropdown = ({ name, data = [], placeholder, pictureTag, textTag, attribute
             }
             newSelected.push(in_item.origin);
         }
-        
+
         setSelected(newSelected);
         setText("");
-        
+
         if (onSelect) {
             onSelect(newSelected);
         }
-        
+
         if (newSelected.length >= maxItems) {
             setShowList(false);
         }
